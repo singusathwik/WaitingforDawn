@@ -1,0 +1,149 @@
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST rules PASS: all placements reachable, input ownership/bounds, duplicate/range pickup, cooldown, hiding, revive, door, team escape, restart, noise falloff/walls, ghost targeting, solo defeat
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST host peers=2 phase=playing
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST client began match; peers=2
+TEST client snapshots=119
+TEST authoritative movement=true
+TEST host departure returned menu=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST host peers=4 phase=playing
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST client began match; peers=4
+TEST client snapshots=119
+TEST authoritative movement=true
+TEST host departure returned menu=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST client began match; peers=4
+TEST client snapshots=119
+TEST authoritative movement=true
+TEST host departure returned menu=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST client began match; peers=4
+TEST client snapshots=119
+TEST authoritative movement=true
+TEST host departure returned menu=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST mismatch rejected=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST host peers=1 phase=playing
+TEST shared key persists=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST client left voluntarily
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST repeated network match
+TEST host peers=2 phase=playing
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST client began match; peers=2
+TEST client snapshots=119
+TEST authoritative movement=true
+TEST host departure returned menu=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST active match rejection=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST host peers=2 phase=playing
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST client began match; peers=2
+TEST client snapshots=119
+TEST authoritative movement=true
+TEST host departure returned menu=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST connection timeout=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST lobby capacity=4
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST waiting client host departure=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST waiting client host departure=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST waiting client host departure=true
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST connection timeout=true
+PASS: rules, two/four peers, movement, departures, persistence, mismatch, repeated matches, active-match rejection, capacity and timeout.
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+COOP PASS pickup race
+COOP PASS remote revive
+COOP PASS all-player boarding
+COOP PASS synchronized victory
+COOP PASS restart and host shutdown
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+COOP observations true true true true true
+COOP CLIENT PASS replicated pickup, revive, victory, reset, departure
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+COOP observations true true true true true
+COOP CLIENT PASS replicated pickup, revive, victory, reset, departure
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+COOP observations true true true true true
+COOP CLIENT PASS replicated pickup, revive, victory, reset, departure
+PASS: four-peer pickup race, revival, shared objectives, all-player boarding, synchronized victory and restart.
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+PASS scares: objective, cooldown, expiry, restart, capture, defeat menu, leave
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+PASS imported art: five skeletal clips, 41 bones, animated hand, head anchor, eight cloth meshes
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+PASS: mobile platform routing, iOS export configuration and permission plist XML (not iOS runtime testing).
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+PASS difficulty and both endings: Easy
+PASS difficulty and both endings: Normal
+PASS difficulty and both endings: Hard
+PASS difficulty and both endings: Extreme
+PASS difficulty locking, ready reset, invalid selection and stamina recovery
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+PASS thematic papers discovered and shared without pinpoint markers
+PASS shut room door blocks physics, sight and ghost path; reopening restores route
+PASS cupboard slit and low bed camera, occupancy, exit and flashlight concealment
+PASS witnessed hide capture, round reset, noise investigation/wail cooldown and proximity warning
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+HORROR NET PASS client discovered shared clue
+HORROR NET PASS client closed authoritative room door
+HORROR NET PASS cupboard entry and exit replicated
+HORROR NET PASS under-bed entry and exit replicated
+HORROR NET PASS restart cleared clues, doors and hiding
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+HORROR CLIENT PASS shared clue, room door, cupboard, bed, restart and departure
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+PASS 81 individually aimed compartments, twelve-key dependency chain, locked storage, crypt gates, portraits and duplicate protection
+PASS ignition requirement, dawn loss and full restart reset
+PASS Easy/Normal/Hard/Extreme sound delays: 6/4.5/3/2 seconds
+PASS sound queue bounded and reset; new wings connected
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+SEARCH NET PASS remote aimed drawer recovered one key and replicated open state
+SEARCH NET PASS duplicate use idempotent; restart cleared compartments
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+SEARCH CLIENT PASS key, open drawer, restart and departure

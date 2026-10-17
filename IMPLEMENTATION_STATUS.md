@@ -1,0 +1,9 @@
+# Waiting for Dawn 0.8.0
+
+Implemented: twelve randomized, dependent keys; individually locked storage; gated crypt; 81 searches including four turning portraits; shared bag with named key uses; teammate item notifications; authoritative dawn countdown and timeout defeat; garage plus ignition escape requirements; Easy through Extreme; cupboards and under-bed hiding; open/closed doors; delayed noise investigation; creaking floors; shared revival and endings.
+
+Presentation: generated title/loading art and parchment; new SVG app logo and refined circular action icons; additional imported consoles/chairs and small props; a skinned mourning veil, bodice and skirt on the existing credited ghost rig; breathing and red edge warnings; dark lower floors with an intermittently flickering flashlight. The 36-second opening combines a moving establishing illustration, live 3D camera shots, original subtitles and 34.59 seconds of synthesized narration.
+
+Important limits: the opening is an in-engine cinematic, not a rendered live-action video. Architecture, some furniture, vehicle and survivors retain procedural geometry. The antagonist is an adaptation of the existing rig rather than a newly scanned female actor. Portraits reuse the manor illustration. There is no simulation of every loose object, no procedural unlimited maze, no Internet matchmaking, and no host migration. Key progression is a twelve-stage chain, not a branching puzzle generator. Keys are automatically retained and shared rather than physically passed between players.
+
+This is a playable release candidate. Automated logic/network/physical-route tests and Android emulator checks are recorded in TEST_RESULTS.md. They do not establish subjective five-star quality, sustained physical-phone performance, headphone mix quality or real-phone Wi-Fi reliability. iPhone project configuration is included, but an Apple-signed iOS binary is not built or tested.

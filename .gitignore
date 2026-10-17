@@ -1,0 +1,8 @@
+.godot/
+artifacts/
+__pycache__/
+*.keystore
+*.jks
+export_credentials.cfg
+.env
+*.tmp
