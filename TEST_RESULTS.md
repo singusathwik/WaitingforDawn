@@ -1,49 +1,43 @@
-# Waiting for Dawn 0.8.0 validation — 18 October 2026
+# Waiting for Dawn 0.8.1 validation � 18 October 2026
 
-## Delivered build
+## Local candidate
 
-- Signed Android APK: **87,764,583 bytes**, version code **8**, version name **0.8.0**, display name **Waiting for Dawn**.
-- Package remains `org.hollowhouse.lastride`; minimum SDK 24, target SDK 35; arm64-v8a and x86_64.
-- APK SHA-256: `a4663fd5ed92447d086bcf625715e4d8c0242325db5cca40cb1d9144806bdebf`.
-- Windows executable SHA-256: `73a6e463fa95fc2be78d2cc5126ae7d14b68b0d90c383b993610ea388035f285`.
-- `apksigner verify --print-certs` passed. Retained certificate SHA-256: `a60346ef9fa95c931ce67f3774d9d8bba44e02bf3c1c7a7f8e526f3a2b74bb76`.
+Signed Android APK: **105,034,370 bytes**, version code **9**, version **0.8.1**. Package `org.hollowhouse.lastride`, minimum SDK 24, target SDK 35, arm64-v8a and x86_64. APK SHA-256: `f93f10bbc39de07c06a52314dbce6f3b19690e15b4d0e7f7c2a020888224a5a2`. Windows executable SHA-256: `560afa153f52b243aafb50819849ae2e2c15e0d7bb77b4d0a38ed386d735e52d`.
+
+`apksigner verify --print-certs` passed; retained certificate SHA-256 `a60346ef9fa95c931ce67f3774d9d8bba44e02bf3c1c7a7f8e526f3a2b74bb76`. [Build metadata](docs/validation-0.8.1/build.json), [signature](docs/validation-0.8.1/signature-081.txt), [manifest](docs/validation-0.8.1/manifest-081.txt). Human Runtime approval is pending before publication.
 
 ## Executed checks
 
-The final `scripts/test.ps1` run completed successfully. [Full regression log](docs/validation-0.8.0/tests-080-final.log).
+The complete `scripts/test.ps1` regression completed with exit code 0. [Full log](docs/validation-0.8.1/tests-081-final.log). It covers rules, two/four-process ENet matches, movement, ready state, departures, capacity, version mismatch, connection timeout, late joining, repeated rounds, shared key pickup, revival, team boarding, synchronized victory, all-down defeat, difficulty, stamina, noise timing, door physics/sight/ghost routes, hiding occupancy and witnessed capture, letters, scare lifecycle, 81 search locations, the twelve-key dependency chain, crypt locks, dawn timeout/reset and remote drawer replication. iOS checks cover configuration only.
 
-- Input ownership and bounds, interaction distance, duplicate pickups and cooldowns, shared progress persistence, hiding, revival, garage and team escape, all-down defeat, noise attenuation and ghost targeting.
-- Two- and four-process ENet matches: movement replication, disconnects, repeated rounds, version mismatch, active-match joining rejection, capacity, connection timeout, synchronized objectives, remote revival, team boarding, victory and restart.
-- Easy, Normal, Hard and Extreme: settings authority, ready reset, stamina behavior and both existing endings. Dawn adds its own loss condition and resets correctly.
-- 81 individually aimed search locations, a complete twelve-key dependency chain, locked-storage rejection, crypt gates, four portrait backs, duplicate-use protection, ignition requirement and shared bag data. Key placement is randomized within the defined furniture pools.
-- Difficulty noise delays of 6 / 4.5 / 3 / 2 seconds, bounded sound queue, queue reset and connected expanded wings.
-- Room-door physics/sight/navigation blocking, reopening, cupboard and bed cameras, occupancy and exits, witnessed-hide capture, proximity warning and scare lifecycle.
-- Five skeletal clips, 41-bone rig, animated hand, head anchor and imported architecture/curtains. The clothing additions were rendered and their initial scale error corrected.
-- Remote aimed search through real ENet input/action RPCs: key and drawer replication, teammate discovery text, countdown synchronization, duplicate use and round reset.
-- iOS configuration/mobile routing/plist XML checks only; these are not iOS runtime tests.
+New room checks verify 16 imported meshes, 12 native drawer bindings, both texture tiers, navigation to each dresser, partition occlusion, cupboard and bed entry/exit and camera positions, basement-only torch behavior, the keyboard F shortcut, and input before the bag exists.
 
-[Physical traversal log](docs/validation-0.8.0/traversal-080-final.log): a real CharacterBody3D walked the complete ordered twelve-key route, searched each selected container, opened the garage and boarded the car, reaching `phase=escaping` with twelve keys. This fixture disables the ghost and accelerates time; it verifies movement/collision/progression, not a human survival playthrough. Separate ending and multiplayer tests verify the victory transition.
+[Physical traversal](docs/validation-0.8.1/traversal-081.log) walked a real CharacterBody3D through all twelve ordered keys, opened the garage and boarded the car, reaching `phase=escaping`. The fixture disables the ghost and extends the clock; this establishes collision/progression access, not human survival difficulty. Ending fixtures separately verify victory and failure.
 
-## Signed APK checks
+## Final APK
 
-Installed the final APK in the Wired_API35 Android emulator with the host GPU. Verified its manifest and retained signature, normal launch, opening story and transition to play, circular controls/joystick, clock, paper readability, bag opening, and cupboard view. Android logs contained a recoverable shader-cache recompilation warning, with no observed script exception or Android crash in these runs.
+Installed and launched the signed candidate on Wired_API35, Android 15, with the host GPU. The actual game viewport was captured using an in-game fixture and a loopback collector. Nursery, dresser, wardrobe slit, under-bed view and both texture tiers were visually inspected. The fixture rejects shader errors, missing images and flat/blank 3D captures. These checks use game test drivers, not a new manual touch playthrough.
 
-The final installed APK joined a desktop host through `10.0.2.2`. Actual touch drags aimed at a kitchen drawer and the hand button recovered the Brass key. The host confirmed one shared pickup, drawer-open state, duplicate protection and restart reset. The screenshot shows the discovery notification and synchronized countdown. [Host log](docs/validation-0.8.0/android-search-host-080.log).
+![Android nursery](design/rooms/eleanors-nursery/runtime/nursery-view.png)
 
-![Android discovery](docs/validation-0.8.0/android-discovery-080.png)
+The final APK joined a Windows host through `10.0.2.2`. The Android client aimed at and opened a native nursery drawer through the normal action RPC, received the key, open state, teammate notification and shared clock, then verified duplicate protection, restart and departure. [Host](docs/validation-0.8.1/android-host.log), [client](docs/validation-0.8.1/android-client.log).
 
-A second Android-to-desktop fixture placed the client in the basement: it was visually black with the torch off, a touch on the torch icon lit the room, and the host received `light=true`. [Flashlight host log](docs/validation-0.8.0/android-light-host-080.log).
+## Art and performance
 
-![Basement flashlight](docs/validation-0.8.0/android-basement-light-080.png)
+Native Blender checks: 84,020 triangles, 204 opening/low-trim rays, 28 independent furniture collision pairs, floor/ceiling support checks, packed textures and 14 animation roots. Delivery: 83,876 triangles, 16 meshes, 4,463,300-byte GLB, shared geometry with 4096/2048 atlases. Hashes, UVs, mipmaps, VRAM compression settings and the fixture manifest passed [integrity checks](design/rooms/eleanors-nursery/runtime/integrity.json).
 
-![Recovered parchment](docs/validation-0.8.0/android-clueview-080.png)
+Static surfaces use combined baked color/light. Runtime practicals illuminate actors within the existing nearest-three-light budget. The room does not receive dynamic shadows or provide full native-Blender material parity. The 4096 atlas's 8-bit-per-pixel compressed upper bound including mipmaps is about 21.33 MiB; the whole game uses more memory.
 
-## Issues caught and fixed
+Short 15-second samples after a three-second warmup: Windows RTX 3050 and the hardware-GPU Android emulator reported 900 and 901 frames respectively, p50/p95 16.67 ms (60 FPS), 105 draw calls in the fixed nursery view. Reported whole-game texture allocation was 131,409,235 bytes on desktop and 141,516,086 on Android. These capped, stationary samples are not sustained physical-phone benchmarks. [Desktop log](docs/validation-0.8.1/benchmark-081.log), [Android log](docs/validation-0.8.1/android-nursery-benchmark.log).
 
-The new crypt lock initially removed navigation edges before they could be cached; setup now caches open geometry before round locks are applied. A decorative cabinet obstructed kitchen approaches and was relocated. Navigation now checks below tabletop height and excludes furniture points, preventing routes through low props. Garage edges remain available behind its disabled navigation point so opening the garage restores its direct route. The physical fixture now walks to the actual search approach and fails immediately if a key is not collected. Restart fixtures were updated to expect the two intentionally locked crypt doors, and clock tests allow the documented one-second synchronization interval. Clothing scale and corpse scale were corrected during visual review.
+## Problems found and corrected
+
+Boolean-cut wall trim left low collision bars; rebuilt trim segments and added near-floor ray checks. A 1.5 m navigation grid now reaches the offset internal openings, with capsule clearance pruning for flat room links. Stair connectors are preserved because their nav heights approximate the ramp. Trimmed a 0.2 m floor overhang that trapped the capsule at the stair landing. The full physical route passed after these changes. Early input now tolerates the bag not yet existing, and F actually invokes the flashlight action.
+
+SwiftShader emulator rendering failed with shader-link errors and blank frames. It was rejected, not counted as a visual pass. Switching the emulator to the host GPU resolved the captures; a recoverable shader-cache recompile warning remained. This corresponds to an [upstream SwiftShader compatibility issue](https://github.com/godotengine/godot/issues/109550), not a claimed engine fix.
 
 ## Remaining qualification
 
-No physical-phone performance, thermal/battery, headphone mix or phone-to-phone Wi-Fi qualification was performed. The emulator ran without audible output; audio assets and triggers were exercised, but no listening-quality rating is claimed. No iOS binary, App Store submission, Internet matchmaking or exhaustive human difficulty/balance study is included. The cinematic uses generated art, game-engine camera movement and synthesized narration, not a prerendered film. This is a playable release candidate, not a five-star quality certification.
+No physical-phone performance, thermal/battery, headphone listening or phone-to-phone Wi-Fi qualification. No signed/tested iOS binary. This upgrade covers the nursery wing; other rooms, the adapted creature and the narrated in-engine opening retain their existing art. No Internet matchmaking or host migration. No commercial-quality or five-star certification is claimed.
 
-Historical results: [0.7.0](docs/TEST_RESULTS-0.7.0.md).
+Historical evidence: [0.8.0](docs/TEST_RESULTS-0.8.0.md), [0.7.0](docs/TEST_RESULTS-0.7.0.md).

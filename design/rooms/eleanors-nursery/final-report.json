@@ -1,0 +1,111 @@
+{
+  "schema": "game-room.room-final-report.v1",
+  "roomId": "eleanors-nursery",
+  "gates": {
+    "function": true,
+    "form": true,
+    "runtime": false
+  },
+  "formChecks": {
+    "floorPlanParity": true,
+    "primaryArrival": true,
+    "symmetry": true,
+    "shell": true,
+    "manifold": true,
+    "booleans": true,
+    "collisions": true,
+    "support": true,
+    "attachmentOrientation": true,
+    "ceilingAttachmentOrientation": true,
+    "seatingOrientation": true,
+    "focalDistribution": true,
+    "heroClearance": true,
+    "colonnades": true,
+    "screenClearance": true,
+    "scale": true,
+    "camera": true,
+    "ceilingCoverage": true,
+    "environmentCoverage": true,
+    "provenance": true
+  },
+  "reviewRenders": {
+    "corners": [
+      "renders/form-corner-1.png",
+      "renders/form-corner-2.png",
+      "renders/form-corner-3.png",
+      "renders/form-corner-4.png"
+    ],
+    "ceiling": [
+      "renders/form-ceiling-up.png",
+      "renders/form-ceiling-a.png",
+      "renders/form-ceiling-b.png"
+    ],
+    "environment": {}
+  },
+  "runtimeChecks": {
+    "vlow": true,
+    "textureTiers": true,
+    "lightmap": true,
+    "lightingManifest": true,
+    "performance": true,
+    "browserCapture": "runtime-review-browser.png",
+    "errors": [],
+    "evidence": "runtime/integrity.json; docs/validation-0.8.1; runtime/*.png",
+    "performanceScope": "Geometry and texture budgets pass. Short desktop and host-GPU emulator benchmarks only; physical phones remain unqualified.",
+    "lightingScope": "Combined baked color/light atlas for static surfaces; five manifest-driven practicals with nearest-three active budget for actors. Static surfaces do not receive dynamic shadows.",
+    "knownEmulatorIssue": "SwiftShader produced blank frames and shader link errors. Final checks used host GPU; rejected logs remain under ignored artifacts/android-swiftshader-failure. https://github.com/godotengine/godot/issues/109550"
+  },
+  "postmortem": {
+    "observations": [
+      "A successful PNG request can still contain a blank 3D frame.",
+      "The original 3 m navigation grid missed the approved offset doorways.",
+      "Boolean-cut trim concealed a low collision bar."
+    ],
+    "corrections": [
+      "Rebuilt trim as explicit segments around doors and added 96 low-height aperture rays.",
+      "Added a 1.5 m navigation grid and capsule pruning for flat room links; preserved stair connectors.",
+      "Trimmed floor to 21 m so its edge meets the existing stair landing.",
+      "Fixed early-input access to the bag and the desktop F-key call.",
+      "Reject shader errors and low-variance blank captures; use emulator hardware graphics."
+    ],
+    "remainingRisks": [
+      "Human Runtime approval pending.",
+      "Physical-phone performance, thermal, audio listening and phone-to-phone Wi-Fi remain unqualified.",
+      "The bespoke mother character, whole-house art pass and rendered-film intro are not included in this room upgrade.",
+      "No signed or tested iOS binary."
+    ]
+  },
+  "proposedLessons": [
+    {
+      "id": "aperture-trim-capsule",
+      "status": "pending",
+      "lesson": "Validate decorated openings near floor height and walk the complete progression route before release."
+    },
+    {
+      "id": "render-not-transport",
+      "status": "pending",
+      "lesson": "Reject runtime shader errors and blank frame content even when screenshot transport succeeds."
+    }
+  ],
+  "formCheckEvidence": {
+    "floorPlanParity": "plans/form-lower-room.png, plans/form-reflected-ceiling.png; minor support corrections described in form-adjustments.json",
+    "primaryArrival": "3 m approved aperture; 9 evaluated wall rays clear",
+    "symmetry": "Approved bilateral shell and declared functional prop exceptions retained",
+    "shellManifoldBooleans": "form-preflight.json: evaluated shell, 108 shell rays and 96 low trim/aperture rays",
+    "collisions": "28 independent-prop BVH pair tests, no intersections",
+    "support": "Evaluated world-space bottom bounds, within -5 to +5 mm of floor",
+    "attachmentOrientation": "Floor-supported furniture; window joinery seated in the scheduled apertures",
+    "ceilingAttachmentOrientation": "Five ceiling roses meet the ceiling or beam underside; circular faces parallel to support",
+    "seatingOrientation": "Nursery chair faces cradle; reading chair rotated toward diary table",
+    "focalDistribution": "One cradle hero; no competing bright prop",
+    "heroClearance": "Cradle occupies approved reserve; independent furniture has no intersections",
+    "colonnades": "Not applicable; none present",
+    "screenClearance": "Production hero frame stays inside 4% viewport margins; corner/close-up visual inspection",
+    "scaleCamera": "Metre units; production vertical field of view 70 degrees and 1.65 m eye height",
+    "ceilingCoverage": "Center-up and opposed ceiling views",
+    "environmentCoverage": "Not applicable; no assigned equirectangular environment",
+    "provenance": "Generated walnut prompt plus existing asset licenses, all used textures packed"
+  },
+  "formNativeSha256": "6819266fa77e9d9d34e386547bf7936236cfc27d6a19a0064d02cd8a3d5a3cf5",
+  "runtimeNativeSha256": "f16cbe834daed3a18347519dbb0f61b0860b0f0c9c57327783e2e42c53f135b0"
+}

@@ -1,0 +1,789 @@
+{
+  "stage": "FORM evidence; no runtime claims",
+  "functionHumanApproval": "approved",
+  "formHumanApproval": "approved",
+  "nativeFileReopened": true,
+  "triangles": 84020,
+  "triangleBudget": 250000,
+  "contacts": [
+    {
+      "group": "Cradle",
+      "bounds": [
+        [
+          5.230000019073486,
+          5.420000076293945,
+          0.0
+        ],
+        [
+          6.769999980926514,
+          6.579999923706055,
+          1.156000018119812
+        ]
+      ],
+      "floorContactMeters": 0.0,
+      "result": "PASS"
+    },
+    {
+      "group": "Wardrobe",
+      "bounds": [
+        [
+          -6.840000152587891,
+          1.9999998807907104,
+          0.0
+        ],
+        [
+          -5.134999752044678,
+          4.0,
+          2.4200000762939453
+        ]
+      ],
+      "floorContactMeters": 0.0,
+      "result": "PASS"
+    },
+    {
+      "group": "Nursery dresser",
+      "bounds": [
+        [
+          -4.789999961853027,
+          5.535999774932861,
+          0.0
+        ],
+        [
+          -1.2100000381469727,
+          6.440000057220459,
+          1.6999999284744263
+        ]
+      ],
+      "floorContactMeters": 0.0,
+      "result": "PASS"
+    },
+    {
+      "group": "Toy drawers",
+      "bounds": [
+        [
+          4.210000038146973,
+          -6.464000225067139,
+          0.0
+        ],
+        [
+          7.789999961853027,
+          -5.559999942779541,
+          1.6999999284744263
+        ]
+      ],
+      "floorContactMeters": 0.0,
+      "result": "PASS"
+    },
+    {
+      "group": "Preserved bed",
+      "bounds": [
+        [
+          1.8999998569488525,
+          -7.0,
+          0.0
+        ],
+        [
+          4.159999847412109,
+          -5.0,
+          1.75
+        ]
+      ],
+      "floorContactMeters": 0.0,
+      "result": "PASS"
+    },
+    {
+      "group": "Preserved under-bed search box",
+      "bounds": [
+        [
+          -3.5,
+          -6.400000095367432,
+          0.0
+        ],
+        [
+          -2.5,
+          -5.599999904632568,
+          0.800000011920929
+        ]
+      ],
+      "floorContactMeters": 0.0,
+      "result": "PASS"
+    },
+    {
+      "group": "ClassicConsole_01",
+      "bounds": [
+        [
+          -6.894201755523682,
+          -3.341493606567383,
+          0.0
+        ],
+        [
+          -4.105798244476318,
+          8.341492652893066,
+          1.100000023841858
+        ]
+      ],
+      "floorContactMeters": 0.0,
+      "result": "PASS"
+    },
+    {
+      "group": "ArmChair_01",
+      "bounds": [
+        [
+          -7.533722400665283,
+          -7.650886535644531,
+          0.0
+        ],
+        [
+          9.557608604431152,
+          6.503275394439697,
+          1.4000000953674316
+        ]
+      ],
+      "floorContactMeters": 0.0,
+      "result": "PASS"
+    },
+    {
+      "group": "Keeper__",
+      "bounds": [
+        [
+          5.508797645568848,
+          1.975000023841858,
+          -0.0019997418858110905
+        ],
+        [
+          6.491202354431152,
+          4.025000095367432,
+          0.6089014410972595
+        ]
+      ],
+      "floorContactMeters": -0.002,
+      "result": "PASS"
+    }
+  ],
+  "shell": [
+    {
+      "id": "floor",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "west",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "east",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-divider",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-divider",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-midwall",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-midwall",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "Entrance apron",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "Entrance apron.001",
+      "nonManifoldEdges": 0,
+      "result": "PASS"
+    }
+  ],
+  "apertures": [
+    {
+      "id": "west-arrival",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "west-arrival-with-trim",
+      "rays": 12,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "east-exit",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "east-exit-with-trim",
+      "rays": 12,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-divider-west",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-divider-west-with-trim",
+      "rays": 12,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-divider-east",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-divider-east-with-trim",
+      "rays": 12,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-divider-west",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-divider-west-with-trim",
+      "rays": 12,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-divider-east",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-divider-east-with-trim",
+      "rays": 12,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-loop",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-loop-with-trim",
+      "rays": 12,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-loop",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-loop-with-trim",
+      "rays": 12,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-window-1",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "north-window-2",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-window-1",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "id": "south-window-2",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    }
+  ],
+  "ceilingMounts": [
+    {
+      "id": "Ceiling rose",
+      "ceilingOrBeamUnderside": 3.6,
+      "top": 3.5999999046325684,
+      "contactError": -9.536743172944284e-08,
+      "result": "PASS"
+    },
+    {
+      "id": "Ceiling rose.001",
+      "ceilingOrBeamUnderside": 3.6,
+      "top": 3.5999999046325684,
+      "contactError": -9.536743172944284e-08,
+      "result": "PASS"
+    },
+    {
+      "id": "Ceiling rose.002",
+      "ceilingOrBeamUnderside": 3.6,
+      "top": 3.5999999046325684,
+      "contactError": -9.536743172944284e-08,
+      "result": "PASS"
+    },
+    {
+      "id": "Ceiling rose.003",
+      "ceilingOrBeamUnderside": 3.6,
+      "top": 3.5999999046325684,
+      "contactError": -9.536743172944284e-08,
+      "result": "PASS"
+    },
+    {
+      "id": "Ceiling rose.004",
+      "ceilingOrBeamUnderside": 3.32,
+      "top": 3.319999933242798,
+      "contactError": -6.675720198856538e-08,
+      "result": "PASS"
+    }
+  ],
+  "usedImages": [
+    {
+      "name": "ClassicConsole_01_nor_gl",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "diff.jpg.002",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "diff.jpg.001",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "diff.jpg",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "rough.jpg",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "new_thin_zombie.png",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "nor_gl.jpg",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "Armchair_01_diff",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "Armchair_01_nor_gl",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "walnut-albedo.png",
+      "resolution": [
+        1254,
+        1254
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "ClassicConsole_01_diff",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "Armchair_01_arm",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "ClassicConsole_01_metallic-ClassicConsole_01_roughness",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "rough.jpg.002",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "nor_gl.jpg.002",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "rough.jpg.001",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    },
+    {
+      "name": "nor_gl.jpg.001",
+      "resolution": [
+        1024,
+        1024
+      ],
+      "packed": true,
+      "result": "PASS"
+    }
+  ],
+  "productionHeroFrame": {
+    "minX": 0.4672607183456421,
+    "maxX": 0.5296518802642822,
+    "minY": 0.3553030490875244,
+    "maxY": 0.5591716766357422,
+    "result": "PASS"
+  },
+  "bedToDresserGapMeters": 0.05000019073486328,
+  "ceilingAndCornerViews": "11 review renders scheduled; verify image files separately",
+  "runtimeLightingParity": "NOT_CHECKED",
+  "collisionNavigation": "NOT_CHECKED",
+  "textureBakeAndGLBReimport": "NOT_CHECKED",
+  "technicalPreflight": "PASS",
+  "independentPropIntersections": [
+    {
+      "a": "Cradle",
+      "b": "Wardrobe",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Cradle",
+      "b": "Nursery dresser",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Cradle",
+      "b": "Toy drawers",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Cradle",
+      "b": "Preserved bed",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Cradle",
+      "b": "Preserved under-bed search box",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Cradle",
+      "b": "ClassicConsole_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Cradle",
+      "b": "ArmChair_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Wardrobe",
+      "b": "Nursery dresser",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Wardrobe",
+      "b": "Toy drawers",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Wardrobe",
+      "b": "Preserved bed",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Wardrobe",
+      "b": "Preserved under-bed search box",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Wardrobe",
+      "b": "ClassicConsole_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Wardrobe",
+      "b": "ArmChair_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Nursery dresser",
+      "b": "Toy drawers",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Nursery dresser",
+      "b": "Preserved bed",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Nursery dresser",
+      "b": "Preserved under-bed search box",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Nursery dresser",
+      "b": "ClassicConsole_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Nursery dresser",
+      "b": "ArmChair_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Toy drawers",
+      "b": "Preserved bed",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Toy drawers",
+      "b": "Preserved under-bed search box",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Toy drawers",
+      "b": "ClassicConsole_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Toy drawers",
+      "b": "ArmChair_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Preserved bed",
+      "b": "Preserved under-bed search box",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Preserved bed",
+      "b": "ClassicConsole_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Preserved bed",
+      "b": "ArmChair_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Preserved under-bed search box",
+      "b": "ClassicConsole_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "Preserved under-bed search box",
+      "b": "ArmChair_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    },
+    {
+      "a": "ClassicConsole_01",
+      "b": "ArmChair_01",
+      "intersectingFacePairs": 0,
+      "result": "PASS"
+    }
+  ],
+  "animationAssemblies": [
+    {
+      "name": "Drawer_0",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_1",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_2",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_3",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_4",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_5",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_6",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_7",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_8",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_9",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_10",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Drawer_11",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Wardrobe_leaf_left",
+      "childCount": 11,
+      "result": "PASS"
+    },
+    {
+      "name": "Wardrobe_leaf_right",
+      "childCount": 11,
+      "result": "PASS"
+    }
+  ]
+}

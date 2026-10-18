@@ -1,0 +1,59 @@
+{
+  "schema": "game-room.milestone-reviews.v1",
+  "roomId": "eleanors-nursery",
+  "function": {
+    "status": "approved",
+    "approvedBy": "User in this conversation",
+    "approvedAt": "2026-10-18T04:20:05Z",
+    "evidence": [
+      "review.html",
+      "plans/lower-room.png",
+      "images/prop-contact-sheet.png",
+      "plans/openings.png",
+      "nursery-concept.blend"
+    ],
+    "strangestElement": "A 21 m nursery is implausibly large as one room; four connected domestic spaces address that scale. The oversized original 3 m double doors remain to preserve gameplay.",
+    "notes": "Nursery Function-stage layout, opening schedule and three prop reference designs. Local Blender authoring with no paid Meshy jobs. Form and Runtime approval are not implied."
+  },
+  "form": {
+    "status": "approved",
+    "approvedBy": "User in this conversation",
+    "approvedAt": "2026-10-18T04:52:24Z",
+    "evidence": [
+      "form-review.html",
+      "nursery-form.blend",
+      "form-preflight.json",
+      "renders/form-nursery.png",
+      "renders/form-dresser.png",
+      "renders/form-wardrobe.png",
+      "renders/form-cradle-detail.png",
+      "renders/form-corner-1.png",
+      "renders/form-corner-2.png",
+      "renders/form-corner-3.png",
+      "renders/form-corner-4.png",
+      "renders/form-ceiling-up.png",
+      "renders/form-ceiling-a.png",
+      "renders/form-ceiling-b.png"
+    ],
+    "strangestElement": "The former empty 21 m chamber is now four rooms. The native keeper uses the existing zombie asset; a bespoke human corpse and mother character remain separate art work.",
+    "notes": "Local Blender Form proposal; original human Function approval retained. No final game export, integration or deployment. Corrected support heights, shortened bed, added animation roots, restored source materials, and opened lamp shades."
+  },
+  "runtime": {
+    "status": "pending",
+    "approvedBy": "",
+    "approvedAt": "",
+    "evidence": [
+      "runtime-review.html",
+      "runtime/integrity.json",
+      "runtime/export.json",
+      "runtime/nursery-view.png",
+      "runtime/nursery-hide.png",
+      "runtime/nursery-bed.png",
+      "runtime/nursery-drawers.png",
+      "runtime/nursery-view-low.png",
+      "../../../docs/validation-0.8.1"
+    ],
+    "strangestElement": "The keeper still uses the existing credited creature asset; a bespoke corpse and mother character are outside this room upgrade.",
+    "notes": "Integrated and tested local 0.8.1 candidate. Form-approved layout preserved; runtime clearance fixes documented in final-report.json. Human Runtime approval remains separate from the executed technical checks."
+  }
+}

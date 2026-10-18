@@ -1,0 +1,134 @@
+{
+  "stage": "Function-stage concept preflight only",
+  "fileReopened": true,
+  "openingApertures": [
+    {
+      "opening": "west-arrival",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "east-exit",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "north-divider-west",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "north-divider-east",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "south-divider-west",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "south-divider-east",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "north-loop",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "south-loop",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "north-window-1",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "north-window-2",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "south-window-1",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    },
+    {
+      "opening": "south-window-2",
+      "rays": 9,
+      "blocked": 0,
+      "result": "PASS"
+    }
+  ],
+  "shellMeshes": [
+    {
+      "object": "floor",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "west",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "east",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "north",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "south",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "north-divider",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "south-divider",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "north-midwall",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "south-midwall",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "Entrance apron",
+      "nonManifoldEdges": 0
+    },
+    {
+      "object": "Entrance apron.001",
+      "nonManifoldEdges": 0
+    }
+  ],
+  "bedToDresserGapMeters": 0.05,
+  "bedToDresser": "PASS",
+  "shaderMaterials": "Neutral clay; final PBR not authored",
+  "functionApproval": "PENDING",
+  "formApproval": "NOT_STARTED",
+  "runtimePerformance": "NOT_CHECKED",
+  "runtimeCollisionNavigation": "NOT_CHECKED",
+  "mobileScreenshots": "NOT_CHECKED",
+  "paidMeshyRequests": 0,
+  "technicalPreflight": "PASS"
+}

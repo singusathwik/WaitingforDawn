@@ -1,0 +1,14 @@
+{
+  "approvedLayoutPreserved": true,
+  "corrections": [
+    "Cradle runners and storage box lowered to meet floor",
+    "Books seated on shelves",
+    "Diary table aligned under diary interaction, paper raised to table top",
+    "Bed shortened to remove toy-drawer overlap",
+    "Center ceiling rose attached to beam underside",
+    "Lamp shades opened so bulbs can illuminate room",
+    "Reading chair faces diary table",
+    "Native keeper texture restored from local original; unused rig display mesh removed"
+  ],
+  "renderOnlyLighting": "Documented indirect-light approximation in lighting-manifest.json; must be baked or matched before runtime approval"
+}

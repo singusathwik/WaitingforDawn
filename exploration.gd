@@ -77,13 +77,7 @@ func setup():
  game.horror.panel(game.world,Vector3(39,1.3,3),Vector3(10,.12,1.5),true)
  game._box(game.world,Vector3(42,1.38,3),Vector3(1.4,.09,1),Color(.3,.32,.29))
  for x in [-.6,.6]: game._box(game.world,Vector3(42+x,1.55,3),Vector3(.08,.3,1),Color(.35,.36,.32))
- for i in range(7): game.atmosphere._sphere(game.world,Vector3(74+i*.4,5.17,13+sin(i)*.5),Vector3(.18,.18,.18),Color(.3+.05*i,.18,.12))
- # A fallen keeper: imported articulated human silhouette, laid on the upstairs floor.
- var body=load("res://assets/models/wraith.glb").instantiate()
- game.world.add_child(body)
- body.position=game.horror.NOTES[0]+Vector3(0,.3,0)
- body.rotation.z=PI/2
- body.scale=Vector3.ONE*.27
+ # Nursery dressing and keeper are baked from the approved editable Blender scene.
  add_portraits()
  furnish()
  for c in compartments:
@@ -97,6 +91,7 @@ func setup():
  # Prevent AI graph routes through furniture and the new partitions.
  await game.get_tree().physics_frame
  await game.get_tree().physics_frame
+ game.nursery.prune_navigation()
  for a in game.navigation.get_point_ids():
   for b in game.navigation.get_point_connections(a):
    # Garage passability is controlled by its disabled nav point; preserve its two edges.
@@ -113,11 +108,21 @@ func setup():
  build_intro()
 
 func dresser(p: Vector3,group: int,title: String):
+ if p in [Vector3(72,5,3),Vector3(81,5,15)]:
+  var first=0 if p.x==72 else 6
+  for i in range(6):
+   var mesh=game.nursery.drawer(first+i)
+   compartments.append({"pos":mesh.global_position+Vector3(0,0,.06),"group":group,"title":title+" / drawer "+str(i+1),"mesh":mesh,"home":mesh.position,"native":true})
+  return
  game.horror.panel(game.world,p+Vector3(0,.8,-.18),Vector3(3.5,1.7,.8),true)
  for row in range(2):
   for col in range(3): container(p+Vector3((col-1)*1.1,.45+row*.7,.36),group,title+" / drawer "+str(row*3+col+1),Vector3(1,.58,.55))
 
 func container(pos: Vector3,group: int,title: String,size: Vector3):
+ if title=="Under-bed box":
+  var mesh=game.nursery.parts["Search_box"]
+  compartments.append({"pos":mesh.global_position,"group":group,"title":"Reading-room box","mesh":mesh,"home":mesh.position,"native":true})
+  return
  var root=Node3D.new()
  game.world.add_child(root)
  root.position=pos
@@ -304,7 +309,7 @@ func add_portraits():
 
 func furnish():
  # Wall-side props preserve the main circulation routes; collisions are pruned from navigation above.
- for p in [Vector3(14,0,3),Vector3(4,0,27),Vector3(70,5,1),Vector3(100,5,0),Vector3(110,10,48),Vector3(110,-5,39)]:
+ for p in [Vector3(14,0,3),Vector3(4,0,27),Vector3(100,5,0),Vector3(110,10,48),Vector3(110,-5,39)]:
   preload("res://realistic_art.gd").place(game.world,"ClassicConsole_01",p,1.1)
   var collider=game.horror.panel(game.world,p+Vector3(0,.5,0),Vector3(1.8,1,.7),true)
   collider.visible=false
@@ -312,14 +317,14 @@ func furnish():
   for n in range(4):
    var book=game.horror.panel(game.world,p+Vector3((n-1.5)*.23,1.15+n*.025,0),Vector3(.19,.07,.34))
    book.rotation.y=n*.18
- for p in [Vector3(3,0,4),Vector3(21,0,34),Vector3(84,5,3),Vector3(96,5,17),Vector3(114,10,46)]:
+ for p in [Vector3(3,0,4),Vector3(21,0,34),Vector3(96,5,17),Vector3(114,10,46)]:
   preload("res://realistic_art.gd").place(game.world,"ArmChair_01",p,1.4,PI)
   var blocker=game.horror.panel(game.world,p+Vector3(0,.55,0),Vector3(1,1.1,1),true)
   blocker.visible=false
   game.navigation.set_point_disabled(game.navigation.get_closest_point(p),true)
  # Dresser cornices, shaped feet, inner drawer rails and brass escutcheons.
  for c in compartments:
-  if c.get("portrait",false): continue
+  if c.get("portrait",false) or c.get("native",false): continue
   var root=c.mesh
   for x in [-.43,.43]: game.horror.panel(root,Vector3(x,0,.3),Vector3(.035,.48,.035))
   game._box(root,Vector3(0,-.11,.335),Vector3(.055,.08,.025),Color(.36,.27,.12))
@@ -329,8 +334,8 @@ func cinematic_camera():
  var t=36-intro_left
  var shot=mini(4,int(t/7.2))
  var f=fmod(t,7.2)/7.2
- var starts=[Vector3(12,1.8,12),Vector3(9,1.7,20),Vector3(75,6.8,12),Vector3(80,6.4,9),Vector3(39,1.8,27)]
- var ends=[Vector3(12,1.7,7),Vector3(9,1.5,17),Vector3(78,6.6,10),Vector3(80,5.9,7.5),Vector3(40,1.5,28)]
+ var starts=[Vector3(12,1.8,12),Vector3(9,1.7,20),Vector3(77.1,6.65,5.9),Vector3(80,6.4,5),Vector3(39,1.8,27)]
+ var ends=[Vector3(12,1.7,7),Vector3(9,1.5,17),Vector3(78,6.6,5.5),Vector3(80,5.9,5.5),Vector3(40,1.5,28)]
  var targets=[Vector3(18,1.4,3),Vector3(9,1.4,15),Vector3(81,5.6,6),Vector3(81,5.4,6),Vector3(42,1,30)]
  game.camera.position=starts[shot].lerp(ends[shot],smoothstep(0,1,f))
  game.camera.look_at(targets[shot])

@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "triangles": 83876,
+  "geometryBytes": 4463300,
+  "geometryTiers": "Shared geometry at both texture tiers",
+  "highAtlasGpuBudgetBytes": 22369621,
+  "fixtureManifestSha256": "5868e15af5bb5fd56bf41e72cda84e3dfa87593b7623fbdb32fb316be38166b2",
+  "lightmap": "Combined material and lighting atlas; 16 meshes have UV0. Static surfaces are unshaded; runtime practicals illuminate moving actors.",
+  "nativeAndExportHashes": "MATCH",
+  "textureTiers": "4096 and 2048, VRAM compressed with mipmaps",
+  "humanRuntimeApproval": "NOT GRANTED BY THIS CHECK"
+}

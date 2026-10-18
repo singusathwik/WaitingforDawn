@@ -1,0 +1,7 @@
+FAIL: props.json: current official Meshy pricing verification is required
+FAIL: props.json: hardCreditCeiling must be positive and no greater than the room credit budget
+FAIL: Form gate: explicit approval is required
+FAIL: final-report.json: gates.form must be true
+FAIL: Form gate: prop cradle requires an accepted, hashed Meshy GLB
+FAIL: Form gate: prop wardrobe requires an accepted, hashed Meshy GLB
+FAIL: Form gate: prop dresser requires an accepted, hashed Meshy GLB

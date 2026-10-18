@@ -1,6 +1,6 @@
-# 0.8.0 touch controls
+# 0.8.1 touch controls
 
-Install WaitingForDawn-0.8.0.apk over the previous signed release. All peers must use 0.8.0.
+Install WaitingForDawn-0.8.1.apk over the previous signed release. All peers must use 0.8.1.
 
 - Top left: menu, recovered papers, torch. The torch works below ground; it starts switched off.
 - Bottom left: drag the large circular joystick. Drag the right side to look.
@@ -17,7 +17,7 @@ Previous setup and network notes follow.
 
 # Install and play on phones
 
-1. Copy `WaitingForDawn-0.8.0.apk` to each device. Android 7.0/API 24 or newer and a 64-bit ARM device with OpenGL ES 3.0 are the package's technical baseline. No physical device has yet been performance-qualified. A 4 GB RAM mid-range phone is the intended test target, not a measured guarantee.
+1. Copy `WaitingForDawn-0.8.1.apk` to each device. Android 7.0/API 24 or newer and a 64-bit ARM device with OpenGL ES 3.0 are the package's technical baseline. No physical device has yet been performance-qualified. A 4 GB RAM mid-range phone is the intended test target, not a measured guarantee.
 2. Open the APK and allow installation from the chosen file manager when Android asks. The package is `org.hollowhouse.lastride`. Install only builds whose checksum you trust. No microphone/storage permission prompt is required.
 3. Put the phones on the same non-guest Wi-Fi network. Choose HOST ROOM on one phone. It displays its candidate LAN IPv4 addresses. Enter the address associated with Wi-Fi on the other phones, then JOIN IP. VPN/virtual adapters may add extra addresses; disable the VPN or select the Wi-Fi address in Android network details.
 4. Enter names, mark everyone ready and let the host press START. Maximum team size is four, including the host. Joining during a match is rejected. The host must return to the lobby after the match to accept new players.
@@ -49,3 +49,5 @@ Choose Easy / Normal / Hard / Extreme on the menu before starting Solo or hostin
 - Approach the front of a cupboard or bed and press USE. Look through the slit or under-bed gap. USE again exits. One survivor per hiding place; hiding in sight of the ghost is unsafe.
 - USE a room doorway to open/close it. Step clear of the threshold first. Closed doors block the ghost, but cannot protect you from one already inside.
 - Listen for a wail after noise, then breathing and footsteps as it gets close. A visual warning also appears. Headphone/speaker levels still need physical-phone validation.
+
+For lower texture memory use, enable **Lower texture detail** in Settings. This changes the new nursery atlas from 4096 to 2048 pixels; other assets retain their existing quality.

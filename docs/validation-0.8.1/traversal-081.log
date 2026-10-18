@@ -1,0 +1,26 @@
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+TEST reached key 0 at (34.87666, 0.000842, 5.346117) collected=1 target=36 key=(34.9, 0.45, 3.36) prompt=Searched — Kitchen cabinet / drawer 1
+TEST reached key 1 at (70.92183, 5.000822, 5.398112) collected=2 target=0 key=(70.9, 5.58, 3.43) prompt=Searched — Nursery dresser / drawer 1
+ROUTE position (70.60011, 5.000831, 5.856483) next (70.5, 5.0, 6.0)
+ROUTE position (132.0, -4.999169, 28.4119) next (132.0, -5.0, 30.0)
+TEST reached key 2 at (97.87649, -4.999163, 26.34604) collected=3 target=60 key=(97.9, -4.55, 24.36) prompt=Searched — Pantry cupboard / drawer 1
+ROUTE position (132.0, -4.999168, 22.72039) next (132.0, -5.0, 22.36364)
+TEST reached key 3 at (100.1234, 5.000837, 5.346071) collected=4 target=50 key=(100.1, 5.45, 3.36) prompt=Searched — Bathroom cabinet / drawer 3
+ROUTE position (105.0, 6.704663, 22.45036) next (105.0, 7.142857, 23.14286)
+TEST reached key 4 at (106.8606, 10.00084, 35.33682) collected=5 target=54 key=(106.9, 10.45, 33.36) prompt=Searched — Attic dresser / drawer 1
+ROUTE position (132.0, -4.999178, 14.22525) next (132.0, -5.0, 14.72727)
+TEST reached key 5 at (72.00513, -4.999207, 26.44111) collected=6 target=16 key=(72.0, -3.85, 24.36) prompt=Searched — Work bench / drawer 5
+ROUTE position (72.74665, -4.999163, 29.99108) next (75.0, -5.0, 30.0)
+TEST reached key 6 at (82.10915, -4.999163, 38.3548) collected=7 target=20 key=(82.1, -4.55, 36.36) prompt=Searched — Coal cabinet / drawer 3
+TEST reached key 7 at (73.14008, -9.999158, 56.33638) collected=8 target=26 key=(73.1, -9.55, 54.36) prompt=Searched — Burial drawers / drawer 3
+TEST reached key 8 at (80.9983, -9.999162, 68.44002) collected=9 target=31 key=(81.0, -9.55, 66.36) prompt=Searched — Keepsake chest / drawer 2
+ROUTE position (75.38684, -9.999157, 63.00347) next (75.0, -10.0, 63.0)
+ROUTE position (122.4392, -4.999167, 30.0) next (124.0, -5.0, 30.0)
+ROUTE position (86.36643, 5.000837, 9.0) next (86.0, 5.0, 9.0)
+TEST reached key 9 at (45.0, 0.000842, 3.960973) collected=10 target=80 key=(45.0, 1.6, 1.95) prompt=Searched — Family portrait
+ROUTE position (70.52592, 5.000822, 9.746226) next (70.5, 5.0, 10.5)
+TEST reached key 10 at (82.06921, 5.000833, 17.38538) collected=11 target=11 key=(82.1, 6.22, 15.43) prompt=Searched — Toy chest / drawer 6
+TEST reached key 11 at (42.00163, 0.000841, 5.440177) collected=12 target=43 key=(42.0, 0.45, 3.36) prompt=Searched — Sink cabinet / drawer 2
+ROUTE position (36.96002, 0.000842, 8.999979) next (36.0, 0.0, 9.0)
+TEST traversal finished keys=12 phase=escaping

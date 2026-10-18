@@ -1,0 +1,5 @@
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 595.79 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 3050 4GB Laptop GPU
+
+NURSERY BENCH platform=Windows frames=900 p50_ms=16.6666666666667 p95_ms=16.6666666666667 texture_bytes=131409235.0 draw_calls=105.0
+NURSERY RENDER nursery-benchmark camera=(77.1, 6.65, 5.9) triangles=73572

@@ -1,0 +1,83 @@
+{
+  "schema": "game-room.room-brief.v1",
+  "roomId": "eleanors-nursery",
+  "family": "gameplay-room",
+  "purpose": "Eleanor nursery wing: find the dead keeper, infer the family tragedy, search two sets of six drawers and evade the mother through connected rooms.",
+  "runtimeSurface": "Existing Godot 4.5.2 Android first-person cooperative game; no engine migration",
+  "boundsMeters": [
+    21,
+    21,
+    3.6
+  ],
+  "hero": {
+    "id": "cradle",
+    "role": "Empty cradle establishes the mother and lost-child theme without a key-location label",
+    "reservedBoundsMeters": [
+      3,
+      2.5,
+      2.1
+    ]
+  },
+  "symmetry": {
+    "mode": "bilateral",
+    "order": 2,
+    "appliesTo": [
+      "architecture",
+      "barriers",
+      "circulation",
+      "repeatedProps"
+    ],
+    "exceptions": [
+      "Existing interaction anchors stay fixed; furniture is intentionally asymmetric",
+      "West internal opening at X=-5 and east at X=5.5 preserve access to the keeper",
+      "One cradle in the northeast room establishes the hero hierarchy"
+    ]
+  },
+  "circulation": {
+    "description": "3.42 m clear central corridor, 2.4 m internal openings, two cross-room loops; player radius .32 m and ghost radius .4 m must be verified in runtime. Door sweeps and hiding entry reserves stay clear.",
+    "minimumClearanceMeters": 1.2
+  },
+  "productionCamera": {
+    "viewport": [
+      1280,
+      720
+    ],
+    "location": [
+      2.1,
+      3.1,
+      1.65
+    ],
+    "target": [
+      6,
+      6,
+      0.8
+    ],
+    "verticalFovDegrees": 70
+  },
+  "performanceBudget": {
+    "maxSceneTriangles": 250000,
+    "maxVLowBytes": 8000000,
+    "maxHighTextureBytes": 24000000
+  },
+  "creditBudget": {
+    "maximumCredits": 0,
+    "approvalRequired": true
+  },
+  "environment": {
+    "type": "none",
+    "identity": "",
+    "source": "",
+    "assignmentKey": ""
+  },
+  "artifacts": {
+    "floorPlan": "plans/lower-room.png",
+    "reflectedCeilingPlan": "plans/reflected-ceiling.png",
+    "planMetadata": "plan-metadata.json",
+    "wallElevations": [
+      "plans/elevation-north.png",
+      "plans/elevation-south.png"
+    ],
+    "visualTarget": "images/prop-contact-sheet.png",
+    "openingContactSheet": "plans/openings.png"
+  }
+}

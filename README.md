@@ -1,4 +1,4 @@
-# Waiting for Dawn — v0.8.0
+# Waiting for Dawn — v0.8.1
 
 A first-person 3D cooperative horror escape game for Android and Windows, built with Godot 4.5.2. One player hosts; up to three friends join over local Wi-Fi. No account, microphone, analytics, or online service is needed to play.
 
@@ -6,9 +6,15 @@ A first-person 3D cooperative horror escape game for Android and Windows, built 
 
 ## Play
 
-Install the APK from [Releases](https://github.com/singusathwik/WaitingforDawn/releases). All peers must use **0.8.0**. Choose **SOLO**, or **HOST ROOM** and give friends your local IP. Friends use **JOIN IP**, mark ready, and the host starts. Android and Windows use the same protocol. The Android package ID and signing identity remain compatible with the preceding Hollow House builds.
+Install the APK from [Releases](https://github.com/singusathwik/WaitingforDawn/releases). All peers must use **0.8.1**. Choose **SOLO**, or **HOST ROOM** and give friends your local IP. Friends use **JOIN IP**, mark ready, and the host starts. Android and Windows use the same protocol. The Android package ID and signing identity remain compatible with the preceding Hollow House builds.
 
 Three students enter an abandoned house during a night out. The doors lock behind them. Upstairs, a dead keeper carries a warning about Eleanor, the children she lost, and a chain of twelve keys. Recover the garage key and ignition key, then board the car together **before 6 AM**. A moving in-engine opening uses generated establishing art, offline synthesized narration, and subtitles; it is not a prerendered film.
+
+## Nursery upgrade in 0.8.1
+
+The approved Blender nursery is now four connected rooms, with a modeled cradle, hollow wardrobe, two six-drawer dressers, shelves, beams and aged surfaces. Twelve native drawer parts share the existing search state; cupboard leaves animate and both hiding cameras work. A 2048-pixel texture option reduces this room�s memory use. Baked lighting keeps the room within the mobile light budget.
+
+See the [runtime review](design/rooms/eleanors-nursery/runtime-review.html) and [editable room package](design/rooms/eleanors-nursery/README.md). The 0.8.1 APK is a locally built candidate awaiting human runtime approval before GitHub publication.
 
 ## Escape the house
 
@@ -34,7 +40,7 @@ Three students enter an abandoned house during a night out. The doors lock behin
 | Recovered papers | Paper, top left | J |
 | Menu | Menu, top left | Esc |
 
-The green bottom bar is stamina. Settings control audio, sensitivity, brightness, touch size and optional camera motion. Menus, bag and reading **do not pause the world**. Multiplayer is local-network play, not Internet matchmaking.
+The green bottom bar is stamina. Settings control audio, sensitivity, brightness, touch size, lower texture detail and optional camera motion. Menus, bag and reading **do not pause the world**. Multiplayer is local-network play, not Internet matchmaking.
 
 ## Build and verify
 

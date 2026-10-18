@@ -1,0 +1,14 @@
+{
+  "version": "0.8.1",
+  "androidVersionCode": 9,
+  "files": {
+    "WaitingForDawn-0.8.1.apk": {
+      "bytes": 105034370,
+      "sha256": "f93f10bbc39de07c06a52314dbce6f3b19690e15b4d0e7f7c2a020888224a5a2"
+    },
+    "WaitingForDawn-0.8.1.exe": {
+      "bytes": 150362584,
+      "sha256": "560afa153f52b243aafb50819849ae2e2c15e0d7bb77b4d0a38ed386d735e52d"
+    }
+  }
+}

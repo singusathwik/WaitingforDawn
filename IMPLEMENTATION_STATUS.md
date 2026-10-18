@@ -1,6 +1,8 @@
-# Waiting for Dawn 0.8.0
+# Waiting for Dawn 0.8.1
 
 Implemented: twelve randomized, dependent keys; individually locked storage; gated crypt; 81 searches including four turning portraits; shared bag with named key uses; teammate item notifications; authoritative dawn countdown and timeout defeat; garage plus ignition escape requirements; Easy through Extreme; cupboards and under-bed hiding; open/closed doors; delayed noise investigation; creaking floors; shared revival and endings.
+
+Nursery upgrade: the approved native Blender wing replaces the original open chamber with four connected spaces, modeled cradle and wardrobe, two animated six-drawer dressers, beams, shelves and baked surfaces. Sixteen runtime meshes total 83,876 triangles. Texture tiers are 4096 and 2048 pixels; their geometry is shared. Native fixtures and runtime lights use the same manifest. All 12 search bindings, hiding cameras, navigation, physical key traversal and Android-to-Windows state replication were exercised. Local Runtime review is pending before publication.
 
 Presentation: generated title/loading art and parchment; new SVG app logo and refined circular action icons; additional imported consoles/chairs and small props; a skinned mourning veil, bodice and skirt on the existing credited ghost rig; breathing and red edge warnings; dark lower floors with an intermittently flickering flashlight. The 36-second opening combines a moving establishing illustration, live 3D camera shots, original subtitles and 34.59 seconds of synthesized narration.
 

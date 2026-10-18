@@ -1,0 +1,19 @@
+FAIL: props.json: current official Meshy pricing verification is required
+FAIL: props.json: hardCreditCeiling must be positive and no greater than the room credit budget
+FAIL: prop cradle: reference image requires explicit approval
+FAIL: prop wardrobe: reference image requires explicit approval
+FAIL: prop dresser: reference image requires explicit approval
+FAIL: opening west-arrival: mask/dimensions are not approved
+FAIL: opening east-exit: mask/dimensions are not approved
+FAIL: opening north-divider-west: mask/dimensions are not approved
+FAIL: opening north-divider-east: mask/dimensions are not approved
+FAIL: opening south-divider-west: mask/dimensions are not approved
+FAIL: opening south-divider-east: mask/dimensions are not approved
+FAIL: opening north-loop: mask/dimensions are not approved
+FAIL: opening south-loop: mask/dimensions are not approved
+FAIL: opening north-window-1: mask/dimensions are not approved
+FAIL: opening north-window-2: mask/dimensions are not approved
+FAIL: opening south-window-1: mask/dimensions are not approved
+FAIL: opening south-window-2: mask/dimensions are not approved
+FAIL: Function gate: explicit approval is required
+FAIL: final-report.json: gates.function must be true

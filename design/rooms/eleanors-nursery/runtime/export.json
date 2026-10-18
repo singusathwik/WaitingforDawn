@@ -1,0 +1,52 @@
+{
+  "nativeSha256": "f16cbe834daed3a18347519dbb0f61b0860b0f0c9c57327783e2e42c53f135b0",
+  "bakeSeconds": 117.99,
+  "sourceMeshes": 447,
+  "runtimeMeshes": 16,
+  "triangles": 83876,
+  "textureTiers": {
+    "mobile": [
+      4096,
+      4096
+    ],
+    "low": [
+      2048,
+      2048
+    ]
+  },
+  "textureBudgetBytes": 22369621,
+  "textureBudgetBasis": "GPU block compression up to 8 bits/pixel including mipmaps; import setting is required",
+  "fixtureManifestSha256": "5868e15af5bb5fd56bf41e72cda84e3dfa87593b7623fbdb32fb316be38166b2",
+  "nodes": [
+    "Drawer_0",
+    "Drawer_1",
+    "Drawer_10",
+    "Drawer_11",
+    "Drawer_2",
+    "Drawer_3",
+    "Drawer_4",
+    "Drawer_5",
+    "Drawer_6",
+    "Drawer_7",
+    "Drawer_8",
+    "Drawer_9",
+    "Room_static",
+    "Search_box",
+    "Wardrobe_leaf_left",
+    "Wardrobe_leaf_right"
+  ],
+  "files": {
+    "nursery-lit-low.png": {
+      "bytes": 1637375,
+      "sha256": "39dcdb40a812cc3e716b192b79b8c01722d1eb33f873ac67b5f1fb62686c41fb"
+    },
+    "nursery-lit.png": {
+      "bytes": 5051951,
+      "sha256": "3505aa53aea74a36b3fe915ddb7fc5f532f1195312d10f00074aecbb33d7abc9"
+    },
+    "nursery.glb": {
+      "bytes": 4463300,
+      "sha256": "efbd26ef86d2aae94f9c65ae3fa2fa4446632be571e8ce9af31bf85590d5556f"
+    }
+  }
+}

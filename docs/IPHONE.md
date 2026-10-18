@@ -6,7 +6,7 @@ The source now includes an iOS export preset and mobile input support for iPhone
 
 - Planned minimum: iOS 15.0 on a 64-bit iPhone. This is the configured deployment target, not a measured performance guarantee; minimum practical hardware remains to be established.
 - Install the future signed build through TestFlight or the App Store, or a development build provisioned for your device.
-- For multiplayer, use the same Wi-Fi and game version (protocol 0.6.0) on every device. Android and Windows use the same ENet protocol; mixed iPhone sessions still need device validation.
+- For multiplayer, use the same Wi-Fi and game version (version 0.8.1) on every device. Android and Windows use the same ENet protocol; mixed iPhone sessions still need device validation.
 - Allow Local Network access. If denied, enable Waiting for Dawn in Settings > Privacy & Security > Local Network, then retry joining.
 - A player selects HOST ROOM and shares the IPv4 address shown in the lobby. Others enter it and select JOIN IP. Ready up, then the host starts. Up to four total players.
 - iOS automatic nearby discovery is disabled. Direct IP avoids broadcast operations requiring Apple's multicast entitlement. No Bonjour services are used.

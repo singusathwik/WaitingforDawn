@@ -1,0 +1,355 @@
+{
+  "schema": "game-room.layout.v1",
+  "roomId": "eleanors-nursery",
+  "units": "meters",
+  "surfaces": [
+    {
+      "id": "floor",
+      "location": [
+        0,
+        0,
+        -0.18
+      ],
+      "dimensions": [
+        21.0,
+        21.4,
+        0.36
+      ],
+      "wall": false,
+      "ceiling": false
+    },
+    {
+      "id": "ceiling",
+      "location": [
+        0,
+        0,
+        3.75
+      ],
+      "dimensions": [
+        21.4,
+        21.4,
+        0.3
+      ],
+      "wall": false,
+      "ceiling": true
+    },
+    {
+      "id": "west",
+      "location": [
+        -10.5,
+        0,
+        1.8
+      ],
+      "dimensions": [
+        0.3,
+        21.3,
+        3.6
+      ],
+      "wall": true,
+      "ceiling": false
+    },
+    {
+      "id": "east",
+      "location": [
+        10.5,
+        0,
+        1.8
+      ],
+      "dimensions": [
+        0.3,
+        21.3,
+        3.6
+      ],
+      "wall": true,
+      "ceiling": false
+    },
+    {
+      "id": "north",
+      "location": [
+        0,
+        10.5,
+        1.8
+      ],
+      "dimensions": [
+        21.3,
+        0.3,
+        3.6
+      ],
+      "wall": true,
+      "ceiling": false
+    },
+    {
+      "id": "south",
+      "location": [
+        0,
+        -10.5,
+        1.8
+      ],
+      "dimensions": [
+        21.3,
+        0.3,
+        3.6
+      ],
+      "wall": true,
+      "ceiling": false
+    },
+    {
+      "id": "north-divider",
+      "location": [
+        0,
+        1.8,
+        1.8
+      ],
+      "dimensions": [
+        21,
+        0.18,
+        3.6
+      ],
+      "wall": true,
+      "ceiling": false
+    },
+    {
+      "id": "south-divider",
+      "location": [
+        0,
+        -1.8,
+        1.8
+      ],
+      "dimensions": [
+        21,
+        0.18,
+        3.6
+      ],
+      "wall": true,
+      "ceiling": false
+    },
+    {
+      "id": "north-midwall",
+      "location": [
+        0,
+        6.15,
+        1.8
+      ],
+      "dimensions": [
+        0.18,
+        8.7,
+        3.6
+      ],
+      "wall": true,
+      "ceiling": false
+    },
+    {
+      "id": "south-midwall",
+      "location": [
+        0,
+        -6.15,
+        1.8
+      ],
+      "dimensions": [
+        0.18,
+        8.7,
+        3.6
+      ],
+      "wall": true,
+      "ceiling": false
+    }
+  ],
+  "instances": [
+    {
+      "id": "cradle-1",
+      "assetId": "cradle",
+      "location": [
+        6,
+        6,
+        0
+      ],
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "wardrobe-1",
+      "assetId": "wardrobe",
+      "location": [
+        -6,
+        3,
+        0
+      ],
+      "rotationDegrees": [
+        0,
+        0,
+        90
+      ]
+    },
+    {
+      "id": "dresser-1",
+      "assetId": "dresser",
+      "location": [
+        -3,
+        6,
+        0
+      ],
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "toy-drawers",
+      "assetId": "dresser",
+      "location": [
+        6,
+        -6,
+        0
+      ],
+      "rotationDegrees": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "productionCamera": {
+    "viewport": [
+      1280,
+      720
+    ],
+    "location": [
+      2.1,
+      3.1,
+      1.65
+    ],
+    "target": [
+      6,
+      6,
+      0.8
+    ],
+    "verticalFovDegrees": 70
+  },
+  "coordinateMapping": "Godot = (75 + X, 5 + Z, 9 - Y)",
+  "existingGameplayFixtures": [
+    {
+      "id": "bed-hide",
+      "location": [
+        3,
+        -6,
+        0
+      ],
+      "entry": [
+        1,
+        -6,
+        0
+      ],
+      "proposedDimensionsMeters": [
+        2.2,
+        1.9,
+        1.75
+      ],
+      "change": "Shorten frame from 2.9 m to 2.2 m to remove overlap with toy drawers; keep hiding anchor and entry"
+    },
+    {
+      "id": "under-bed-box",
+      "location": [
+        -3,
+        -6,
+        0.65
+      ]
+    },
+    {
+      "id": "keeper-body",
+      "location": [
+        6,
+        3,
+        0.3
+      ]
+    },
+    {
+      "id": "diary",
+      "location": [
+        -6,
+        -3,
+        0.82
+      ]
+    }
+  ],
+  "builtInFeatures": [
+    "Wall skirting and picture rails",
+    "Four toy/book shelf bays",
+    "Four sealed exterior windows with reveals and sills",
+    "Five ceiling-mounted light fixtures",
+    "Timber ceiling beams"
+  ],
+  "circulation": [
+    {
+      "id": "main",
+      "points": [
+        [
+          -12,
+          0,
+          0
+        ],
+        [
+          12,
+          0,
+          0
+        ]
+      ],
+      "width": 3.42
+    },
+    {
+      "id": "north-loop",
+      "points": [
+        [
+          -5,
+          0,
+          0
+        ],
+        [
+          -5,
+          6,
+          0
+        ],
+        [
+          5.5,
+          6,
+          0
+        ],
+        [
+          5.5,
+          0,
+          0
+        ]
+      ],
+      "minimumOpeningWidth": 2.4
+    },
+    {
+      "id": "south-loop",
+      "points": [
+        [
+          -5,
+          0,
+          0
+        ],
+        [
+          -5,
+          -6,
+          0
+        ],
+        [
+          5.5,
+          -6,
+          0
+        ],
+        [
+          5.5,
+          0,
+          0
+        ]
+      ],
+      "minimumOpeningWidth": 2.4
+    }
+  ]
+}

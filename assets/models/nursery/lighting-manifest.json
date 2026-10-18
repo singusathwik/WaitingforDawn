@@ -1,0 +1,297 @@
+{
+  "schema": "waiting-for-dawn.light-fixtures.v1",
+  "roomId": "eleanors-nursery",
+  "runtimeDynamicBudget": 3,
+  "notes": "Bake window/indirect light; nearest three practicals in Compatibility renderer. Native wattages are not Godot energy values.",
+  "fixtures": [
+    {
+      "id": "Practical-0",
+      "type": "POINT",
+      "location": [
+        -5,
+        5,
+        2.92
+      ],
+      "color": [
+        1,
+        0.62,
+        0.28
+      ],
+      "energyWatts": 35,
+      "sizeMeters": 0.08,
+      "role": "practical"
+    },
+    {
+      "id": "Practical-1",
+      "type": "POINT",
+      "location": [
+        5,
+        5,
+        2.92
+      ],
+      "color": [
+        1,
+        0.62,
+        0.28
+      ],
+      "energyWatts": 25,
+      "sizeMeters": 0.08,
+      "role": "practical"
+    },
+    {
+      "id": "Practical-2",
+      "type": "POINT",
+      "location": [
+        -5,
+        -5,
+        2.92
+      ],
+      "color": [
+        1,
+        0.62,
+        0.28
+      ],
+      "energyWatts": 35,
+      "sizeMeters": 0.08,
+      "role": "practical"
+    },
+    {
+      "id": "Practical-3",
+      "type": "POINT",
+      "location": [
+        5,
+        -5,
+        2.92
+      ],
+      "color": [
+        1,
+        0.62,
+        0.28
+      ],
+      "energyWatts": 35,
+      "sizeMeters": 0.08,
+      "role": "practical"
+    },
+    {
+      "id": "Practical-4",
+      "type": "POINT",
+      "location": [
+        0,
+        0,
+        2.64
+      ],
+      "color": [
+        1,
+        0.62,
+        0.28
+      ],
+      "energyWatts": 35,
+      "sizeMeters": 0.08,
+      "role": "practical"
+    },
+    {
+      "id": "Window bounce-0",
+      "type": "AREA",
+      "location": [
+        -5,
+        10.3,
+        2.05
+      ],
+      "color": [
+        0.25,
+        0.42,
+        0.7
+      ],
+      "energyWatts": 65,
+      "sizeMeters": 2.6,
+      "role": "baked window fill"
+    },
+    {
+      "id": "Window bounce-1",
+      "type": "AREA",
+      "location": [
+        5,
+        10.3,
+        2.05
+      ],
+      "color": [
+        0.25,
+        0.42,
+        0.7
+      ],
+      "energyWatts": 65,
+      "sizeMeters": 2.6,
+      "role": "baked window fill"
+    },
+    {
+      "id": "Window bounce-2",
+      "type": "AREA",
+      "location": [
+        -5,
+        -10.3,
+        2.05
+      ],
+      "color": [
+        0.25,
+        0.42,
+        0.7
+      ],
+      "energyWatts": 65,
+      "sizeMeters": 2.6,
+      "role": "baked window fill"
+    },
+    {
+      "id": "Window bounce-3",
+      "type": "AREA",
+      "location": [
+        5,
+        -10.3,
+        2.05
+      ],
+      "color": [
+        0.25,
+        0.42,
+        0.7
+      ],
+      "energyWatts": 65,
+      "sizeMeters": 2.6,
+      "role": "baked window fill"
+    },
+    {
+      "id": "Indirect preview-0",
+      "type": "AREA",
+      "location": [
+        -5,
+        5,
+        3.3
+      ],
+      "color": [
+        0.48,
+        0.49,
+        0.45
+      ],
+      "energyWatts": 48,
+      "sizeMeters": 4,
+      "role": "authoring-only indirect approximation; bake for mobile"
+    },
+    {
+      "id": "Wall bounce preview-0",
+      "type": "AREA",
+      "location": [
+        -5,
+        2.5,
+        2.3
+      ],
+      "color": [
+        0.62,
+        0.56,
+        0.45
+      ],
+      "energyWatts": 32,
+      "sizeMeters": 3,
+      "role": "authoring-only bounced light approximation; bake for mobile"
+    },
+    {
+      "id": "Indirect preview-1",
+      "type": "AREA",
+      "location": [
+        5,
+        5,
+        3.3
+      ],
+      "color": [
+        0.48,
+        0.49,
+        0.45
+      ],
+      "energyWatts": 48,
+      "sizeMeters": 4,
+      "role": "authoring-only indirect approximation; bake for mobile"
+    },
+    {
+      "id": "Wall bounce preview-1",
+      "type": "AREA",
+      "location": [
+        5,
+        2.5,
+        2.3
+      ],
+      "color": [
+        0.62,
+        0.56,
+        0.45
+      ],
+      "energyWatts": 32,
+      "sizeMeters": 3,
+      "role": "authoring-only bounced light approximation; bake for mobile"
+    },
+    {
+      "id": "Indirect preview-2",
+      "type": "AREA",
+      "location": [
+        -5,
+        -5,
+        3.3
+      ],
+      "color": [
+        0.48,
+        0.49,
+        0.45
+      ],
+      "energyWatts": 48,
+      "sizeMeters": 4,
+      "role": "authoring-only indirect approximation; bake for mobile"
+    },
+    {
+      "id": "Wall bounce preview-2",
+      "type": "AREA",
+      "location": [
+        -5,
+        -2.5,
+        2.3
+      ],
+      "color": [
+        0.62,
+        0.56,
+        0.45
+      ],
+      "energyWatts": 32,
+      "sizeMeters": 3,
+      "role": "authoring-only bounced light approximation; bake for mobile"
+    },
+    {
+      "id": "Indirect preview-3",
+      "type": "AREA",
+      "location": [
+        5,
+        -5,
+        3.3
+      ],
+      "color": [
+        0.48,
+        0.49,
+        0.45
+      ],
+      "energyWatts": 48,
+      "sizeMeters": 4,
+      "role": "authoring-only indirect approximation; bake for mobile"
+    },
+    {
+      "id": "Wall bounce preview-3",
+      "type": "AREA",
+      "location": [
+        5,
+        -2.5,
+        2.3
+      ],
+      "color": [
+        0.62,
+        0.56,
+        0.45
+      ],
+      "energyWatts": 32,
+      "sizeMeters": 3,
+      "role": "authoring-only bounced light approximation; bake for mobile"
+    }
+  ]
+}

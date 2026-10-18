@@ -1,0 +1,7 @@
+{
+  "generator": "Built-in image_gen",
+  "model": "not returned",
+  "path": "walnut-albedo.png",
+  "prompt": "Use case: product-mockup. Asset type: seamless physically based color texture for the approved original Victorian walnut furniture in Waiting for Dawn. Fill the entire square image with aged dark walnut wood grain, medium dark desaturated brown with a subtle warm umber undertone. Grain runs vertically, long fine irregular natural fibers, a few elongated knots but no plank boundaries, no panels or objects. Weathered old varnish, fine wear and small pale scratches, restrained dirty crevices. Flat orthographic scan with perfectly even diffuse illumination. This is ALBEDO ONLY: no directional highlights, no cast shadows, no lighting gradient, no perspective, no bevels, no metal hardware, no text, no borders, no watermarks. Seamlessly tileable edges. Realistic old furniture material, avoid black crushed areas and extreme contrast.",
+  "approvalScope": "Material development within the approved aged walnut furniture direction"
+}

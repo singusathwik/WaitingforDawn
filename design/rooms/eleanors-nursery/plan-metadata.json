@@ -1,0 +1,32 @@
+{
+  "schema": "game-room.plan-metadata.v1",
+  "roomId": "eleanors-nursery",
+  "style": "monochrome-engineering",
+  "projectionSource": "actual-meshes",
+  "layers": [
+    "lower-room",
+    "reflected-ceiling"
+  ],
+  "semanticLabelsOutsideImage": true,
+  "aiInspirationIncluded": false,
+  "aiInspirationReason": "",
+  "coverage": [
+    "room-outline",
+    "cutouts",
+    "openings",
+    "exterior-apron",
+    "main-sign",
+    "ingress-props",
+    "floor-markers",
+    "barriers",
+    "columns",
+    "circulation",
+    "placed-features"
+  ],
+  "coverageNotes": {
+    "main-sign": "None proposed; no floating in-world labels",
+    "floor-markers": "Review-only corridor dashes, excluded from gameplay",
+    "columns": "None; load-bearing walls and ceiling beams",
+    "projectionSourceDetail": "Orthographic Blender Cycles render of the actual concept meshes; ceiling collection rendered separately"
+  }
+}

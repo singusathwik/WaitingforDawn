@@ -1,0 +1,4 @@
+Signer #1 certificate DN: CN=Hollow House Local Distribution
+Signer #1 certificate SHA-256 digest: a60346ef9fa95c931ce67f3774d9d8bba44e02bf3c1c7a7f8e526f3a2b74bb76
+Signer #1 certificate SHA-1 digest: 4e37701243bf0a0a8fba8ab96deb31799ae94aa5
+Signer #1 certificate MD5 digest: a8ab12535c192ddf25f1334568c86ba2

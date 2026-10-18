@@ -46,8 +46,9 @@ func setup(owner_game):
 	game.lamp.spot_attenuation=1.1
 	game.lamp.shadow_enabled=not game._is_mobile()
 	for x in [9,18,33,42]: _window(Vector3(x,2,1.55))
-	for center in [Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(75,5,9),Vector3(75,-5,30),Vector3(75,-10,60)]:
+	for center in [Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(75,-5,30),Vector3(75,-10,60)]:
 		_fixture(center+Vector3(-4,2.8,-4),Color(1,.62,.32))
+	game.nursery.fixtures(self)
 	# Architectural profiles are exported meshes with worn wood PBR maps.
 	_build_architecture()
 	_build_ghost()

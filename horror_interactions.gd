@@ -36,6 +36,7 @@ func setup(g):
 	for p in BEDS: _bed(p)
 	for spec in DOORS: _door(spec)
 	for i in range(NOTES.size()):
+		if i<2: continue # Keeper and diary meshes are part of the approved native room.
 		var p=NOTES[i]
 		if i!=0: panel(game.world,p+Vector3(0,.55,0),Vector3(.8,1.1,.5))
 		var paper=game._box(game.world,p+Vector3(0,.35 if i==0 else 1.13,0),Vector3(.6,.025,.4),Color(.7,.62,.42))
@@ -99,6 +100,9 @@ func panel(parent: Node3D,p: Vector3,size: Vector3,solid=false) -> MeshInstance3
 	return mesh
 
 func _cupboard(p: Vector3):
+	if p==Vector3(69,5,6):
+		game.nursery.register_hiding(self,"cupboard",p)
+		return
 	var angle=PI/2 if p.x<40 or p.x>60 else -PI/2
 	var root=Node3D.new()
 	game.world.add_child(root)
@@ -126,6 +130,9 @@ func _cupboard(p: Vector3):
 	game._sign("CUPBOARD / USE",p+Vector3(0,2.6,0))
 
 func _bed(p: Vector3):
+	if p==Vector3(78,5,15):
+		game.nursery.register_hiding(self,"bed",p)
+		return
 	var angle=PI if p.x<60 else -PI/2
 	var root=Node3D.new()
 	game.world.add_child(root)
@@ -176,6 +183,7 @@ func blocks(a: Vector3,b: Vector3) -> bool:
 	return false
 
 func reset():
+	game.nursery.wardrobe(false,false)
 	clues=[]
 	journal.hide()
 	notice=""
@@ -223,6 +231,7 @@ func receive(door_state: Array,read_clues: Array):
 				tween.tween_property(leaf,"rotation:y",-1.3,.25)
 				tween.tween_interval(.8)
 				tween.tween_property(leaf,"rotation:y",0.0,.5)
+		if occupied[i]!=used and slots[i].pos==Vector3(69,5,6): game.nursery.wardrobe(used)
 		occupied[i]=used
 
 func near_door(p: Vector3) -> int:

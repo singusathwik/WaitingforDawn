@@ -1,7 +1,7 @@
 extends Node3D
 signal important_state_received
 ## All gameplay mutations execute on peer 1. Clients send bounded input and action intents.
-const VERSION = "0.8.0"
+const VERSION = "0.8.1"
 const DIFFICULTIES = [
 	{"name":"Easy","chase":2.7,"patrol":1.6,"vision":12.0,"hearing":0.7,"memory":2.0,"grace":18.0,"drain":16.0,"regen":20.0,"bottles":5},
 	{"name":"Normal","chase":3.5,"patrol":2.0,"vision":16.0,"hearing":1.0,"memory":3.0,"grace":10.0,"drain":22.0,"regen":14.0,"bottles":3},
@@ -73,6 +73,7 @@ var yaw = 0.0
 var pitch = 0.0
 var sensitivity = 0.003
 var brightness = 0.65
+var low_textures=false
 var volume = 0.6
 var control_scale = 1.0
 var shake = false
@@ -110,6 +111,7 @@ var move_guide: Control
 var stamina_bar: ProgressBar
 var dawn: Node
 var exploration: Node
+var nursery: Node3D
 var round_id = 0
 var horror: Node
 var noise_warning_until=0
@@ -159,6 +161,7 @@ func _ready():
 	add_child(exploration)
 	exploration.geometry(self)
 	_build_navigation()
+	nursery.seed_navigation()
 	for pos in [Vector3(15,0,18),Vector3(72,5,9),Vector3(72,-5,30)]:
 		glass_meshes.append(_box(world,pos+Vector3(0,0.025,0),Vector3(1.8,0.05,1.8),Color(0.32,0.53,0.54)))
 	_load_settings()
@@ -219,6 +222,10 @@ func _ready():
 		var driver=preload("res://tests/exploration.gd").new()
 		add_child(driver)
 		driver.setup(self)
+	elif test_mode.begins_with("nursery-"):
+		var driver=preload("res://tests/nursery.gd").new()
+		add_child(driver)
+		driver.setup(self,test_mode)
 	elif test_mode=="horror": call_deferred("_test_horror")
 	elif test_mode=="difficulty": call_deferred("_test_difficulty")
 	elif test_mode=="art": call_deferred("_test_art")
@@ -231,7 +238,7 @@ func _ready():
 		test_route=_test_key_route(0)
 	elif test_mode == "benchmark": _host(); _start(); grace=10000
 	_refresh_menu()
-	if test_mode.begins_with("search-"):
+	if test_mode.begins_with("search-") or test_mode.begins_with("room-"):
 		var driver=preload("res://tests/search_network.gd").new()
 		add_child(driver)
 		driver.setup(self,test_mode)
@@ -365,7 +372,9 @@ func _hiding_spots() -> Array:
 
 func _build_estate():
 	# Each wing has a single wide ramp. Floors and navigation share the same coordinates.
-	_room(Vector3(75,5,9),"UPPER FLOOR / THE NURSERY",Color(0.27,0.23,0.28),"west")
+	nursery=preload("res://nursery_room.gd").new()
+	world.add_child(nursery)
+	nursery.build(self)
 	_room(Vector3(75,-5,30),"BASEMENT / THE BOILER",Color(0.23,0.28,0.22),"west_south")
 	_room(Vector3(75,-10,60),"UNDERGROUND CRYPT",Color(0.24,0.25,0.3),"north")
 	_ramp(Vector3(49.5,0,9),Vector3(64.5,5,9))
@@ -378,12 +387,8 @@ func _build_estate():
 	for x in [-21,-15,-9]:
 		for z in [12,24]:
 			_box(world,Vector3(x,0.65,z),Vector3(0.8,1.3,0.35),Color(0.37,0.4,0.4),true)
-	for spot in [Vector3(78,5,9),Vector3(78,-5,30),Vector3(78,-10,60)]:
+	for spot in [Vector3(78,-5,30),Vector3(78,-10,60)]:
 		_box(world,spot+Vector3(0,0.5,0),Vector3(2.4,1,1.2),Color(0.31,0.24,0.19),true)
-	# Shared low-poly palette, recognizable silhouettes, no external asset dependencies.
-	for x in [0,0.4,0.8,1.2,1.6,2.0]:
-		_box(world,Vector3(77+x,6.0,8.3),Vector3(0.07,1,0.07),Color(0.54,0.48,0.36))
-	_box(world,Vector3(78,6.5,8.3),Vector3(2.4,0.1,0.1),Color(0.54,0.48,0.36))
 	for x in [67,83]:
 		for z in [54,66]: _box(world,Vector3(x,-8.2,z),Vector3(0.7,3.6,0.7),Color(0.31,0.32,0.36))
 	for x in [68,70,72]:
@@ -440,7 +445,7 @@ func _build_navigation():
 			var next=_nav_add(pair[0].lerp(pair[1],float(step)/6))
 			navigation.connect_points(previous,next)
 			previous=next
-	for obstacle in [Vector3(6,0,6),Vector3(33,0,6),Vector3(6,0,30),Vector3(18,0,9),Vector3(36,0,12),Vector3(42,0,33),Vector3(78,5,9),Vector3(78,-5,30),Vector3(78,-10,60)]:
+	for obstacle in [Vector3(6,0,6),Vector3(33,0,6),Vector3(6,0,30),Vector3(18,0,9),Vector3(36,0,12),Vector3(42,0,33),Vector3(78,-5,30),Vector3(78,-10,60)]:
 		if nav_ids.has(obstacle): navigation.set_point_disabled(nav_ids[obstacle],true)
 
 func _nav_path(a: Vector3,b: Vector3) -> PackedVector3Array:
@@ -550,6 +555,11 @@ func _build_ui():
 	shake_toggle.button_pressed=shake
 	shake_toggle.toggled.connect(func(v): shake=v; _save_settings())
 	stack.add_child(shake_toggle)
+	var texture_toggle=CheckButton.new()
+	texture_toggle.text="Lower texture detail (uses less memory)"
+	texture_toggle.button_pressed=low_textures
+	texture_toggle.toggled.connect(func(v): low_textures=v; nursery.set_texture_detail(v); _save_settings())
+	stack.add_child(texture_toggle)
 	var help = Label.new()
 	help.text = "WASD move • mouse look • Shift sprint • Ctrl crouch\nE interact / revive • F light • Q throw • Esc release mouse / menu\nSearch for 12 linked keys. Escape by car before 6 AM.
 B: shared bag • J: recovered papers. Flashlight works below ground."
@@ -670,6 +680,7 @@ func _layout_touch():
 func _save_settings():
 	var c = ConfigFile.new()
 	c.set_value("settings","brightness",brightness)
+	c.set_value("settings","low_textures",low_textures)
 	c.set_value("settings","sensitivity",sensitivity)
 	c.set_value("settings","audio",volume)
 	c.set_value("settings","controls",control_scale)
@@ -681,6 +692,7 @@ func _load_settings():
 	var c = ConfigFile.new()
 	if c.load("user://settings.cfg") == OK:
 		brightness=c.get_value("settings","brightness",0.65)
+		low_textures=c.get_value("settings","low_textures",false)
 		sensitivity=c.get_value("settings","sensitivity",0.003)
 		volume=c.get_value("settings","audio",0.6)
 		control_scale=c.get_value("settings","controls",1.0)
@@ -959,7 +971,8 @@ func _show_pause():
 
 func _input(event):
 	if is_instance_valid(exploration) and exploration.intro_left>0: return
-	if is_instance_valid(horror) and (horror.journal.visible or dawn.bag.visible): return
+	if is_instance_valid(horror) and horror.journal.visible: return
+	if is_instance_valid(dawn) and dawn.bag.visible: return
 	# Raw touch dispatch keeps action buttons independent of the movement/look fingers.
 	if phase!="playing" or menu.visible or not event is InputEventScreenTouch or not event.pressed: return
 	for button in touch.get_children():
@@ -970,14 +983,15 @@ func _input(event):
 
 func _unhandled_input(event):
 	if is_instance_valid(exploration) and exploration.intro_left>0: return
-	if is_instance_valid(horror) and (horror.journal.visible or dawn.bag.visible): return
+	if is_instance_valid(horror) and horror.journal.visible: return
+	if is_instance_valid(dawn) and dawn.bag.visible: return
 	if phase != "playing": return
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_ESCAPE: _show_pause()
 			KEY_E: if not menu.visible: _request_action("use")
 			KEY_Q: if not menu.visible: _request_action("throw")
-			KEY_F: _toggle_light
+			KEY_F: _toggle_light()
 			KEY_J: horror.show_journal()
 			KEY_B: dawn.show_bag()
 	if menu.visible: return
@@ -1514,7 +1528,7 @@ func _test_rules():
 	for i in [6,7]: horror.opened[i]=true
 	horror.apply_doors(false)
 	for key in keys:
-		assert(not _nav_path(Vector3(9,0,9),exploration.approach(key)).is_empty())
+		assert(not _nav_path(Vector3(9,0,9),exploration.approach(key)).is_empty(),"Unreachable key "+str(key))
 	for candidate in [Vector3(72,5,6),Vector3(81,5,12),Vector3(72,-5,27),Vector3(81,-5,33),Vector3(72,-10,57),Vector3(81,-10,63)]:
 		assert(not _nav_path(Vector3(9,0,9),candidate).is_empty(),"Unreachable random placement")
 	_accept_input(99,{"move":Vector2.ONE,"yaw":0.0})

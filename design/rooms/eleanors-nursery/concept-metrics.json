@@ -1,0 +1,12 @@
+{
+  "stage": "FUNCTION prototype only",
+  "trianglesByCollection": {
+    "Shell": 340,
+    "Ceiling": 1792,
+    "Joinery": 13424,
+    "Furniture prototypes": 28580,
+    "Preserved fixtures": 28792
+  },
+  "totalTriangles": 72928,
+  "runtimePerformance": "NOT_CHECKED"
+}

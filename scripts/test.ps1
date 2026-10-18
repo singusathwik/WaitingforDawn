@@ -96,3 +96,11 @@ Start-Sleep -Milliseconds 700
 $clientProcess = Launch 'search-client' 'search-client'
 Check $hostProcess 'search-host'
 Check $clientProcess 'search-client'
+
+$nursery = Launch 'nursery-check' 'nursery-check'
+Check $nursery 'nursery-check'
+$hostProcess = Launch 'room-host' 'room-host'
+Start-Sleep -Milliseconds 700
+$clientProcess = Launch 'room-client' 'room-client'
+Check $hostProcess 'room-host'
+Check $clientProcess 'room-client'

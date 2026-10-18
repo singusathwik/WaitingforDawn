@@ -1,0 +1,39 @@
+{
+  "schema": "game-room.opening-cutter.v1",
+  "id": "north-loop",
+  "kind": "door",
+  "widthMeters": 2.4,
+  "heightMeters": 2.8,
+  "sillMeters": null,
+  "depthMeters": null,
+  "source": "north-loop.png",
+  "sourceSha256": "fedcbd4f13adb58b168133d94b85ffd8ffa45a6d1c3b96b840a38eb49f4b4131",
+  "imageSize": [
+    256,
+    256
+  ],
+  "whitePixelRatio": 0.6796875,
+  "contours": [
+    {
+      "role": "outer",
+      "points": [
+        [
+          0.1254902,
+          0.9058824
+        ],
+        [
+          0.1254902,
+          0.0
+        ],
+        [
+          0.8745098,
+          0.0
+        ],
+        [
+          0.8745098,
+          0.9058824
+        ]
+      ]
+    }
+  ]
+}
