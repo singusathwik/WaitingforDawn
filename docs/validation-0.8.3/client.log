@@ -1,7 +1,7 @@
---------- beginning of main
-10-18 14:06:24.007  5360  5383 I godot   : Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
-10-18 14:06:24.257  5360  5383 E godot   : WARNING: Failed to load cached shader, recompiling.
-10-18 14:06:24.257  5360  5383 E godot   :    at: _load_from_cache (drivers/gles3/shader_gles3.cpp:612)
-10-18 14:06:24.775  5360  5383 I godot   : OpenGL API OpenGL ES 3.1 (4.5.0 NVIDIA 595.79) - Compatibility - Using Device: Google (NVIDIA Corporation) - Android Emulator OpenGL ES Translator (NVIDIA GeForce RTX 3050 4GB Laptop GPU/PCIe/SSE2)
-10-18 14:06:24.784  5360  5383 I godot   : 
-10-18 14:06:35.847  5360  5383 I godot   : SEARCH CLIENT PASS key, open drawer, restart and departure
+--------- beginning of main
+10-18 14:06:24.007  5360  5383 I godot   : Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+10-18 14:06:24.257  5360  5383 E godot   : WARNING: Failed to load cached shader, recompiling.
+10-18 14:06:24.257  5360  5383 E godot   :    at: _load_from_cache (drivers/gles3/shader_gles3.cpp:612)
+10-18 14:06:24.775  5360  5383 I godot   : OpenGL API OpenGL ES 3.1 (4.5.0 NVIDIA 595.79) - Compatibility - Using Device: Google (NVIDIA Corporation) - Android Emulator OpenGL ES Translator (NVIDIA GeForce RTX 3050 4GB Laptop GPU/PCIe/SSE2)
+10-18 14:06:24.784  5360  5383 I godot   :
+10-18 14:06:35.847  5360  5383 I godot   : SEARCH CLIENT PASS key, open drawer, restart and departure

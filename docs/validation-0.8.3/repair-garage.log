@@ -1,7 +1,7 @@
---------- beginning of main
-10-18 13:56:56.947  4464  4487 I godot   : Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
-10-18 13:56:57.082  4464  4487 E godot   : WARNING: Failed to load cached shader, recompiling.
-10-18 13:56:57.082  4464  4487 E godot   :    at: _load_from_cache (drivers/gles3/shader_gles3.cpp:612)
-10-18 13:56:57.328  4464  4487 I godot   : OpenGL API OpenGL ES 3.1 (4.5.0 NVIDIA 595.79) - Compatibility - Using Device: Google (NVIDIA Corporation) - Android Emulator OpenGL ES Translator (NVIDIA GeForce RTX 3050 4GB Laptop GPU/PCIe/SSE2)
-10-18 13:56:57.336  4464  4487 I godot   : 
-10-18 13:57:10.812  4464  4487 I godot   : REPAIR RENDER repair-garage viewport=(2400, 1080)
+--------- beginning of main
+10-18 13:56:56.947  4464  4487 I godot   : Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+10-18 13:56:57.082  4464  4487 E godot   : WARNING: Failed to load cached shader, recompiling.
+10-18 13:56:57.082  4464  4487 E godot   :    at: _load_from_cache (drivers/gles3/shader_gles3.cpp:612)
+10-18 13:56:57.328  4464  4487 I godot   : OpenGL API OpenGL ES 3.1 (4.5.0 NVIDIA 595.79) - Compatibility - Using Device: Google (NVIDIA Corporation) - Android Emulator OpenGL ES Translator (NVIDIA GeForce RTX 3050 4GB Laptop GPU/PCIe/SSE2)
+10-18 13:56:57.336  4464  4487 I godot   :
+10-18 13:57:10.812  4464  4487 I godot   : REPAIR RENDER repair-garage viewport=(2400, 1080)
