@@ -1,0 +1,149 @@
+{
+  "checks": [
+    {
+      "asset": "sofa",
+      "mesh_count": 1,
+      "bounds_m": [
+        2.900000214576721,
+        1.350000262260437,
+        1.3181474208831787
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "dining",
+      "mesh_count": 1,
+      "bounds_m": [
+        2.6000014543533325,
+        1.7000011205673218,
+        1.0519791580736637
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "fallen_chair",
+      "mesh_count": 1,
+      "bounds_m": [
+        1.3179594492539763,
+        0.7700002491474152,
+        0.7500001788139343
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "litter",
+      "mesh_count": 1,
+      "bounds_m": [
+        2.9321969747543335,
+        1.7867527604103088,
+        0.11499999277293682
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "nursery_litter",
+      "mesh_count": 1,
+      "bounds_m": [
+        2.5477932691574097,
+        1.4625810384750366,
+        0.317500002682209
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "bed",
+      "mesh_count": 1,
+      "bounds_m": [
+        1.950000286102295,
+        2.884999990463257,
+        1.8250000476837158
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "shelf",
+      "mesh_count": 1,
+      "bounds_m": [
+        1.6800000071525574,
+        0.4800001382827759,
+        2.4149999618530273
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "radiator",
+      "mesh_count": 1,
+      "bounds_m": [
+        1.2399999499320984,
+        0.22000010311603546,
+        0.9200000464916229
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "key",
+      "mesh_count": 1,
+      "bounds_m": [
+        0.1680000275373459,
+        0.30300000309944153,
+        0.02800000086426735
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "cupboard_shell",
+      "mesh_count": 1,
+      "bounds_m": [
+        1.0199999809265137,
+        0.5800000727176666,
+        2.0
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "cupboard_leaf",
+      "mesh_count": 1,
+      "bounds_m": [
+        0.9400000002384974,
+        0.16000007651746273,
+        1.8800000548362732
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "room_door",
+      "mesh_count": 1,
+      "bounds_m": [
+        1.100000026464541,
+        0.17500009201467037,
+        2.380000114440918
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 0
+    },
+    {
+      "asset": "mourning_ghost",
+      "mesh_count": 4,
+      "bounds_m": [
+        3.676126718521118,
+        3.3734623193740845,
+        8.304882019758224
+      ],
+      "dimension_check": "PASS",
+      "bone_count": 41
+    }
+  ],
+  "native_reopen": "PASS",
+  "scope": "Blender FBX round trip and native source only"
+}
