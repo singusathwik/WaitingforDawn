@@ -1,0 +1,32 @@
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+REPAIR PASS: Play closes menus and enters the story
+REPAIR PASS: ghost cannot spawn during the opening story
+REPAIR PASS: story skip restores controls and fair grace period
+REPAIR PASS: death retry does not replay the story
+REPAIR PASS: ghost patrol leaves its actual default spawn
+REPAIR PASS: scheduled noise makes the ghost physically reach the hallway
+REPAIR PASS: ghost follows stairs to (36.0, 5.0, 9.0)
+REPAIR PASS: ghost follows stairs to (36.0, 10.0, 9.0)
+REPAIR PASS: ghost follows stairs to (36.0, -5.0, 30.0)
+REPAIR PASS: closed room door blocks the ghost
+REPAIR PASS: opening the same door restores passage
+REPAIR PASS: enter hiding slot 0
+REPAIR PASS: camera is inside hiding slot 0
+REPAIR PASS: leave hiding slot 0
+REPAIR PASS: enter hiding slot 3
+REPAIR PASS: camera is inside hiding slot 3
+REPAIR PASS: leave hiding slot 3
+REPAIR PASS: enter hiding slot 6
+REPAIR PASS: camera is inside hiding slot 6
+REPAIR PASS: leave hiding slot 6
+REPAIR PASS: enter hiding slot 7
+REPAIR PASS: camera is inside hiding slot 7
+REPAIR PASS: leave hiding slot 7
+REPAIR PASS: torch works on the bedroom floor
+REPAIR PASS: basement stays dark without torch
+REPAIR PASS: outside garage key plate opens the shutter
+REPAIR PASS: garage shutter lifts clear of the car
+REPAIR PASS: boarding from the car side starts escape
+REPAIR PASS: car drives through the open outside door
+REPAIR PASS: retry resets the car and garage lock

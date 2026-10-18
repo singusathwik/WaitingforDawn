@@ -1,0 +1,14 @@
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+083 PASS: normal noise reaches closed-room approach and is remembered for 60 seconds
+083 PASS: closed door still protects survivor
+083 PASS: handle has a clear Use prompt from 2.2 metres
+083 PASS: same Use action opens door without warning hiding its prompt
+083 PASS: waiting ghost enters and catches exposed survivor after door opens
+083 PASS: 3087 room-floor support probes have no holes
+083 PASS: 2050 additional ground-floor support probes have no holes
+083 PASS: exposed landing edges have solid guards
+083 PASS: off-centre walking contained at (54.7, 2.5, 18.0)
+083 PASS: off-centre walking contained at (54.7, 7.5, 18.0)
+083 PASS: off-centre walking contained at (49.5, 5.0, 9.0)
+083 PASS: unexpected fall returns to last grounded point

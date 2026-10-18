@@ -98,3 +98,7 @@ Original Blender meshes in `assets/models/repair/`: hollow drawer, dresser, pane
 `assets/ui/manor.png` and `assets/textures/worn-oak.png` were created with the built-in OpenAI image generator on 2026-10-18. The first is an empty haunted manor at night with no person/monster; the second is a worn timber grain texture. No reference stock artwork or commercial-game image is bundled. The new home and opening use the empty-manor image; the older title illustration remains a credited legacy asset.
 
 The revised original introduction text was synthesized using the installed Windows Microsoft George voice at rate -2, then band-limited with subtle delay/reverb and saved mono at 22,050 Hz (34.74 seconds). It is synthesized narration, not a recorded actor. Existing sound effects and ghost licensing remain unchanged.
+
+## 0.8.3 furniture and decay
+
+Original Blender assemblies: sofa, linen-covered dining table, fallen chair, books/boards/broken-crockery cluster and nursery toy/rag-doll cluster. Sources, dimensions and reimport checks are in `design/repair-083/`; regenerate with `scripts/build_decay_assets.py`. Existing credited Poly Haven fabric and original generated worn oak are reused through shared runtime materials. Editable Blender source packs both images; exports omit duplicate image copies intentionally. No new third-party model or sound was downloaded. Decay-patch shading and ghost-driven presentation effects are original code. Eyes and Amnesia were consulted through official descriptions for design principles only; none of their assets are bundled.

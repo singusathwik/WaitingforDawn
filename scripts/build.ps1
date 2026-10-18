@@ -12,11 +12,11 @@ if ($Release) {
     foreach ($key in @('GODOT_ANDROID_KEYSTORE_RELEASE_PATH','GODOT_ANDROID_KEYSTORE_RELEASE_USER','GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD')) {
         if (![Environment]::GetEnvironmentVariable($key)) { throw "Set $key outside the repository first" }
     }
-    & $Godot --headless --path $project --export-release Android (Join-Path $project 'artifacts/WaitingForDawn-0.8.2.apk')
+    & $Godot --headless --path $project --export-release Android (Join-Path $project 'artifacts/WaitingForDawn-0.8.3.apk')
 } else {
-    & $Godot --headless --path $project --export-debug Android (Join-Path $project 'artifacts/WaitingForDawn-0.8.2.apk')
+    & $Godot --headless --path $project --export-debug Android (Join-Path $project 'artifacts/WaitingForDawn-0.8.3.apk')
 }
 if ($LASTEXITCODE) { throw 'Android export failed' }
-& $Godot --headless --path $project --export-release 'Windows Desktop' (Join-Path $project 'artifacts/WaitingForDawn-0.8.2.exe')
+& $Godot --headless --path $project --export-release 'Windows Desktop' (Join-Path $project 'artifacts/WaitingForDawn-0.8.3.exe')
 if ($LASTEXITCODE) { throw 'Windows export failed' }
-Get-FileHash (Join-Path $project 'artifacts/WaitingForDawn-0.8.2.apk') -Algorithm SHA256 | Format-List
+Get-FileHash (Join-Path $project 'artifacts/WaitingForDawn-0.8.3.apk') -Algorithm SHA256 | Format-List

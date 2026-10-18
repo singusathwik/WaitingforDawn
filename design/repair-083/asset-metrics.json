@@ -1,0 +1,22 @@
+{
+  "sofa": {
+    "triangles": 6196,
+    "editable_parts": 20
+  },
+  "dining": {
+    "triangles": 3780,
+    "editable_parts": 14
+  },
+  "litter": {
+    "triangles": 4342,
+    "editable_parts": 41
+  },
+  "fallen_chair": {
+    "triangles": 916,
+    "editable_parts": 11
+  },
+  "nursery_litter": {
+    "triangles": 6308,
+    "editable_parts": 34
+  }
+}

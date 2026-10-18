@@ -67,6 +67,7 @@ func setup():
  # Nursery dressing and keeper are baked from the approved editable Blender scene.
  add_portraits()
  furnish()
+ preload("res://decay_dressing.gd").build(game)
  for c in compartments:
   var floor_pos=Vector3(c.pos.x,5.0*floor(c.pos.y/5.0),c.pos.z-.36)
   var point=game.navigation.get_closest_point(floor_pos)
@@ -77,6 +78,8 @@ func setup():
   if game.navigation.get_point_position(point).distance_to(slot.pos)<1: game.navigation.set_point_disabled(point,true)
  # Prevent AI graph routes through furniture and the new partitions.
  await game.get_tree().physics_frame
+ await game.get_tree().physics_frame
+ game.repair_layout.seal_edges()
  await game.get_tree().physics_frame
  game.nursery.prune_navigation()
  for a in game.navigation.get_point_ids():
@@ -205,7 +208,8 @@ func disturb(pos: Vector3):
  if pending_sounds.size()>=8: return
  pending_sounds.append({"pos":pos,"left":[6.0,4.5,3.0,2.0][game.difficulty]})
  if pending_sounds.size()==1:
-  game.sound_event.rpc(pos+Vector3(0,2,0),.32,"wail")
+  # Response comes from her actual position, not from the opened drawer.
+  game.sound_event.rpc(game.ghost_pos,.55,"wail")
   game.noise_reply.rpc(pos)
 
 func tick(delta: float):

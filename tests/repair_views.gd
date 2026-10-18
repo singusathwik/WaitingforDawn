@@ -12,6 +12,8 @@ func run():
 		g.test_mode="repair-render"
 		g._host();g._start();g.grace=10000;g.set_physics_process(false)
 		var positions={"kitchen":[Vector3(32,0,10),Vector3(39,1.5,3)],"garage":[Vector3(38,0,37),Vector3(42,1,33)],"stairs":[Vector3(54,5,9),Vector3(52.5,7,17)],"bedroom":[Vector3(36,10,14),Vector3(33,11,12)],"nursery":[Vector3(14.1,5,5.9),Vector3(18,5.8,3)],"drawer":[Vector3(36,0,4.7),Vector3(36,.3,3.9)],"exterior":[Vector3(37,0,50),Vector3(30,7,20)]}
+		positions["parlour"]=[Vector3(9,0,10),Vector3(15,1,3)]
+		positions["door"]=[Vector3(9.9,0,12.8),Vector3(9.9,1.35,15)]
 		var pair=positions[shot]
 		g.people[1].pos=pair[0];g.actors[1].position=pair[0]
 		var d=pair[1]-(pair[0]+Vector3(0,1.65,0))

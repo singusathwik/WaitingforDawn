@@ -1,0 +1,52 @@
+{
+  "source_parts": 120,
+  "modifiers": 138,
+  "packed_images": 2,
+  "exports": {
+    "dining.glb": {
+      "meshes": 1,
+      "dimensions_m": [
+        2.600001096725464,
+        1.700000822544098,
+        1.0519791580736637
+      ],
+      "triangles": 3780
+    },
+    "fallen_chair.glb": {
+      "meshes": 1,
+      "dimensions_m": [
+        1.3179594145622104,
+        0.7700001001358032,
+        0.7500001788139343
+      ],
+      "triangles": 916
+    },
+    "litter.glb": {
+      "meshes": 1,
+      "dimensions_m": [
+        2.9321967363357544,
+        1.7867525219917297,
+        0.11499999277293682
+      ],
+      "triangles": 4342
+    },
+    "nursery_litter.glb": {
+      "meshes": 1,
+      "dimensions_m": [
+        2.5477930307388306,
+        1.4625808000564575,
+        0.317500002682209
+      ],
+      "triangles": 6308
+    },
+    "sofa.glb": {
+      "meshes": 1,
+      "dimensions_m": [
+        2.9000000953674316,
+        1.350000023841858,
+        1.3181474208831787
+      ],
+      "triangles": 6196
+    }
+  }
+}

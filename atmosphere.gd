@@ -32,6 +32,8 @@ var seen_keys=0
 var curtains: Array = []
 var previous_ghost=Vector3.ZERO
 var stride=0.0
+var haunting_stride=0.0
+var trembling_props:Array=[]
 
 func setup(owner_game):
 	game=owner_game
@@ -220,6 +222,11 @@ func _animate_horror(delta: float):
 	if game.phase=="lost": game.menu.visible=scare_time<=0
 	var motion=game.ghost_pos-previous_ghost
 	previous_ghost=game.ghost_pos
+	if game.phase=="playing" and game.grace<=0 and motion.length()<1.0:
+		haunting_stride+=motion.length()
+		if haunting_stride>.85:
+			haunting_stride=0.0
+			play("foot_stone",game.ghost_pos,.32 if game.ghost_mode=="chase" else .18)
 	stride+=delta
 	var clip="run" if game.ghost_mode=="chase" else ("walk" if motion.length()>.003 else "idle")
 	if game.ghost_pos.distance_to(game.camera.position)<2.5 and game.ghost_mode=="chase": clip="attack1_l"
@@ -230,6 +237,9 @@ func _animate_horror(delta: float):
 	if motion.length()>.003:
 		game.ghost.rotation.y=lerp_angle(game.ghost.rotation.y,atan2(motion.x,motion.z)+PI,1-exp(-delta*8))
 	for item in curtains: item.rotation.x=sin(elapsed*.65+item.position.x)*.018
+	for item in trembling_props:
+		var proximity=clampf(1-item.global_position.distance_to(game.ghost_pos)/9.0,0,1) if game.phase=="playing" and game.grace<=0 else 0.0
+		item.rotation.z=sin(elapsed*18+item.position.x)*.018*proximity
 
 func play(kind: String,pos: Vector3,strength: float):
 	if DisplayServer.get_name()=="headless": return
@@ -274,7 +284,10 @@ func _process(delta):
 	fixtures.sort_custom(func(a,b): return a.global_position.distance_squared_to(game.camera.position)<b.global_position.distance_squared_to(game.camera.position))
 	for i in range(fixtures.size()):
 		fixtures[i].visible=active and i<3 and fixtures[i].global_position.y>0
-		if i<3: fixtures[i].light_energy=(float(fixtures[i].get_meta("base_energy",.7))+sin(elapsed*2.7+i)*.025)*(.25 if scare_time>0 else (.12 if fmod(elapsed+i*3,17)<.18 else 1.0))
+		if i<3:
+			var presence=clampf(1-fixtures[i].global_position.distance_to(game.ghost_pos+Vector3.UP)/8.0,0,1) if game.grace<=0 else 0.0
+			var flutter=lerpf(1.0,.55+.35*sin(elapsed*19+i),presence)
+			fixtures[i].light_energy=flutter*(float(fixtures[i].get_meta("base_energy",.7))+sin(elapsed*2.7+i)*.025)*(.25 if scare_time>0 else (.12 if fmod(elapsed+i*3,17)<.18 else 1.0))
 
 func stop_audio():
 	for voice in voices:

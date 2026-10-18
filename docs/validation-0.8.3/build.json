@@ -1,0 +1,21 @@
+{
+  "version": "0.8.3",
+  "version_code": 11,
+  "engine": "Godot 4.5.2 stable",
+  "artifacts": {
+    "WaitingForDawn-0.8.3.apk": {
+      "bytes": 111758030,
+      "sha256": "e38221d1872960c781717a010fb29804c7301fd009718866796273eebe4a0bce"
+    },
+    "WaitingForDawn-0.8.3.exe": {
+      "bytes": 157068208,
+      "sha256": "57453c7f7941ff475bf957d2523af1cb0cd23a9c4b645a949ff23a96d123c9a1"
+    }
+  },
+  "certificate_sha256": "a60346ef9fa95c931ce67f3774d9d8bba44e02bf3c1c7a7f8e526f3a2b74bb76",
+  "android_api": {
+    "min": 24,
+    "target": 35
+  },
+  "tested_apk_sha256": "e38221d1872960c781717a010fb29804c7301fd009718866796273eebe4a0bce"
+}

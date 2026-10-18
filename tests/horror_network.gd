@@ -96,7 +96,10 @@ func client_step():
 			return
 		if stage==1 and p.pos.distance_to(game.horror.NOTES[0])<2: act()
 		if game.horror.clues.has(0) and stage==1: saw_clue=true; stage=2
-		if stage==2 and p.pos.distance_to(Vector3(25.5,5,9))<.5: act()
+		if stage==2 and p.pos.distance_to(Vector3(25.5,5,9))<.5:
+			var handle=game.horror.doors[4].pivot.to_global(Vector3(2.53,1.35,0))-(p.pos+Vector3(0,1.35,0))
+			game.yaw=atan2(-handle.x,-handle.z)
+			act()
 		if not game.horror.opened[4] and stage==2: saw_door=true; stage=3
 		if stage==3 and p.pos.distance_to(game.horror.slots[3].entry)<.5:
 			game.yaw=PI/2

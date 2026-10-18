@@ -1,4 +1,14 @@
-# Waiting for Dawn 0.8.2
+# Waiting for Dawn 0.8.3
+
+The 0.8.3 repair adds a continuous nursery collision slab, exposed-landing guards and last-grounded fall recovery. Door selection now uses the visible handle with a wider range and a single target for both the prompt and action. Ghost navigation follows complete waypoints, retains a sound behind a closed room and reroutes when a door opens; blocked patrol choices no longer strand it.
+
+Five new original Blender asset clusters are placed in the playable rooms: sofas, draped dining settings, fallen chairs, broken crockery/books/boards and nursery toys. The 120-part editable source is packed and its five exports were reimported for dimensional/topology checks. Shared texture bindings avoid duplicate texture memory. Debris disturbance, spatial ghost steps, nearby light flutter and subtle toy movement provide additional cues; they do not reveal key locations.
+
+The exact floor hole from the user's report was not located from a supplied room coordinate. Broad floor-grid, exposed-edge and recovery coverage addresses multiple potential fall routes. The ghost's prior behavior varied with door state; a controlled fresh-match regression now verifies closed-room approach, retained investigation and entry after opening. These checks do not prove every device playthrough is bug-free.
+
+Unreal Engine was requested, but no installed engine, .uproject or live editor connection was available. This deliverable continues the existing Godot project. It is not an Unreal migration. Research and tool availability are recorded in `design/repair-083/README.md`.
+
+## Existing game systems
 
 This repair replaces the old entry dialog with a home screen, expands the viewport, fixes intro dismissal/skip/retry and removes the monster from the opening. Narration is a 34.74-second synthesized male voice. The flashlight now works on every floor.
 

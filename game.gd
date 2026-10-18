@@ -1,7 +1,7 @@
 extends Node3D
 signal important_state_received
 ## All gameplay mutations execute on peer 1. Clients send bounded input and action intents.
-const VERSION = "0.8.2"
+const VERSION = "0.8.3"
 const DIFFICULTIES = [
 	{"name":"Easy","chase":2.7,"patrol":1.6,"vision":12.0,"hearing":0.7,"memory":2.0,"grace":18.0,"drain":16.0,"regen":20.0,"bottles":5},
 	{"name":"Normal","chase":3.5,"patrol":2.0,"vision":16.0,"hearing":1.0,"memory":3.0,"grace":10.0,"drain":22.0,"regen":14.0,"bottles":3},
@@ -43,6 +43,9 @@ var ghost: Node3D
 var ghost_pos = Vector3(42,0,33)
 var ghost_mode = "patrol"
 var ghost_goal = Vector3.ZERO
+var haunt=preload("res://haunt_navigation.gd").new()
+var safe_positions: Dictionary={}
+var rattle_cooldowns: Dictionary={}
 var ghost_timer = 0.0
 var grace = 10.0
 var keys: Array = []
@@ -855,6 +858,9 @@ func _start():
 	ghost_pos=Vector3(27,0,18)
 	ghost_goal=Vector3(30,0,18)
 	ghost_mode="patrol"
+	haunt.reset()
+	safe_positions.clear()
+	rattle_cooldowns.clear()
 	grace=_difficulty().grace+(36 if test_mode=="" and round_id==0 else 0)
 	round_id+=1
 	begin_match.rpc(people,keys,round_id,difficulty)
@@ -1114,6 +1120,12 @@ func _simulate_players(delta: float):
 				if rise>.015 and rise<.18 and not actor.test_move(actor.global_transform.translated(Vector3.UP*(rise+.015)),direction.normalized()*.1):
 					actor.position.y+=rise+.015
 		p.pos=actor.position
+		# Physical containment is primary; recover a fall before it strands a survivor
+		# on an unrelated lower floor. Stairs continuously update the grounded position.
+		if actor.is_on_floor():safe_positions[id]=actor.position
+		elif safe_positions.has(id) and actor.position.y<safe_positions[id].y-2.0 and actor.velocity.y< -4:
+			actor.position=safe_positions[id];actor.velocity=Vector3.ZERO
+			p.pos=actor.position
 		p.yaw=cmd.yaw
 		p.light=cmd.light
 		# Count travelled footsteps, not frames or button presses. Only marked loose boards creak.
@@ -1126,6 +1138,13 @@ func _simulate_players(delta: float):
 				exploration.disturb(p.pos)
 				sound_event.rpc(p.pos,.6,"creak")
 		if direction.length()>0.1:
+			if not cmd.crouch and p.pos.distance_to(previous_position)>.005:
+				for zone in range(repair_layout.rattle_zones.size()):
+					var spot:Vector3=repair_layout.rattle_zones[zone]
+					var stamp=str(id)+":"+str(zone)
+					if p.pos.distance_to(spot)<.85 and Time.get_ticks_msec()>int(rattle_cooldowns.get(stamp,0)):
+						rattle_cooldowns[stamp]=Time.get_ticks_msec()+12000
+						exploration.disturb(p.pos);sound_event.rpc(spot,.38,"glass")
 			for i in range(glass_meshes.size()):
 				if not broken.has(i) and p.pos.distance_to(glass_meshes[i].position)<1.2:
 					broken.append(i)
@@ -1196,6 +1215,8 @@ func _prompt(id: int) -> String:
 		if other!=id and people[other].down and p.pos.distance_to(people[other].pos)<2.4: return "USE — revive "+people[other].name
 	var hide_target=horror.aimed_hiding(id)
 	if hide_target>=0: return "USE — "+("hide in wardrobe" if horror.slots[hide_target].kind=="cupboard" else "crawl under bed")
+	var door_target=horror.target_door(id)
+	if door_target>=0:return horror.door_prompt(door_target)
 	var search_prompt=exploration.prompt(id)
 	if not search_prompt.is_empty(): return search_prompt
 	var interaction=horror.prompt(id)
@@ -1259,6 +1280,10 @@ func _act(id: int,action: String):
 					grace=3
 					done=true
 					break
+			if not done:
+				var target_door=horror.target_door(id)
+				if target_door>=0 and horror.aimed_hiding(id)<0:
+					horror.toggle_door(id,target_door);done=true
 			if not done:
 				for i in range(keys.size()):
 					if exploration.key_available(i) and exploration.target(id)==exploration.index_for_key(i) and not found.has(i):
@@ -1383,28 +1408,8 @@ func _tick_ghost(delta: float):
 			var choices=[Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(30,0,18),Vector3(9,5,6),Vector3(9,-5,27),Vector3(9,-10,27),Vector3(-12,0,18)]
 			ghost_goal=choices[rng.randi_range(0,choices.size()-1)]
 	if ghost_mode=="search": return
-	var path=_nav_path(ghost_pos,ghost_goal)
-	if path.is_empty():
-		# A closed room cannot strand her indefinitely. Approach its nearest reachable side.
-		var nearest_point=ghost_pos
-		var best_distance=INF
-		for point in navigation.get_point_ids():
-			if navigation.is_point_disabled(point): continue
-			var candidate=navigation.get_point_position(point)
-			if candidate.distance_to(ghost_goal)>=best_distance: continue
-			var route=_nav_path(ghost_pos,candidate)
-			if route.size()>1: nearest_point=candidate; best_distance=candidate.distance_to(ghost_goal)
-		ghost_goal=nearest_point
-		path=_nav_path(ghost_pos,ghost_goal)
-		if path.size()<2: ghost_mode="search"; ghost_timer=2
-	if path.size()>1:
-		var target=path[1]
-		var speed=_difficulty().chase if ghost_mode=="chase" else _difficulty().patrol*1.65 if ghost_mode=="investigate" else _difficulty().patrol
-		var step=ghost_pos.move_toward(target,delta*speed)
-		if not horror.blocks(ghost_pos,step): ghost_pos=step
-	elif path.size()==1:
-		var step=ghost_pos.move_toward(ghost_goal,delta*(_difficulty().chase if ghost_mode=="chase" else _difficulty().patrol))
-		if _line_clear(ghost_pos,step): ghost_pos=step
+	var speed=_difficulty().chase if ghost_mode=="chase" else _difficulty().patrol*1.65 if ghost_mode=="investigate" else _difficulty().patrol
+	haunt.move(self,delta,speed)
 
 func _check_outcome():
 	if phase!="playing": return
@@ -1809,6 +1814,8 @@ func _test_horror():
 	people[1].pos=Vector3(25.5,5,9)
 	actors[1].position=people[1].pos
 	ghost_pos=Vector3(21,5,9)
+	var handle_direction=horror.doors[4].pivot.to_global(Vector3(2.53,1.35,0))-(people[1].pos+Vector3(0,1.35,0))
+	yaw=atan2(-handle_direction.x,-handle_direction.z)
 	last_action.clear()
 	_act(1,"use")
 	assert(not horror.opened[4],"Upper door did not close")
@@ -1827,6 +1834,9 @@ func _test_horror():
 	assert(ghost_pos.x<24,"Ghost crossed closed door")
 	people[1].pos=Vector3(25.5,5,9)
 	actors[1].position=people[1].pos
+	await get_tree().create_timer(.35).timeout
+	handle_direction=horror.doors[4].pivot.to_global(Vector3(2.53,1.35,0))-(people[1].pos+Vector3(0,1.35,0))
+	yaw=atan2(-handle_direction.x,-handle_direction.z)
 	last_action.clear()
 	_act(1,"use")
 	assert(horror.opened[4])

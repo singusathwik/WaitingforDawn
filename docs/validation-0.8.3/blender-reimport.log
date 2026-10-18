@@ -1,0 +1,20 @@
+13:54:48 | INFO: Data are loaded, start creating Blender stuff
+13:54:48 | INFO: Blender create Mesh node Cylinder.025
+13:54:48 | INFO: glTF import finished in 0.02s
+13:54:48 | INFO: Data are loaded, start creating Blender stuff
+13:54:48 | INFO: Blender create Mesh node Cylinder.031
+13:54:48 | INFO: glTF import finished in 0.01s
+13:54:48 | INFO: Data are loaded, start creating Blender stuff
+13:54:48 | INFO: Blender create Mesh node Cube.081
+13:54:48 | INFO: glTF import finished in 0.02s
+13:54:48 | INFO: Data are loaded, start creating Blender stuff
+13:54:48 | INFO: Blender create Mesh node Cube.106
+13:54:48 | INFO: glTF import finished in 0.02s
+13:54:49 | INFO: Data are loaded, start creating Blender stuff
+13:54:49 | INFO: Blender create Mesh node Cylinder.021
+13:54:49 | INFO: glTF import finished in 0.02s
+SOURCE_REOPEN_AND_GLB_REIMPORT_PASS {'source_parts': 120, 'modifiers': 138, 'packed_images': 2, 'exports': {'dining.glb': {'meshes': 1, 'dimensions_m': [2.600001096725464, 1.700000822544098, 1.0519791580736637], 'triangles': 3780}, 'fallen_chair.glb': {'meshes': 1, 'dimensions_m': [1.3179594145622104, 0.7700001001358032, 0.7500001788139343], 'triangles': 916}, 'litter.glb': {'meshes': 1, 'dimensions_m': [2.9321967363357544, 1.7867525219917297, 0.11499999277293682], 'triangles': 4342}, 'nursery_litter.glb': {'meshes': 1, 'dimensions_m': [2.5477930307388306, 1.4625808000564575, 0.317500002682209], 'triangles': 6308}, 'sofa.glb': {'meshes': 1, 'dimensions_m': [2.9000000953674316, 1.350000023841858, 1.3181474208831787], 'triangles': 6196}}}
+Blender 4.3.2 (hash 32f5fdce0a0a built 2024-12-17 03:35:23)
+Read blend: "C:\Users\Sathwik\Downloads\HorrorGame\design\repair-083\decay-furniture.blend"
+
+Blender quit

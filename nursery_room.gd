@@ -10,6 +10,8 @@ func build(g):
 	game=g
 	name="EleanorsNursery"
 	position=Vector3(12,5,9)
+	# Structural slab: visual floor seams cannot become traversable holes.
+	blocker(Vector3(0,-.18,0),Vector3(21,.36,21))
 	var model=load("res://assets/models/nursery/nursery.glb").instantiate()
 	add_child(model)
 	var material=StandardMaterial3D.new()

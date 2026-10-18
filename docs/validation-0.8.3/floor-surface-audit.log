@@ -1,0 +1,10 @@
+Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+SURFACE (16.0, 5.0, 12.0) { "position": (16.0, 5.0, 12.0), "normal": (0.0, 1.0, 0.0), "face_index": -1, "collider_id": 43788535789, "collider": @StaticBody3D@300:<StaticBody3D#43788535789>, "shape": 0, "rid": RID(2345052143707) }
+SURFACE (12.0, 5.0, 4.0) { "position": (12.0, 5.0, 4.0), "normal": (0.0, 1.0, 0.0), "face_index": -1, "collider_id": 43788535789, "collider": @StaticBody3D@300:<StaticBody3D#43788535789>, "shape": 0, "rid": RID(2345052143707) }
+SURFACE (7.0, 5.0, 16.0) { "position": (7.0, 5.0, 16.0), "normal": (0.0, 1.0, 0.0), "face_index": -1, "collider_id": 43788535789, "collider": @StaticBody3D@300:<StaticBody3D#43788535789>, "shape": 0, "rid": RID(2345052143707) }
+SURFACE (18.0, 5.0, 5.0) { "position": (18.0, 5.0, 5.0), "normal": (0.0, 1.0, 0.0), "face_index": -1, "collider_id": 43788535789, "collider": @StaticBody3D@300:<StaticBody3D#43788535789>, "shape": 0, "rid": RID(2345052143707) }
+WITHOUT_SLAB (16.0, 5.0, 12.0) { "position": (16.0, 5.0, 12.0), "normal": (0.0, 1.0, 0.0), "face_index": 5637, "collider_id": 45130713126, "collider": Room_static_col:<StaticBody3D#45130713126>, "shape": 0, "rid": RID(2585570312284) }
+WITHOUT_SLAB (12.0, 5.0, 4.0) { "position": (12.0, 5.0, 4.0), "normal": (0.0, 1.0, 0.0), "face_index": 5636, "collider_id": 45130713126, "collider": Room_static_col:<StaticBody3D#45130713126>, "shape": 0, "rid": RID(2585570312284) }
+WITHOUT_SLAB (7.0, 5.0, 16.0) { "position": (7.0, 5.0, 16.0), "normal": (0.0, 1.0, 0.0), "face_index": 5637, "collider_id": 45130713126, "collider": Room_static_col:<StaticBody3D#45130713126>, "shape": 0, "rid": RID(2585570312284) }
+WITHOUT_SLAB (18.0, 5.0, 5.0) { "position": (18.0, 5.0, 5.0), "normal": (0.0, 1.0, 0.0), "face_index": 5637, "collider_id": 45130713126, "collider": Room_static_col:<StaticBody3D#45130713126>, "shape": 0, "rid": RID(2585570312284) }

@@ -42,6 +42,7 @@ static func setup_house(game):
 	var wood=pbr("old_wooden_floor_01",.3)
 	wood.albedo_color=Color(.48,.46,.41)
 	wood.roughness=1.0
+	wood.metallic_specular=.12
 	var plaster=pbr("rough_plaster_broken",.38)
 	for node in game.world.get_children():
 		if not node is MeshInstance3D or not node.mesh is BoxMesh or node.has_meta("outdoor_ground"): continue

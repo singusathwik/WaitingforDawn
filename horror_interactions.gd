@@ -28,6 +28,7 @@ var journal_text: RichTextLabel
 var notice=""
 var notice_until=0
 var wood: StandardMaterial3D
+var door_focus: MeshInstance3D
 
 func setup(g):
 	game=g
@@ -35,6 +36,12 @@ func setup(g):
 	wood.albedo_texture=load("res://assets/textures/worn-oak.png")
 	wood.albedo_color=Color(.48,.46,.4)
 	wood.roughness=.95
+	door_focus=MeshInstance3D.new()
+	var ring=TorusMesh.new();ring.inner_radius=.055;ring.outer_radius=.075;ring.rings=16;ring.ring_segments=8
+	door_focus.mesh=ring
+	var glow=StandardMaterial3D.new();glow.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED;glow.albedo_color=Color(.9,.8,.5)
+	door_focus.material_override=glow
+	game.world.add_child(door_focus);door_focus.hide()
 	for p in game._hiding_spots(): _cupboard(p)
 	for p in BEDS: _bed(p)
 	for spec in DOORS: _door(spec)
@@ -246,6 +253,39 @@ func near_door(p: Vector3) -> int:
 		if p.distance_to(DOORS[i].pos)<2.3: return i
 	return -1
 
+func target_door(id: int) -> int:
+	var p=game.people[id]
+	var view_yaw=game.yaw if id==game.multiplayer.get_unique_id() else game.commands.get(id,{}).get("yaw",p.yaw)
+	var forward=Vector3(0,0,-1).rotated(Vector3.UP,view_yaw)
+	var best=-1;var score=INF
+	for i in range(doors.size()):
+		if absf(p.pos.y-DOORS[i].pos.y)>.75:continue
+		var handle=doors[i].pivot.to_global(Vector3(2.53,1.35,0))
+		var offset=handle-(p.pos+Vector3(0,1.35,0))
+		var d=offset.length()
+		if d>3.0 or (d>.75 and forward.dot(offset.normalized())<.15):continue
+		var query=PhysicsRayQueryParameters3D.create(p.pos+Vector3(0,1.5,0),handle,1)
+		query.exclude=[doors[i].shape.get_parent().get_rid()]
+		if not game.get_world_3d().direct_space_state.intersect_ray(query).is_empty():continue
+		var rank=d*(1.4-forward.dot(offset.normalized()))
+		if rank<score:score=rank;best=i
+	return best
+
+func door_prompt(index: int) -> String:
+	return "USE — "+("close " if opened[index] else "open ")+DOORS[index].name+" door"
+
+func _process(_delta):
+	if not is_instance_valid(door_focus):return
+	var id=game.multiplayer.get_unique_id()
+	var target=target_door(id) if game.phase=="playing" and game.people.has(id) and not game.people[id].hidden else -1
+	door_focus.visible=target>=0 and game.exploration.intro_left<=0
+	if target>=0:
+		var handle=doors[target].pivot.to_global(Vector3(2.53,1.4,0))
+		# Offset toward the viewer: the ring must sit outside either face of the leaf.
+		door_focus.global_position=handle+(game.camera.global_position-handle).normalized()*.22
+		door_focus.look_at(game.camera.global_position,Vector3.UP)
+		door_focus.rotate_object_local(Vector3.RIGHT,PI/2)
+
 func toggle_door(id: int,index: int):
 	if index in [6,7] and not game.found.has(6):
 		game.interaction_notice.rpc_id(id,"The crypt ward fits this door.")
@@ -294,14 +334,13 @@ func show_journal():
 func prompt(id: int) -> String:
 	var p=game.people[id]
 	if p.hidden: return "USE — leave "+slots[p.hide_slot].kind+"  |  Look through the gap"
-	if Time.get_ticks_msec()<notice_until: return notice
-	var d=near_door(p.pos)
-	if d>=0: return "USE — "+("close " if opened[d] else "open ")+DOORS[d].name+" door"
+	var d=target_door(id)
+	if d>=0: return door_prompt(d)
 	for i in range(NOTES.size()):
 		if p.pos.distance_to(NOTES[i])<2.2: return "USE — read "+["the letter in the dead man's coat","nursery diary","soot-stained page"][i]
 	for slot in slots:
 		if p.pos.distance_to(slot.entry)<2.0: return "USE — "+("enter cupboard and close it" if slot.kind=="cupboard" else "crawl under bed")
-	return ""
+	return notice if Time.get_ticks_msec()<notice_until else ""
 
 func use(id: int) -> bool:
 	var p=game.people[id]
@@ -312,7 +351,8 @@ func use(id: int) -> bool:
 		p.hide_slot=-1
 		game.sound_event.rpc(p.pos,.25,"door")
 		return true
-	var d=near_door(p.pos)
+	var hiding=aimed_hiding(id)
+	var d=target_door(id) if hiding<0 else -1
 	if d>=0:
 		toggle_door(id,d)
 		return true

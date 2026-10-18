@@ -3,6 +3,37 @@ extends Node
 var game
 var routes: Array=[]
 var loose: Array=[]
+var guard_count=0
+var rattle_zones:Array=[]
+
+func seal_edges():
+	# Sweep exposed edges; a shared floor remains an opening, a drop gets a guard.
+	var space=game.get_world_3d().direct_space_state
+	var transforms:Array[Transform3D]=[]
+	for route in routes:
+		for i in range(route.size()-1):
+			var a:Vector3=route[i];var b:Vector3=route[i+1]
+			var direction=(b-a).normalized()
+			var side=Vector3(direction.z,0,-direction.x).normalized()
+			var count=int(ceil(a.distance_to(b)/.45))
+			for n in range(count):
+				var centre=a.lerp(b,(n+.5)/count)
+				for signum in [-1,1]:
+					var outside=centre+side*signum*1.85
+					var hit=space.intersect_ray(PhysicsRayQueryParameters3D.create(outside+Vector3.UP*.25,outside-Vector3.UP*.45,1))
+					if not hit.is_empty():continue
+					var p=centre+side*signum*1.43
+					var rail=game._box(game.world,p+Vector3.UP*.52,Vector3(.1,1.04,a.distance_to(b)/count+.04),Color(.12,.085,.05),true)
+					rail.rotation.y=atan2(direction.x,direction.z)
+					rail.name="LandingGuard"
+					transforms.append(rail.transform.scaled_local(Vector3(.1,1.04,a.distance_to(b)/count+.04)))
+					rail.hide()
+					guard_count+=1
+	var instance=MultiMeshInstance3D.new();var batches=MultiMesh.new()
+	batches.transform_format=MultiMesh.TRANSFORM_3D;batches.mesh=BoxMesh.new();batches.mesh.size=Vector3.ONE
+	batches.instance_count=transforms.size()
+	for i in range(transforms.size()):batches.set_instance_transform(i,transforms[i])
+	instance.multimesh=batches;instance.material_override=game._material(Color(.12,.085,.05));game.world.add_child(instance)
 
 func build(g):
 	game=g

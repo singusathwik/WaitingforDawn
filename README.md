@@ -1,4 +1,4 @@
-# Waiting for Dawn — v0.8.2
+# Waiting for Dawn — v0.8.3
 
 A first-person 3D cooperative horror escape game for Android and Windows, built with Godot 4.5.2. One player hosts; up to three friends join over local Wi-Fi. No account, microphone, analytics or online service is needed.
 
@@ -6,11 +6,21 @@ A first-person 3D cooperative horror escape game for Android and Windows, built 
 
 ## Play
 
-Install the APK from [Releases](https://github.com/singusathwik/WaitingforDawn/releases). Everyone in a match must use **0.8.2**. **Play** starts a solo round and closes the menu. **Join with friends** opens the LAN host/join screen; host a room, share the local IP, mark players ready, then start. **Exit** closes the game. Android and Windows use the same protocol and the Android signing identity is unchanged.
+Install the APK from [Releases](https://github.com/singusathwik/WaitingforDawn/releases). Everyone in a match must use **0.8.3**. **Play** starts a solo round and closes the menu. **Join with friends** opens the LAN host/join screen; host a room, share the local IP, mark players ready, then start. **Exit** closes the game. Android and Windows use the same protocol and the Android signing identity is unchanged.
 
 Three students enter an abandoned house during a night out. The doors lock behind them. A dead keeper carries a warning about Eleanor, the children she lost, and twelve keys. Recover the garage and ignition keys, then board the car together **before 6 AM**. The opening uses in-engine camera shots, generated establishing art, synthesized male narration and subtitles. **Skip** ends it; retrying a lost round does not replay it.
 
-## Repairs in 0.8.2
+## Repairs in 0.8.3
+
+- Continuous nursery floor collision, guards along exposed stair/bridge edges, and recovery to the last grounded position after an unexpected fall.
+- Aim near a door handle within three metres for its Use prompt and small highlight. The same target drives the action; a noise notice no longer hides it.
+- Ghost navigation retains the noise destination behind a closed door, approaches the accessible side and resumes when the door opens. Complete waypoints prevent corner cutting, and blocked patrol destinations do not strand it.
+- Original Blender sofas, draped dining tables, fallen chairs, broken crockery/books and nursery toy clutter are integrated into the actual scene. Grime patches and less reflective timber age the rooms.
+- Stepping through visible debris disturbs the ghost; crouching avoids it. Ghost footsteps are spatial, response wails originate at the ghost, and nearby lights/toys react to its position. Ordinary player steps remain silent.
+
+See [research and editable assets](design/repair-083/README.md) and [executed checks and limitations](TEST_RESULTS.md). This is an existing-engine repair, **not an Unreal port**.
+
+## Previous 0.8.2 repairs
 
 - Expanding landscape viewport removes the fixed-aspect sidebars. New Play / Join with friends / Exit home screen.
 - Ghost starts in an accessible hallway, investigates reported noise long enough to travel between floors, and approaches a closed room from a reachable point. Closed doors still protect a room.
