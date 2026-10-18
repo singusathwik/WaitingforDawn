@@ -102,3 +102,11 @@ The revised original introduction text was synthesized using the installed Windo
 ## 0.8.3 furniture and decay
 
 Original Blender assemblies: sofa, linen-covered dining table, fallen chair, books/boards/broken-crockery cluster and nursery toy/rag-doll cluster. Sources, dimensions and reimport checks are in `design/repair-083/`; regenerate with `scripts/build_decay_assets.py`. Existing credited Poly Haven fabric and original generated worn oak are reused through shared runtime materials. Editable Blender source packs both images; exports omit duplicate image copies intentionally. No new third-party model or sound was downloaded. Decay-patch shading and ghost-driven presentation effects are original code. Eyes and Amnesia were consulted through official descriptions for design principles only; none of their assets are bundled.
+
+## Unreal 0.9.0
+
+The Unreal house uses the original credited furniture and surfaces above. `unreal/tools/prepare_assets.py` exports the repair/decay furniture, hollow joinery, and animated Eleanor to FBX. It removes the source rig's unused Icosphere display mesh. `prepare_nursery_props.py` extracts the actual cradle, scanned armchair and posed keeper from the approved nursery Blender source. Unreal materials explicitly restore the original skin/fabric/oak textures; no screenshots of Blender are substituted for game geometry.
+
+Visible co-op bodies use Epic's UE 5.7 template Manny mesh, skeleton, materials, idle/walk/jog/death animations and their rig dependencies under `unreal/WaitingForDawn/Content/Characters`. These are recognizable template mannequins, not commissioned student character art. Source: the installed `Templates/TemplateResources/High/Characters/Content` directory. Epic owns these example assets; they are not covered by any project-specific permissive license. The [Unreal Engine EULA, sections 1 and 5(b)](https://www.unrealengine.com/eula/unreal) identifies Templates as Examples and permits distributing Examples in source or object form. The Unreal runtime remains subject to Epic's EULA.
+
+No models, audio, code, or textures were extracted from Eyes, Amnesia or the commercial reference screenshots. Narration and effects retain the original synthesized-audio provenance above.

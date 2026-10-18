@@ -6,7 +6,7 @@ public class WaitingForDawn : ModuleRules
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
         PrivateIncludePaths.Add(ModuleDirectory);
         PublicDependencyModuleNames.AddRange(new string[] {
-            "Core", "CoreUObject", "Engine", "InputCore", "AIModule", "NavigationSystem", "NetCore"
+            "Core", "CoreUObject", "Engine", "InputCore", "AIModule", "NavigationSystem", "NetCore", "UMG", "Slate", "SlateCore", "Sockets"
         });
     }
 }

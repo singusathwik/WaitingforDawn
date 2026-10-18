@@ -2,7 +2,7 @@
   "FileVersion": 3,
   "EngineAssociation": "5.7",
   "Category": "Games",
-  "Description": "Waiting for Dawn - Unreal rebuild, first playable section",
+  "Description": "Waiting for Dawn - four-storey cooperative horror escape game",
   "Modules": [{"Name": "WaitingForDawn", "Type": "Runtime", "LoadingPhase": "Default"}],
   "Plugins": [
     {"Name": "AndroidFileServer", "Enabled": false},

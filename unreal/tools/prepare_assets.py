@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'unreal/Staging'; OUT.mkdir(parents=True,exist_ok=True)
 SOURCES={
     **{n:f'assets/models/decay/{n}.glb' for n in ('sofa','dining','fallen_chair','litter','nursery_litter')},
-    **{n:f'assets/models/repair/{n}.glb' for n in ('bed','shelf','radiator','key')},
+    **{n:f'assets/models/repair/{n}.glb' for n in ('bed','shelf','radiator','key','kitchen','dresser','drawer','car','wardrobe_case','wardrobe_leaf','debris')},
 }
 records=[]
 for name,rel in SOURCES.items():
@@ -83,6 +83,8 @@ bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'interactive-furniture.blend'))
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
 bpy.ops.import_scene.gltf(filepath=str(ROOT/'assets/models/mourning_ghost.glb'))
+for obj in list(bpy.context.scene.objects):
+    if obj.type=='MESH' and obj.name.startswith('Icosphere'):bpy.data.objects.remove(obj,do_unlink=True)
 rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE')
 # The source has separate hips and two foot-control roots. Unreal requires one root.
 # Retain every existing bone and animation channel beneath an unanimated master root.
@@ -98,7 +100,7 @@ bpy.ops.object.select_all(action='SELECT')
 vertices=[o.matrix_world@Vector(v) for o in bpy.context.scene.objects if o.type=='MESH' for v in o.bound_box]
 ghost_min_z=min(v.z for v in vertices)
 ghost_height=max(v.z for v in vertices)-ghost_min_z
-target=OUT/'SK_mourning_ghost.fbx'
+target=OUT/'SK_Eleanor.fbx'
 bpy.ops.export_scene.fbx(filepath=str(target),use_selection=True,object_types={'MESH','ARMATURE'},
     apply_unit_scale=True,apply_scale_options='FBX_SCALE_UNITS',axis_forward='-Y',axis_up='Z',
     bake_anim=True,bake_anim_use_all_actions=True,bake_anim_use_nla_strips=True,add_leaf_bones=False,

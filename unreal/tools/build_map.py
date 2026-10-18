@@ -13,7 +13,8 @@ sys.path.insert(0,str(HERE))
 from slice_layout import layout, verify_layout
 ROOT=HERE.parents[1]
 STAGING=ROOT/'unreal/Staging'
-MAP='/Game/Maps/'+os.environ.get('WD_MAP_NAME','StairHall')
+HOUSE=os.environ.get('WD_HOUSE')=='1'
+MAP='/Game/Maps/'+os.environ.get('WD_MAP_NAME','House' if HOUSE else 'StairHall')
 if u.EditorAssetLibrary.does_asset_exist(MAP):
     raise RuntimeError(f'{MAP} already exists; preserve it and use WD_MAP_NAME for a new revision.')
 DATA=layout(); verify_layout(DATA)
@@ -69,7 +70,7 @@ for entry in json.loads((STAGING/'assets.json').read_text(encoding='utf-8')):
         animations=[u.load_asset(p) for p in u.EditorAssetLibrary.list_assets('/Game/Imported',recursive=True)]
         animations=[o for o in animations if isinstance(o,u.AnimSequence)]
         for clip in ('idle','walk','run'):
-            ghost_animations[clip]=next((o for o in animations if clip in o.get_name().lower()),None)
+            ghost_animations[clip]=next((o for o in animations if o.get_name().startswith(entry['fbx'].split('.')[0]) and clip in o.get_name().lower()),None)
             if not ghost_animations[clip]: raise RuntimeError('Missing ghost animation: '+clip)
     else:
         mesh=next((o for o in results if isinstance(o,u.StaticMesh)),None)
@@ -111,7 +112,7 @@ for name,texture in textures.items():
     materials[name]=mat
 
 audio={}
-for name in ('door','wail','key','ambient'):
+for name in ('door','wail','key','ambient','creak','breath','glass','stinger','introduction','engine'):
     audio[name]=next(o for o in import_file(ROOT/f'assets/audio/{name}.wav','S_'+name) if isinstance(o,u.SoundWave))
     if name!='ambient':
         # Every positional cue needs explicit attenuation; engine defaults are not spatial.
@@ -127,98 +128,104 @@ for name in ('door','wail','key','ambient'):
         u.EditorAssetLibrary.save_loaded_asset(settings)
         u.EditorAssetLibrary.save_loaded_asset(audio[name])
 
-if not LEVELS.new_level(MAP): raise RuntimeError('Could not create map')
-cube=load('/Engine/BasicShapes/Cube.Cube')
-def spawn(cls,label,position,yaw=0):
-    actor=ACTORS.spawn_actor_from_class(cls,u.Vector(*position),u.Rotator(yaw=yaw))
-    if not actor: raise RuntimeError('Could not spawn '+label)
-    actor.set_actor_label(label)
-    return actor
+if HOUSE:
+    exec(compile((HERE/'build_house_scene.py').read_text(encoding='utf-8'),str(HERE/'build_house_scene.py'),'exec'))
+    # build_house_scene writes its own map; avoid also creating the regression fixture below.
+    MAP=None
 
-for b in DATA['boxes']:
-    actor=spawn(u.StaticMeshActor,b['name'],b['centre'])
-    if b.get('pitch'): actor.set_actor_rotation(u.Rotator(pitch=b['pitch']),False)
-    component=actor.static_mesh_component
-    component.set_static_mesh(cube)
-    actor.set_actor_scale3d(u.Vector(*(s/100 for s in b['size'])))
-    component.set_material(0,materials[b['material']])
-    component.set_collision_profile_name('BlockAll')
-    if not b['visible']: component.set_visibility(False)
-    actor.set_editor_property('tags',[u.Name(b['role'])])
+if MAP and not LEVELS.new_level(MAP): raise RuntimeError('Could not create map')
+if MAP:
+    cube=load('/Engine/BasicShapes/Cube.Cube')
+    def spawn(cls,label,position,yaw=0):
+        actor=ACTORS.spawn_actor_from_class(cls,u.Vector(*position),u.Rotator(yaw=yaw))
+        if not actor: raise RuntimeError('Could not spawn '+label)
+        actor.set_actor_label(label)
+        return actor
 
-for i,p in enumerate(DATA['props']):
-    actor=spawn(u.StaticMeshActor,f"Dressing_{i}_{p['asset']}",p['location'],p['yaw'])
-    component=actor.static_mesh_component
-    component.set_static_mesh(meshes[p['asset']])
-    actor.set_actor_scale3d(u.Vector(p['scale'],p['scale'],p['scale']))
-    component.set_collision_profile_name('NoCollision' if 'litter' in p['asset'] else 'BlockAll')
+    for b in DATA['boxes']:
+        actor=spawn(u.StaticMeshActor,b['name'],b['centre'])
+        if b.get('pitch'): actor.set_actor_rotation(u.Rotator(pitch=b['pitch']),False)
+        component=actor.static_mesh_component
+        component.set_static_mesh(cube)
+        actor.set_actor_scale3d(u.Vector(*(s/100 for s in b['size'])))
+        component.set_material(0,materials[b['material']])
+        component.set_collision_profile_name('BlockAll')
+        if not b['visible']: component.set_visibility(False)
+        actor.set_editor_property('tags',[u.Name(b['role'])])
 
-interactive=u.load_class(None,'/Script/WaitingForDawn.WDInteractable')
-ghost_class=u.load_class(None,'/Script/WaitingForDawn.WDGhost')
-if not interactive or not ghost_class: raise RuntimeError('Compile WaitingForDawnEditor before building the map')
-door=spawn(interactive,'GroundFloorDoor',DATA['door'])
-door.mesh.set_static_mesh(meshes['room_door'])
-door.mesh.set_relative_rotation(u.Rotator(yaw=90),False,False)
-door.handle.set_relative_location(u.Vector(98,12,105),False,False)
-door.set_editor_property('display_name',u.Text('parlour door'))
-door.set_editor_property('interaction_sound',audio['door'])
+    for i,p in enumerate(DATA['props']):
+        actor=spawn(u.StaticMeshActor,f"Dressing_{i}_{p['asset']}",p['location'],p['yaw'])
+        component=actor.static_mesh_component
+        component.set_static_mesh(meshes[p['asset']])
+        actor.set_actor_scale3d(u.Vector(p['scale'],p['scale'],p['scale']))
+        component.set_collision_profile_name('NoCollision' if 'litter' in p['asset'] else 'BlockAll')
 
-cabinet=spawn(u.StaticMeshActor,'HollowCupboard',DATA['cupboard'],180)
-cabinet.static_mesh_component.set_static_mesh(meshes['cupboard_shell'])
-cabinet.static_mesh_component.set_collision_profile_name('BlockAll')
-cupboard=spawn(interactive,'CupboardLeaf',[-472,0,0],180)
-cupboard.mesh.set_static_mesh(meshes['cupboard_leaf'])
-cupboard.handle.set_relative_location(u.Vector(82,12,98),False,False)
-cupboard.set_editor_property('display_name',u.Text('cupboard'))
-cupboard.set_editor_property('open_yaw',100.0)
-cupboard.set_editor_property('blocks_passage',False)
-cupboard.set_editor_property('interaction_sound',audio['door'])
-key=spawn(interactive,'VisibleCupboardKey',[-520,20,75])
-key.mesh.set_static_mesh(meshes['key'])
-key.mesh.set_relative_scale3d(u.Vector(.4,.4,.4))
-key.set_editor_property('kind',u.WDInteraction.KEY)
-key.set_editor_property('container',cupboard)
-key.set_editor_property('grants_key',u.Name('Nursery'))
-key.set_editor_property('display_name',u.Text('small brass key'))
-key.set_editor_property('open_offset',u.Vector(47,10,75))
-key.set_editor_property('interaction_sound',audio['key'])
+    interactive=u.load_class(None,'/Script/WaitingForDawn.WDInteractable')
+    ghost_class=u.load_class(None,'/Script/WaitingForDawn.WDGhost')
+    if not interactive or not ghost_class: raise RuntimeError('Compile WaitingForDawnEditor before building the map')
+    door=spawn(interactive,'GroundFloorDoor',DATA['door'])
+    door.mesh.set_static_mesh(meshes['room_door'])
+    door.mesh.set_relative_rotation(u.Rotator(yaw=90),False,False)
+    door.handle.set_relative_location(u.Vector(98,12,105),False,False)
+    door.set_editor_property('display_name',u.Text('parlour door'))
+    door.set_editor_property('interaction_sound',audio['door'])
 
-for i,position in enumerate(DATA['starts']): spawn(u.PlayerStart,f'SurvivorStart_{i}',position)
-ghost=spawn(ghost_class,'Eleanor',DATA['ghost'],180)
-ghost.set_editor_property('patrol_points',[u.Vector(*p) for p in DATA['patrol']])
-ghost.set_editor_property('warning_sound',audio['wail'])
-ghost.mesh.set_skeletal_mesh_asset(ghost_mesh)
-ghost_scale=ghost_record['target_height_cm']/(ghost_record['source_height_m']*100)
-ghost.mesh.set_relative_scale3d(u.Vector(ghost_scale,ghost_scale,ghost_scale))
-ghost.mesh.set_relative_rotation(u.Rotator(yaw=-90),False,False)
-ghost.mesh.set_relative_location(u.Vector(0,0,-88-ghost_record['source_min_z_m']*100*ghost_scale),False,False)
-for clip,animation in ghost_animations.items(): ghost.set_editor_property(clip+'_animation',animation)
+    cabinet=spawn(u.StaticMeshActor,'HollowCupboard',DATA['cupboard'],180)
+    cabinet.static_mesh_component.set_static_mesh(meshes['cupboard_shell'])
+    cabinet.static_mesh_component.set_collision_profile_name('BlockAll')
+    cupboard=spawn(interactive,'CupboardLeaf',[-472,0,0],180)
+    cupboard.mesh.set_static_mesh(meshes['cupboard_leaf'])
+    cupboard.handle.set_relative_location(u.Vector(82,12,98),False,False)
+    cupboard.set_editor_property('display_name',u.Text('cupboard'))
+    cupboard.set_editor_property('open_yaw',100.0)
+    cupboard.set_editor_property('blocks_passage',False)
+    cupboard.set_editor_property('interaction_sound',audio['door'])
+    key=spawn(interactive,'VisibleCupboardKey',[-520,20,75])
+    key.mesh.set_static_mesh(meshes['key'])
+    key.mesh.set_relative_scale3d(u.Vector(.4,.4,.4))
+    key.set_editor_property('kind',u.WDInteraction.KEY)
+    key.set_editor_property('container',cupboard)
+    key.set_editor_property('grants_key',u.Name('Nursery'))
+    key.set_editor_property('display_name',u.Text('small brass key'))
+    key.set_editor_property('open_offset',u.Vector(47,10,75))
+    key.set_editor_property('interaction_sound',audio['key'])
 
-for i,position in enumerate(DATA['lights']):
-    light=spawn(u.PointLight,f'WarmFixture_{i}',position)
-    light.point_light_component.set_mobility(u.ComponentMobility.MOVABLE)
-    light.point_light_component.set_editor_property('intensity_units',u.LightUnits.LUMENS)
-    light.point_light_component.set_intensity(180)
-    light.point_light_component.set_editor_property('source_radius',8.0)
-    light.point_light_component.set_light_color(u.LinearColor(1,.62,.32))
-    light.point_light_component.set_attenuation_radius(700)
-for i,position in enumerate([[-430,-130,170],[350,-120,170],[-220,-130,480]]):
-    fill=spawn(u.PointLight,f'IndirectFill_{i}',position).point_light_component
-    fill.set_mobility(u.ComponentMobility.MOVABLE)
-    fill.set_editor_property('intensity_units',u.LightUnits.LUMENS)
-    fill.set_intensity(28)
-    fill.set_light_color(u.LinearColor(.42,.51,.65))
-    fill.set_cast_shadows(False)
-    fill.set_attenuation_radius(550)
-sky=spawn(u.SkyLight,'LowAmbient',[0,0,700])
-sky.light_component.set_intensity(.08)
-nav=spawn(u.NavMeshBoundsVolume,'WholeHouseNavigation',[0,0,320])
-nav.set_actor_scale3d(u.Vector(8,6,5))
-origin,extent=nav.get_actor_bounds(False)
-if extent.x<620 or extent.y<470 or extent.z<320:
-    raise RuntimeError('Navigation volume has no usable brush bounds; refusing an un-navigable map')
-world=u.get_editor_subsystem(u.UnrealEditorSubsystem).get_editor_world()
-u.SystemLibrary.execute_console_command(world,'RebuildNavigation')
-if not LEVELS.save_current_level(): raise RuntimeError('Map save failed')
-u.EditorAssetLibrary.save_directory('/Game/Imported',only_if_is_dirty=False,recursive=True)
-print('WD_MAP_CREATED',MAP,'Runtime traversal and navigation validation still required.')
+    for i,position in enumerate(DATA['starts']): spawn(u.PlayerStart,f'SurvivorStart_{i}',position)
+    ghost=spawn(ghost_class,'Eleanor',DATA['ghost'],180)
+    ghost.set_editor_property('patrol_points',[u.Vector(*p) for p in DATA['patrol']])
+    ghost.set_editor_property('warning_sound',audio['wail'])
+    ghost.mesh.set_skeletal_mesh_asset(ghost_mesh)
+    ghost_scale=ghost_record['target_height_cm']/(ghost_record['source_height_m']*100)
+    ghost.mesh.set_relative_scale3d(u.Vector(ghost_scale,ghost_scale,ghost_scale))
+    ghost.mesh.set_relative_rotation(u.Rotator(yaw=-90),False,False)
+    ghost.mesh.set_relative_location(u.Vector(0,0,-88-ghost_record['source_min_z_m']*100*ghost_scale),False,False)
+    for clip,animation in ghost_animations.items(): ghost.set_editor_property(clip+'_animation',animation)
+
+    for i,position in enumerate(DATA['lights']):
+        light=spawn(u.PointLight,f'WarmFixture_{i}',position)
+        light.point_light_component.set_mobility(u.ComponentMobility.MOVABLE)
+        light.point_light_component.set_editor_property('intensity_units',u.LightUnits.LUMENS)
+        light.point_light_component.set_intensity(180)
+        light.point_light_component.set_editor_property('source_radius',8.0)
+        light.point_light_component.set_light_color(u.LinearColor(1,.62,.32))
+        light.point_light_component.set_attenuation_radius(700)
+    for i,position in enumerate([[-430,-130,170],[350,-120,170],[-220,-130,480]]):
+        fill=spawn(u.PointLight,f'IndirectFill_{i}',position).point_light_component
+        fill.set_mobility(u.ComponentMobility.MOVABLE)
+        fill.set_editor_property('intensity_units',u.LightUnits.LUMENS)
+        fill.set_intensity(28)
+        fill.set_light_color(u.LinearColor(.42,.51,.65))
+        fill.set_cast_shadows(False)
+        fill.set_attenuation_radius(550)
+    sky=spawn(u.SkyLight,'LowAmbient',[0,0,700])
+    sky.light_component.set_intensity(.08)
+    nav=spawn(u.NavMeshBoundsVolume,'WholeHouseNavigation',[0,0,320])
+    nav.set_actor_scale3d(u.Vector(8,6,5))
+    origin,extent=nav.get_actor_bounds(False)
+    if extent.x<620 or extent.y<470 or extent.z<320:
+        raise RuntimeError('Navigation volume has no usable brush bounds; refusing an un-navigable map')
+    world=u.get_editor_subsystem(u.UnrealEditorSubsystem).get_editor_world()
+    u.SystemLibrary.execute_console_command(world,'RebuildNavigation')
+    if not LEVELS.save_current_level(): raise RuntimeError('Map save failed')
+    u.EditorAssetLibrary.save_directory('/Game/Imported',only_if_is_dirty=False,recursive=True)
+    print('WD_MAP_CREATED',MAP,'Runtime traversal and navigation validation still required.')

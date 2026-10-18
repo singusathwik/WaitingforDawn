@@ -1,0 +1,297 @@
+[
+  {
+    "name": "sofa",
+    "source": "assets/models/decay/sofa.glb",
+    "source_sha256": "d5a28586100d6e1ab4cd9ab16793ed77f71fb1a453329ef46e4ea20d1c5a8982",
+    "fbx": "SM_sofa.fbx",
+    "sha256": "0fba1b156e6a39db8983726cae9df5aab2ae12fcbabbb22684d05ec49a38d1b8",
+    "triangles": 6196,
+    "blender_bounds_m": [
+      2.9000000953674316,
+      1.350000023841858,
+      1.3181474208831787
+    ]
+  },
+  {
+    "name": "dining",
+    "source": "assets/models/decay/dining.glb",
+    "source_sha256": "ba11dcf8939db22bd32916f87c84fdd208f7110ec83d8cc11af38d5212b6870d",
+    "fbx": "SM_dining.fbx",
+    "sha256": "35e5560d9697f8465c834ac22d1fd30e1f0699c00283dd99e619c65f01d827ab",
+    "triangles": 3780,
+    "blender_bounds_m": [
+      2.600001335144043,
+      1.7000008821487427,
+      1.0519791841506958
+    ]
+  },
+  {
+    "name": "fallen_chair",
+    "source": "assets/models/decay/fallen_chair.glb",
+    "source_sha256": "d390f8766964a92775385255664128be7960d4d325a01451f5050789f8c1318b",
+    "fbx": "SM_fallen_chair.fbx",
+    "sha256": "3fa5d5e0d7259751861d06cc9cfc7e5cbf618282bfe4bbafb44ce52e2ca43a2c",
+    "triangles": 916,
+    "blender_bounds_m": [
+      1.3179594278335571,
+      0.7700001001358032,
+      0.7500001788139343
+    ]
+  },
+  {
+    "name": "litter",
+    "source": "assets/models/decay/litter.glb",
+    "source_sha256": "ba31b4399ff04f85bfcc7d91aaf83be35c3aaa1aa96724a152730ae06868cc0b",
+    "fbx": "SM_litter.fbx",
+    "sha256": "43b62bf2f2e0090e295ecabad31627bff84773760990db29d10a78f9a65172f7",
+    "triangles": 4342,
+    "blender_bounds_m": [
+      2.932196617126465,
+      1.786752462387085,
+      0.11499999463558197
+    ]
+  },
+  {
+    "name": "nursery_litter",
+    "source": "assets/models/decay/nursery_litter.glb",
+    "source_sha256": "f8c9f04fa5799962dacec5b9eeb4af14f2be2fc9468d6749b64c94670120adf1",
+    "fbx": "SM_nursery_litter.fbx",
+    "sha256": "084eb4eb9aad05bd7608a52dcc811303f191883271d59fa303c65238b98c1011",
+    "triangles": 6308,
+    "blender_bounds_m": [
+      2.547792911529541,
+      1.4625808000564575,
+      0.3174999952316284
+    ]
+  },
+  {
+    "name": "bed",
+    "source": "assets/models/repair/bed.glb",
+    "source_sha256": "7ce4497bd4d243a664d5baa4f60e317f73e3d91aa29ffb0cd2bdd1dd8a5a8570",
+    "fbx": "SM_bed.fbx",
+    "sha256": "c937d527bc32933a9dc18b749bc5244e8cde7facdfbcaaa6b3db215513db1892",
+    "triangles": 2356,
+    "blender_bounds_m": [
+      1.9500000476837158,
+      2.8849997520446777,
+      1.8250000476837158
+    ]
+  },
+  {
+    "name": "shelf",
+    "source": "assets/models/repair/shelf.glb",
+    "source_sha256": "29b95ae04835ccff9c1dd37ef9c0a5ed814935aacce3b5509a0382168ef90d1f",
+    "fbx": "SM_shelf.fbx",
+    "sha256": "a2cfbcc770256d03ac6d7e13e2b30d7558a07631539838d0ec083f5dae240d09",
+    "triangles": 5184,
+    "blender_bounds_m": [
+      1.6800000667572021,
+      0.47999998927116394,
+      2.4149999618530273
+    ]
+  },
+  {
+    "name": "radiator",
+    "source": "assets/models/repair/radiator.glb",
+    "source_sha256": "ea1b5e97f08d528ce2ef3a45cde01e936c1480306cddf9e0c533a093aad53761",
+    "fbx": "SM_radiator.fbx",
+    "sha256": "d95329a4d362b83c5bb3c6acafb909f1f7e7b4b5cda802d55867b9f2ad4def54",
+    "triangles": 1448,
+    "blender_bounds_m": [
+      1.2400000095367432,
+      0.2199999988079071,
+      0.9200000762939453
+    ]
+  },
+  {
+    "name": "key",
+    "source": "assets/models/repair/key.glb",
+    "source_sha256": "6170d602c819453dbd1255c2c979313fbd0353f80ef43002ffad78a032de2fc4",
+    "fbx": "SM_key.fbx",
+    "sha256": "6608898927753aee42d2f55771dae301c6f182bcae306b40957d8a801632423f",
+    "triangles": 708,
+    "blender_bounds_m": [
+      0.1679999977350235,
+      0.30300000309944153,
+      0.02800000086426735
+    ]
+  },
+  {
+    "name": "kitchen",
+    "source": "assets/models/repair/kitchen.glb",
+    "source_sha256": "76749fbd91a0c084d864ba5345dad9a405ee7c80a6b83450e957e33b4e8c5946",
+    "fbx": "SM_kitchen.fbx",
+    "sha256": "78b6756c6b60bccf1ce13c526fbb1f172c73e246f4d58fbf504c980de18f8a53",
+    "triangles": 2240,
+    "blender_bounds_m": [
+      1.5,
+      1.434999942779541,
+      1.1949999332427979
+    ]
+  },
+  {
+    "name": "dresser",
+    "source": "assets/models/repair/dresser.glb",
+    "source_sha256": "ed9723ca2a01881eb87d97becb12dffe7c8f674984956090d5618471f9fb451e",
+    "fbx": "SM_dresser.fbx",
+    "sha256": "d08e54ff81eef9333d3fee4c610ba56787b01c9714ef0de0b1cad9ef74074d19",
+    "triangles": 1384,
+    "blender_bounds_m": [
+      3.7199997901916504,
+      1.25,
+      1.8199999332427979
+    ]
+  },
+  {
+    "name": "drawer",
+    "source": "assets/models/repair/drawer.glb",
+    "source_sha256": "ccf006cf72f19ffbe89e89e2e1ad087e31c3a0623e82b30b84ef0ff895a3a588",
+    "fbx": "SM_drawer.fbx",
+    "sha256": "7aedc726ccdc6d276b24b8636f251d404fffe6289476cced8c065192fe934a31",
+    "triangles": 1200,
+    "blender_bounds_m": [
+      1.0699999332427979,
+      0.9175000190734863,
+      0.5799999833106995
+    ]
+  },
+  {
+    "name": "car",
+    "source": "assets/models/repair/car.glb",
+    "source_sha256": "3eb701498f47b9fcc8277fba48df91acebc71a0e23a3533db13547cbeb293e51",
+    "fbx": "SM_car.fbx",
+    "sha256": "3246002b107c6bd856ef1de49b2eb8886ee3cee6be022ed12e473c44c73b865a",
+    "triangles": 8128,
+    "blender_bounds_m": [
+      2.2909998893737793,
+      4.979000091552734,
+      1.6899999380111694
+    ]
+  },
+  {
+    "name": "wardrobe_case",
+    "source": "assets/models/repair/wardrobe_case.glb",
+    "source_sha256": "de1fb67f6f04838e816e3fbacded914c2e7d296e35066d07e43d116257773204",
+    "fbx": "SM_wardrobe_case.fbx",
+    "sha256": "68813b72bafdbe70d29d7b6135a7351669613c9c11c370730465138bdf558e23",
+    "triangles": 952,
+    "blender_bounds_m": [
+      1.9700000286102295,
+      1.7200000286102295,
+      2.4800000190734863
+    ]
+  },
+  {
+    "name": "wardrobe_leaf",
+    "source": "assets/models/repair/wardrobe_leaf.glb",
+    "source_sha256": "151fb866f1e668eb960dba372e90a888a61f4bdec6117a691d1e3a5c10e032d0",
+    "fbx": "SM_wardrobe_leaf.fbx",
+    "sha256": "28d01f9aa98d753170941a085a4578b46e75bbb962bc10368ef162f7ed2c3ae8",
+    "triangles": 1632,
+    "blender_bounds_m": [
+      1.6200001239776611,
+      0.23000000417232513,
+      2.4600000381469727
+    ]
+  },
+  {
+    "name": "debris",
+    "source": "assets/models/repair/debris.glb",
+    "source_sha256": "12c66bcd2b3c65e04dcf96e57a1c7c4747dbe9c755555564a518a3878db16ff9",
+    "fbx": "SM_debris.fbx",
+    "sha256": "d3f08c33c74ae18f0f39d02b2306a2e0de2d46d816c06db4315cba3df679959e",
+    "triangles": 540,
+    "blender_bounds_m": [
+      1.5594111680984497,
+      1.4514262676239014,
+      0.04999999701976776
+    ]
+  },
+  {
+    "name": "cupboard_shell",
+    "source": "original Blender geometry in unreal/tools/prepare_assets.py",
+    "fbx": "SM_cupboard_shell.fbx",
+    "sha256": "608e19fc1992732b6b8675b1e23378d5c48527092ca7e72e77be73b28de64cfd",
+    "triangles": 756,
+    "blender_bounds_m": [
+      1.0199999809265137,
+      0.5800000429153442,
+      2.0
+    ]
+  },
+  {
+    "name": "cupboard_leaf",
+    "source": "original Blender geometry in unreal/tools/prepare_assets.py",
+    "fbx": "SM_cupboard_leaf.fbx",
+    "sha256": "a01d1d4edc99801013062ed4876322d86d3444ce17fc553c18af5e308306afab",
+    "triangles": 756,
+    "blender_bounds_m": [
+      0.9399999976158142,
+      0.1599999964237213,
+      1.880000114440918
+    ]
+  },
+  {
+    "name": "room_door",
+    "source": "original Blender geometry in unreal/tools/prepare_assets.py",
+    "fbx": "SM_room_door.fbx",
+    "sha256": "ff15c32739eac8938744b698408802b685e22499dd3d0bafd41c8758eb4c2d3f",
+    "triangles": 756,
+    "blender_bounds_m": [
+      1.100000023841858,
+      0.17499999701976776,
+      2.380000114440918
+    ]
+  },
+  {
+    "name": "mourning_ghost",
+    "source": "assets/models/mourning_ghost.glb",
+    "source_sha256": "5fcc224adcf9d671c387f7090b4c48c95a131d16f557f17e129d6671fac231d1",
+    "fbx": "SK_Eleanor.fbx",
+    "sha256": "d4e019c8733983637caa57aa71d2ac3f9a92282dc2dc7652a6eef9abe500f9fd",
+    "skeletal": true,
+    "source_min_z_m": -0.3662855327129364,
+    "source_height_m": 8.304720133543015,
+    "target_height_cm": 235,
+    "attribution": "Thin Zombie by Rosswet Mobile, submitted by dogchicken; adapted veil and skirt; CC BY 3.0; see ASSETS.md"
+  },
+  {
+    "name": "cradle",
+    "source": "design\\rooms\\eleanors-nursery\\nursery-form.blend",
+    "source_sha256": "f16cbe834daed3a18347519dbb0f61b0860b0f0c9c57327783e2e42c53f135b0",
+    "fbx": "SM_cradle.fbx",
+    "sha256": "8fc9bf7bd2aaa3268ce9b2d8e86dd80ec86504307dfd46d3b57091cef95dce06",
+    "triangles": 7196,
+    "blender_bounds_m": [
+      1.5399999618530273,
+      1.159999966621399,
+      1.156000018119812
+    ]
+  },
+  {
+    "name": "armchair",
+    "source": "design\\rooms\\eleanors-nursery\\nursery-form.blend",
+    "source_sha256": "f16cbe834daed3a18347519dbb0f61b0860b0f0c9c57327783e2e42c53f135b0",
+    "fbx": "SM_armchair.fbx",
+    "sha256": "d31620fa6a58e448402a6194308a0ec0ae0c20b08959a4164cc53d1435815b6b",
+    "triangles": 5626,
+    "blender_bounds_m": [
+      1.1152164936065674,
+      1.0065505504608154,
+      1.4000000953674316
+    ]
+  },
+  {
+    "name": "keeper",
+    "source": "design\\rooms\\eleanors-nursery\\nursery-form.blend",
+    "source_sha256": "f16cbe834daed3a18347519dbb0f61b0860b0f0c9c57327783e2e42c53f135b0",
+    "fbx": "SM_keeper.fbx",
+    "sha256": "d537c5268472d44caa9ec0dd003a7cda22e5a43631562d4340c7d7f2f125bc18",
+    "triangles": 3340,
+    "blender_bounds_m": [
+      0.9824045300483704,
+      0.6109012365341187,
+      2.049999952316284
+    ]
+  }
+]

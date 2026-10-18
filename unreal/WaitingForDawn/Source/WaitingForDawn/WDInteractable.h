@@ -9,7 +9,7 @@ class USceneComponent;
 class USoundBase;
 
 UENUM(BlueprintType)
-enum class EWDInteraction : uint8 { Door, Drawer, Key };
+enum class EWDInteraction : uint8 { Door, Drawer, Key, Letter, Wardrobe, Bed, Garage, Car, Noise };
 
 // Furniture shell is a separate static actor. This actor contains only its moving leaf/tray.
 UCLASS()
@@ -26,6 +26,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly) EWDInteraction Kind = EWDInteraction::Door;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FText DisplayName;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FName RequiredKey;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly) TArray<FName> RequiredKeys;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly) FVector HideOffset = FVector(0,0,90);
+    UPROPERTY(EditAnywhere, BlueprintReadOnly) FVector ExitOffset = FVector(0,-140,92);
+    UPROPERTY(BlueprintReadOnly, Replicated) TObjectPtr<AWDCharacter> Occupant;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FName GrantsKey;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FVector OpenOffset = FVector(0,-45,0);
     UPROPERTY(EditAnywhere, BlueprintReadOnly) float OpenYaw = 100.f;

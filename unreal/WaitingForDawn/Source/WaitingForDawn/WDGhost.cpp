@@ -48,6 +48,8 @@ void AWDGhost::Warn_Implementation()
 void AWDGhost::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+    auto* Round = GetWorld()->GetGameState<AWDGameState>();
+    SetActorHiddenInGame(Round && (Round->Phase==EWDRoundPhase::Lobby || Round->Phase==EWDRoundPhase::Introduction));
     UAnimSequence* DesiredAnimation = GetVelocity().SizeSquared2D() < 25.f ? IdleAnimation.Get() :
         State == EWDGhostState::Chasing ? RunAnimation.Get() : WalkAnimation.Get();
     if (DesiredAnimation && ActiveAnimation != DesiredAnimation)
@@ -59,7 +61,7 @@ void AWDGhost::Tick(float DeltaSeconds)
     auto* AI = Cast<AAIController>(GetController());
     auto* GS = GetWorld()->GetGameState<AWDGameState>();
     if (!AI || !GS) return;
-    if (GS->bRoundEnded) { AI->StopMovement(); return; }
+    if (GS->bRoundEnded || GS->Phase!=EWDRoundPhase::Playing) { AI->StopMovement(); return; }
     const double Now = GetWorld()->GetTimeSeconds();
     AWDCharacter* Seen = nullptr;
     float Nearest = 1400.f;
@@ -67,7 +69,7 @@ void AWDGhost::Tick(float DeltaSeconds)
     {
         const float Distance = FVector::Dist(GetActorLocation(), It->GetActorLocation());
         const FVector Direction = (It->GetActorLocation() - GetActorLocation()).GetSafeNormal();
-        if (!It->bCaught && Distance < Nearest && (Distance < 180.f || FVector::DotProduct(GetActorForwardVector(), Direction) > .25f)
+        if (!It->bCaught && !It->HidingSpot && Distance < Nearest && (Distance < 180.f || FVector::DotProduct(GetActorForwardVector(), Direction) > .25f)
             && AI->LineOfSightTo(*It)) { Seen = *It; Nearest = Distance; }
     }
     if (Seen)
@@ -78,6 +80,8 @@ void AWDGhost::Tick(float DeltaSeconds)
         State = EWDGhostState::Chasing;
         if (Nearest < 115.f) Seen->Catch();
     }
+    if (State == EWDGhostState::Chasing && ChaseTarget.IsValid() && ChaseTarget->HidingSpot && Now-SeenAt<1.2
+        && FVector::Dist(GetActorLocation(),ChaseTarget->GetActorLocation())<220) ChaseTarget->Catch();
     if (State == EWDGhostState::Chasing && (!ChaseTarget.IsValid() || ChaseTarget->bCaught || Now - SeenAt > 3.))
     {
         NoiseGoal = LastSeen;

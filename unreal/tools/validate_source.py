@@ -2,6 +2,7 @@
 from pathlib import Path
 import ast, json, hashlib, sys
 from slice_layout import layout, verify_layout
+from house_layout import verify as verify_house
 ROOT=Path(__file__).resolve().parents[2]
 PROJECT=ROOT/'unreal/WaitingForDawn'
 project=json.loads((PROJECT/'WaitingForDawn.uproject').read_text())
@@ -10,6 +11,7 @@ assert project['Modules'][0]['Name']=='WaitingForDawn'
 for script in (ROOT/'unreal/tools').glob('*.py'):
     ast.parse(script.read_text(encoding='utf-8'),filename=str(script))
 report={'scope':'Source and export checks only; not an Unreal runtime test','layout':verify_layout(layout())}
+report['house']=verify_house()
 manifest=ROOT/'unreal/Staging/assets.json'
 if manifest.exists():
     entries=json.loads(manifest.read_text())

@@ -6,3 +6,5 @@
 **/*.sln
 **/*.suo
 Staging/
+**/Build/Android/src/
+**/Build/Android_ASTC/

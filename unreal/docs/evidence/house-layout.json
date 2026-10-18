@@ -1,0 +1,143 @@
+{
+  "rooms": 16,
+  "keys": 12,
+  "progression_order": [
+    "Nursery",
+    "Pantry",
+    "Study",
+    "Cellar",
+    "Boiler",
+    "Bedroom",
+    "Attic",
+    "Safe",
+    "Archive",
+    "Workshop",
+    "Garage",
+    "Ignition"
+  ],
+  "stair_flights": 3,
+  "boxes": 401,
+  "key_locations": [
+    {
+      "key": "Nursery",
+      "room": 4,
+      "container": "Parlour_drawer_3",
+      "approach": [
+        -828.0,
+        -1178.0,
+        92.0
+      ]
+    },
+    {
+      "key": "Pantry",
+      "room": 5,
+      "container": "Kitchen_drawer_2",
+      "approach": [
+        -900.0,
+        -178.0,
+        92.0
+      ]
+    },
+    {
+      "key": "Study",
+      "room": 7,
+      "container": "Hinged_portrait_Study",
+      "approach": [
+        900,
+        365,
+        92
+      ]
+    },
+    {
+      "key": "Cellar",
+      "room": 8,
+      "container": "Nursery_drawer_6",
+      "approach": [
+        -828.0,
+        -1178.0,
+        412.0
+      ]
+    },
+    {
+      "key": "Boiler",
+      "room": 0,
+      "container": "Coal cellar_drawer_5",
+      "approach": [
+        -900.0,
+        -1178.0,
+        -228.0
+      ]
+    },
+    {
+      "key": "Bedroom",
+      "room": 1,
+      "container": "Boiler room_drawer_4",
+      "approach": [
+        -972.0,
+        -178.0,
+        -228.0
+      ]
+    },
+    {
+      "key": "Attic",
+      "room": 12,
+      "container": "Eleanor bedroom_drawer_3",
+      "approach": [
+        -828.0,
+        -1178.0,
+        732.0
+      ]
+    },
+    {
+      "key": "Safe",
+      "room": 13,
+      "container": "Attic bedroom_drawer_2",
+      "approach": [
+        -900.0,
+        -178.0,
+        732.0
+      ]
+    },
+    {
+      "key": "Archive",
+      "room": 13,
+      "container": "Hinged_portrait_Archive",
+      "approach": [
+        -900,
+        365,
+        732
+      ]
+    },
+    {
+      "key": "Workshop",
+      "room": 14,
+      "container": "Guest bedroom_drawer_6",
+      "approach": [
+        972.0,
+        -1178.0,
+        732.0
+      ]
+    },
+    {
+      "key": "Garage",
+      "room": 15,
+      "container": "Archive_drawer_5",
+      "approach": [
+        900.0,
+        -178.0,
+        732.0
+      ]
+    },
+    {
+      "key": "Ignition",
+      "room": 2,
+      "container": "Workshop_drawer_4",
+      "approach": [
+        828.0,
+        -1178.0,
+        -228.0
+      ]
+    }
+  ],
+  "actors": 1464
+}

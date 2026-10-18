@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$EngineRoot = 'D:\UE_5.7',
-    [ValidateSet('Check','Editor','Map','Tests','Gameplay','Windows','Android')][string]$Action = 'Check',
+    [ValidateSet('Check','Editor','Map','Tests','Gameplay','Campaign','Windows','Android')][string]$Action = 'Check',
     [string]$OutputDirectory = 'E:\WaitingForDawnBuilds'
 )
 $ErrorActionPreference = 'Stop'
@@ -30,7 +30,7 @@ if (!$sdk) { throw 'Windows SDK headers/libraries are not installed yet. Wait fo
 Write-Output "UE $($version.MajorVersion).$($version.MinorVersion).$($version.PatchVersion); C++ tools: $vs; Windows SDK: $($sdk.Name)"
 if ($Action -eq 'Check') { exit 0 }
 if ($Action -eq 'Editor') {
-    & $buildPath WaitingForDawnEditor Win64 Development "-Project=$projectPath" -WaitMutex -NoHotReloadFromIDE
+    & $buildPath WaitingForDawnEditor Win64 Development "-Project=$projectPath" -WaitMutex -NoHotReloadFromIDE -NoUBA -MaxParallelActions=2
 } elseif ($Action -eq 'Map') {
     $mapScript = Join-Path $PSScriptRoot 'build_map.py'
     & $editorPath $projectPath -run=pythonscript "-script=$mapScript" -unattended -nosplash -stdout -FullStdOutLogOutput
@@ -39,13 +39,24 @@ if ($Action -eq 'Editor') {
     & $editorPath $projectPath /Game/Maps/StairHall -unattended -NullRHI -nosplash '-ExecCmds=Automation RunTests WaitingForDawn' '-TestExit=Automation Test Queue Empty' "-ReportExportPath=$reportPath" -stdout -FullStdOutLogOutput
 } elseif ($Action -eq 'Gameplay') {
     & $editorPath $projectPath /Game/Maps/StairHall -game -WDGameplayTest -unattended -NullRHI -nosound -nosplash '-ExecCmds=t.MaxFPS 60' -stdout -FullStdOutLogOutput
+} elseif ($Action -eq 'Campaign') {
+    & $editorPath $projectPath /Game/Maps/House -game -WDHouseTest -unattended -NullRHI -nosound -nosplash '-ExecCmds=t.MaxFPS 60' -stdout -FullStdOutLogOutput
 } else {
-    if (!(Test-Path -LiteralPath (Join-Path (Split-Path $projectPath) 'Content/Maps/StairHall.umap'))) {
-        throw 'Generate and validate StairHall first. Refusing to package an empty project.'
+    if (!(Test-Path -LiteralPath (Join-Path (Split-Path $projectPath) 'Content/Maps/House.umap'))) {
+        throw 'Generate and validate House first. Refusing to package an empty project.'
     }
     $platform = if ($Action -eq 'Windows') {'Win64'} else {'Android'}
-    $buildArgs = @('BuildCookRun',"-project=$projectPath",'-noP4',"-platform=$platform",'-clientconfig=Development','-build','-cook','-stage','-pak','-archive',"-archivedirectory=$OutputDirectory",'-map=/Game/Maps/StairHall','-utf8output')
-    if ($Action -eq 'Android') { $buildArgs += '-cookflavor=ASTC' }
+    $buildArgs = @('BuildCookRun',"-project=$projectPath",'-noP4',"-platform=$platform",'-clientconfig=Development','-build','-cook','-stage','-pak','-package','-archive',"-archivedirectory=$OutputDirectory",'-map=/Game/Maps/House','-utf8output','-UbtArgs=-NoUBA -MaxParallelActions=2')
+    if ($Action -eq 'Android') {
+        $androidTools = 'E:/WaitingForDawnTools/Android'
+        if (Test-Path -LiteralPath $androidTools) {
+            $env:JAVA_HOME = (Get-ChildItem $androidTools -Directory -Filter 'jdk-21*' | Select-Object -First 1).FullName
+            $env:ANDROID_HOME = Join-Path $androidTools 'sdk'
+            $env:NDKROOT = Join-Path $env:ANDROID_HOME 'ndk/27.2.12479018'
+            $env:GRADLE_USER_HOME = Join-Path $androidTools 'gradle'
+        }
+        $buildArgs += '-cookflavor=ASTC'
+    }
     & $uatPath @buildArgs
 }
 if ($LASTEXITCODE -ne 0) { throw "Unreal $Action failed with exit $LASTEXITCODE. See the engine log; no build success is implied." }

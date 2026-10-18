@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-18",
+  "environment": "API 35 emulator, 2400x1080 landscape, ADB touch input with rendered screenshot inspection",
+  "passed": true,
+  "observed": [
+    "Home Play closes the menu and enters the opening",
+    "Skip Story enters the round",
+    "Bag icon opens shared inventory and Close Bag dismisses it",
+    "Joystick swipe moves along the hall",
+    "Ghost patrol reaches and catches an exposed player",
+    "Try Again starts a new round without replaying the opening",
+    "Journal icon opens the letter panel and Fold Letter dismisses it",
+    "Menu opens and Resume returns to gameplay"
+  ],
+  "limitations": "Single emulator smoke test; does not validate physical multitouch comfort or phone performance. Network join UI is covered separately."
+}

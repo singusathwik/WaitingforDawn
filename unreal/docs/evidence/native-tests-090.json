@@ -1,0 +1,27 @@
+{
+  "reportCreatedOn": "2026.10.18-15.00.01",
+  "succeeded": 4,
+  "failed": 0,
+  "tests": [
+    {
+      "testDisplayName": "Difficulty",
+      "fullTestPath": "WaitingForDawn.Rules.Difficulty",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "NoiseCannotPostponePursuit",
+      "fullTestPath": "WaitingForDawn.Rules.NoiseCannotPostponePursuit",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "StoryDawnAndEscape",
+      "fullTestPath": "WaitingForDawn.Rules.StoryDawnAndEscape",
+      "state": "Success"
+    },
+    {
+      "testDisplayName": "StairCollision",
+      "fullTestPath": "WaitingForDawn.World.StairCollision",
+      "state": "Success"
+    }
+  ]
+}

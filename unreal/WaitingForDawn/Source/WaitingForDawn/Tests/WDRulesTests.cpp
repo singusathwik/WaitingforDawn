@@ -67,4 +67,19 @@ bool FWDStairSupport::RunTest(const FString& Parameters)
     }
     return true;
 }
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWDRoundLifecycle, "WaitingForDawn.Rules.StoryDawnAndEscape",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+bool FWDRoundLifecycle::RunTest(const FString& Parameters)
+{
+    UWorld* World=nullptr;for(const FWorldContext& C:GEngine->GetWorldContexts())if(C.WorldType==EWorldType::Editor)World=C.World();
+    if(!World){AddError(TEXT("Editor world required"));return false;}
+    auto* State=World->SpawnActor<AWDGameState>();State->Phase=EWDRoundPhase::Lobby;
+    State->StartRound(EWDDifficulty::Hard,false);TestTrue(TEXT("Play begins story"),State->Phase==EWDRoundPhase::Introduction);
+    State->IntroRemaining=0;State->Tick(.01f);TestTrue(TEXT("Skip enters gameplay"),State->Phase==EWDRoundPhase::Playing);
+    State->AddKey(TEXT("Ignition"),TEXT("test"));TestFalse(TEXT("Car cannot cross closed garage"),State->CanEscape());
+    State->bGarageUnlocked=true;TestTrue(TEXT("Both final requirements allow escape"),State->CanEscape());
+    State->EndRound(true,TEXT("Escaped"));TestTrue(TEXT("Escape wins"),State->Phase==EWDRoundPhase::Escaped);TestFalse(TEXT("Ended game rejects key grants"),State->AddKey(TEXT("Nursery"),TEXT("test")));
+    State->bRoundEnded=false;State->Phase=EWDRoundPhase::Playing;State->SecondsRemaining=.001f;State->Tick(.02f);TestTrue(TEXT("Dawn loses"),State->Phase==EWDRoundPhase::Lost);
+    State->Destroy();return true;
+}
 #endif

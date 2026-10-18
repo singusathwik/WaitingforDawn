@@ -1,62 +1,45 @@
-# Waiting for Dawn — Unreal rebuild
+# Waiting for Dawn — Unreal 0.9.0
 
-Target: **Unreal Engine 5.7**, Windows editor and Android ARM64. This is a new development project, not a renamed Godot APK. Released Godot 0.8.3 remains at the repository root.
+A playable Unreal Engine 5.7.4 horror survival development preview for Android ARM64 and Windows. Explore Eleanor's house, collect twelve shared keys, open the ground-floor garage and bring the surviving team to the car before dawn. This is the Unreal rebuild; the earlier Godot game remains at the repository root.
 
-The immediate milestone is one furnished two-level section: the parlour, stair hall and upper nursery landing. Establish movement, collision, interactions and noise-driven pursuit here before expanding the house. The user identified the fall-through near stairs on 2026-10-18.
+## The house and game loop
 
-## Implementation and validation
+- Basement, ground floor, nursery floor and bedroom floor: 16 rooms and three physical stair flights, with collision guards and landings.
+- Original Blender furniture, hollow animated drawers, wardrobes, beds, cradle, armchair, keeper, kitchen, car, portraits, carpets and scattered debris. Imported assets are saved in the actual Unreal map.
+- Twelve keys with dependencies, 96 drawers and two hinged portraits. Key locations are authored, not randomized. Opening a container exposes its key; taking it is a separate interaction. The shared bag and discovery messages update for the team.
+- Sixteen wardrobe hiding spots and four under-bed spots. The camera enters the hiding space with a restricted view. Hiding before being seen matters; closing a room door blocks the ghost.
+- Noise investigation, patrol, search and chase. Repeated sounds cannot indefinitely postpone the ghost's response. Door/drawer actions, thrown bottles and loose boards attract attention. Ordinary footsteps are silent; board creaks require distance travelled and an uneven-floor zone.
+- A 36-second narrated, skippable in-engine opening, with no ghost reveal. The keeper's letter appears in an aged-paper journal. Retry skips the introduction.
+- Flashlight on every floor, a dark basement, intermittent light flicker, proximity breathing and red screen edges. Catching the last survivor or reaching dawn loses the round; the garage and ignition keys enable the car ending.
+- Easy, Normal, Hard and Extreme: 40, 32, 26 and 20 minutes; initial noise response delays of 6, 4.5, 3 and 2 seconds.
 
-- First-person CharacterMovement, crouch, stamina, torch and view-based Use selection. Client and server select from the same reachable handles; the server authorizes actions.
-- Replicated opening/closing doors and storage, exposed keys, shared discoveries and four-player admission limit.
-- Ghost delay by difficulty, persistent noise destination, sight-based pursuit, dynamic navigation retries at closed doors, capture and search. Further noises cannot postpone an already pending investigation.
-- Replicated time to dawn, difficulty rules, development HUD and basic touch actions. This HUD is deliberately marked as a development slice; the final icon interface has not been ported.
-- Continuous ground support, solid stair risers, guarded landing edges and a separate unexpected-fall recovery. Geometry tests do not substitute for actual CharacterMovement traversal.
-- Blender FBX preparation for the existing credited furniture/ghost plus newly authored human-scale hollow cupboard and door leaves. The importer creates actual Unreal assets and a saved map; it fails if required assets are missing.
+## Play
 
-Not yet ported: final home/lobby UI, full twelve-key dependency chain and car escape, hiding/peek animations, revive flow, cinematic introduction, full house art, optimized audio mix, final mobile controls, iOS. Existing Godot implementations remain available as references, not as Unreal features.
+Android uses a left joystick, right-side look dragging, circular action buttons, bag/journal controls and a stamina bar. The home screen offers Play, Join with friends and Exit. Pick difficulty before Play. For LAN co-op, one player hosts, and the others enter that host's local IP while connected to the same Wi-Fi or hotspot. Android and Windows use UDP port 7777. There is no internet relay, NAT traversal or host migration.
 
-## Build sequence
+Windows: WASD move, mouse look, E use, F flashlight, Left Ctrl crouch, Left Shift sprint, Q throw, I bag, J journal, Escape menu. Click Play/Join on the home screen. Start, skip and retry are controlled by the host.
 
-Install UE **5.7.x** with Android target support. Install Visual Studio 2022 C++ Build Tools (MSVC 14.44, Windows SDK 22621 or newer), plus the **.NET Framework 4.8 SDK and targeting pack** required by the editor's Swarm module. The engine is configured separately from the existing Godot Android toolchain. UE 5.7 requires Android SDK 35, build-tools 35.0.1, NDK r27c and JDK 21. Use Epic Turnkey to validate these before packaging; do not replace the JDK used by Godot.
+The Android preview uses package `org.waitingfordawn.unrealpreview` and installs separately from the legacy Godot app. It is a Development build with development signing, not a Play Store submission. ARM64, Android 8/API 26 or newer, and a compatible Vulkan or OpenGL ES 3.2 GPU are required. The packaged manifest and tested emulator are recorded in the validation report; minimum API is not a promise of acceptable performance on old phones.
+
+## Build
+
+Requires UE 5.7.4 with Android support, VS 2022 C++ tools and Windows SDK 22621. Android uses OpenJDK 21, SDK 35, build-tools 35.0.1 and NDK 27.2.12479018. Configure tool locations in `tools/Build.ps1` for another computer.
 
 ```powershell
-# In repository root, using the installed Blender executable:
-& 'C:/Users/Sathwik/.cache/hollow-house/tools/blender-4.3.2-windows-x64/blender.exe' --background --factory-startup --python unreal/tools/prepare_assets.py
-python unreal/tools/validate_source.py
-powershell -File unreal/tools/Build.ps1 -Action Check
-powershell -File unreal/tools/Build.ps1 -Action Editor
-powershell -File unreal/tools/Build.ps1 -Action Map
-powershell -File unreal/tools/Build.ps1 -Action Tests
-powershell -File unreal/tools/Build.ps1 -Action Gameplay
-powershell -File unreal/tools/Test-Network.ps1
+./unreal/tools/Build.ps1 -Action Check
+./unreal/tools/Build.ps1 -Action Editor
+./unreal/tools/Build.ps1 -Action Tests
+./unreal/tools/Build.ps1 -Action Campaign
+./unreal/tools/Test-HouseNetwork.ps1
+./unreal/tools/Build.ps1 -Action Android
 ```
 
-Open `WaitingForDawn/WaitingForDawn.uproject`, wait for shaders/navigation and play `StairHall`. WASD/mouse, E use, F torch, Ctrl crouch, Shift sprint. Choose difficulty with the map URL option `?Difficulty=0` (Easy) through `3` (Extreme). UI selection follows after gameplay validation.
+`Content/Maps/House.umap` and imported assets are committed and can be opened directly. To regenerate art, run Blender with `tools/prepare_assets.py` and `tools/prepare_nursery_props.py`, then `tools/Rebuild-House.ps1`. Export staging is generated and ignored. Run one map rebuild at a time. Use the saved map for ordinary builds.
 
-`Gameplay` starts an opt-in development probe in the actual game world. It drives CharacterMovement up and down the stairs, uses the cupboard, collects its visible key and measures the ghost's noise investigation. Results go to `WaitingForDawn/Saved/Validation/gameplay-probe.json`; failure exits nonzero. It is disabled in Shipping builds. See [the validation record](docs/VALIDATION.md) for executed results and remaining gaps.
+## Validation and limits
 
-For local networking validation, start one instance with `/Game/Maps/StairHall?listen` and join another using `open 127.0.0.1`. Physical LAN tests must use two separate devices with the same Unreal build. Godot and Unreal clients are not protocol-compatible. Internet relay and host migration are not implemented.
+See [VALIDATION.md](docs/VALIDATION.md) and the checked-in evidence. The campaign probe exercises the real interaction code and physically walks all stairs in both directions, but teleports between room fixtures; it is not an unassisted human playthrough. Network probes use separate processes and check authoritative use, shared state, late joining and disconnect cleanup.
 
-`Build.ps1 -Action Windows` and `-Action Android` are Development packaging commands, gated on a generated map. They do not certify gameplay or sign a public release. The preview Android package is `org.waitingfordawn.unrealpreview`, so it does not overwrite the existing APK.
+Physical-phone Wi-Fi sessions, touch comfort, sustained performance, thermals and device compatibility still need real-device testing. iOS has not been built or tested. There is no save/resume, revive system or internet matchmaking. Co-op bodies use recognizable Epic template mannequins, the narration is synthesized, hiding entry uses a camera transition, and the artwork remains an independently produced development preview rather than photorealistic commercial character art.
 
-## Acceptance gates before a playable release
-
-1. Compile with UnrealHeaderTool and MSVC; run the native automation checks.
-2. Import all mesh/animation/material assets and verify centimetre scale, front direction, hinges and collision in-engine. Confirm the cupboard is visibly hollow and its key is reachable from the front.
-3. Walk both stair edges, every landing corner, ascend/descend repeatedly and walk into rails. No unplanned falling or recovery log is allowed. Repeat at low frame rate.
-4. Trigger a cupboard from an isolated room: ghost must start investigating after the configured delay, reach the closed door, retain the goal and enter only after opening. Repeat with rapid noises and with a client player.
-5. Confirm prompts and actions agree; shut doors cannot appear through a character; key pickup races award one team item. Validate late join and disconnect.
-6. Verify capture and dawn loss, all required input paths, no ghost revealed during the future intro, and a successful complete escape once the remaining game loop is ported.
-7. Package, install and test an actual Android ARM64 phone; profile frame time, memory, thermals, touch and headphone spatial audio. Emulator or source checks do not satisfy this gate.
-
-## Art and tools
-
-Existing asset rights and source credits are retained in [ASSETS.md](../ASSETS.md). The ghost remains a CC BY 3.0 adaptation of Rosswet Mobile's Thin Zombie, submitted by dogchicken. No commercial horror-game assets were extracted. Blender sources/FBX staging are reproducible with the preparation script; `unreal/Staging` is generated and ignored. Unreal `.uasset` and `.umap` files are created only by the real editor.
-
-The optional Unreal MCP plugin is not assumed to exist in every launcher engine. Enable ModelContextProtocol/AllToolsets only after checking those plugins are installed. This project can be compiled and imported without that optional connection.
-
-Official setup references, checked 2026-10-18:
-
-- [Install Unreal Engine](https://dev.epicgames.com/documentation/unreal-engine/install-unreal-engine)
-- [UE 5.7 C++ tools](https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-visual-studio-development-environment-for-cplusplus-projects-in-unreal-engine?application_version=5.7)
-- [UE 5.7 Android requirements](https://dev.epicgames.com/documentation/en-us/unreal-engine/android-development-requirements-for-unreal-engine?application_version=5.7)
+Asset provenance and licenses: [ASSETS.md](../ASSETS.md). No commercial horror-game assets or reference screenshots are bundled. Epic template examples retain Epic's license.
