@@ -1,0 +1,119 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "KING-OF-HELL",
+			"instance": "3D18DA88416BBCC2BE739FB7DCB36482",
+			"instanceName": "KING-OF-HELL-32660",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Intel(R) Iris(R) Xe Graphics",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i5-13500H",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.18-18.20.39",
+	"succeeded": 6,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.10425099730491638,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "JoinAddress",
+			"fullTestPath": "WaitingForDawn.Network.JoinAddress",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3D18DA88416BBCC2BE739FB7DCB36482"
+			],
+			"duration": 0.016377199441194534,
+			"dateTime": "2026.10.18-18.20.39",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "Difficulty",
+			"fullTestPath": "WaitingForDawn.Rules.Difficulty",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3D18DA88416BBCC2BE739FB7DCB36482"
+			],
+			"duration": 0.016439501196146011,
+			"dateTime": "2026.10.18-18.20.39",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "NoiseCannotPostponePursuit",
+			"fullTestPath": "WaitingForDawn.Rules.NoiseCannotPostponePursuit",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3D18DA88416BBCC2BE739FB7DCB36482"
+			],
+			"duration": 0.018057499080896378,
+			"dateTime": "2026.10.18-18.20.39",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StoryDawnAndEscape",
+			"fullTestPath": "WaitingForDawn.Rules.StoryDawnAndEscape",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3D18DA88416BBCC2BE739FB7DCB36482"
+			],
+			"duration": 0.021245799958705902,
+			"dateTime": "2026.10.18-18.20.39",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "VisibleAttackWindow",
+			"fullTestPath": "WaitingForDawn.Rules.VisibleAttackWindow",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3D18DA88416BBCC2BE739FB7DCB36482"
+			],
+			"duration": 0.016093701124191284,
+			"dateTime": "2026.10.18-18.20.39",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StairCollision",
+			"fullTestPath": "WaitingForDawn.World.StairCollision",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"3D18DA88416BBCC2BE739FB7DCB36482"
+			],
+			"duration": 0.016037300229072571,
+			"dateTime": "2026.10.18-18.20.39",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

@@ -62,11 +62,11 @@ void AWDGhost::Tick(float D){
  if(Now<DoorPauseUntil){AI->StopMovement();return;}
  AWDCharacter* Seen=nullptr;float Nearest=1800;
  for(TActorIterator<AWDCharacter>It(GetWorld());It;++It){const float Dist=FVector::Dist(GetActorLocation(),It->GetActorLocation());const FVector Dir=(It->GetActorLocation()-GetActorLocation()).GetSafeNormal();
-  if(!It->bCaught&&!It->HidingSpot&&Dist<Nearest&&(Dist<180||FVector::DotProduct(GetActorForwardVector(),Dir)>.1f)&&AI->LineOfSightTo(*It)){Seen=*It;Nearest=Dist;}}
+  if(It->IsPlayerControlled()&&!It->bCaught&&!It->HidingSpot&&!It->RidingCar&&Dist<Nearest&&(Dist<180||FVector::DotProduct(GetActorForwardVector(),Dir)>.1f)&&AI->LineOfSightTo(*It)){Seen=*It;Nearest=Dist;}}
  if(Seen){if(ChaseTarget.Get()!=Seen||State!=EWDGhostState::Chasing){SpottedAt=Now;AttackStarted=0;Warn();NextWarningAt=Now+12;}
   ChaseTarget=Seen;LastSeen=Seen->GetActorLocation();SeenAt=Now;State=EWDGhostState::Chasing;bCeilingCrawling=false;}
  const bool WitnessedHide=ChaseTarget.IsValid()&&ChaseTarget->HidingSpot&&Now-SeenAt<1.2;
- if(State==EWDGhostState::Chasing&&ChaseTarget.IsValid()&&!ChaseTarget->bCaught){
+ if(State==EWDGhostState::Chasing&&ChaseTarget.IsValid()&&!ChaseTarget->bCaught&&!ChaseTarget->RidingCar){
   const float Range=FVector::Dist(GetActorLocation(),ChaseTarget->GetActorLocation());const bool CanReach=(Seen==ChaseTarget.Get()||WitnessedHide)&&Range<145&&CeilingBlend<.05;
   // A readable alert, followed by a cancellable attack. Sprinting and a closed door can save you.
   if(Now-SpottedAt<1.8||CeilingBlend>.05){AI->StopMovement();return;}
@@ -75,7 +75,7 @@ void AWDGhost::Tick(float D){
    if(HasAttackWindow(Now,SpottedAt,AttackStarted,Range)){ChaseTarget->Catch();CapturePauseUntil=Now+2.4;AttackStarted=0;ForceNetUpdate();}return;}
   AttackStarted=0;bAttacking=false;
  }
- if(State==EWDGhostState::Chasing&&(!ChaseTarget.IsValid()||ChaseTarget->bCaught||Now-SeenAt>3.5)){
+ if(State==EWDGhostState::Chasing&&(!ChaseTarget.IsValid()||ChaseTarget->bCaught||ChaseTarget->RidingCar||Now-SeenAt>3.5)){
   NoiseGoal=LastSeen;RememberUntil=Now+30;State=EWDGhostState::Investigating;ChaseTarget.Reset();AttackStarted=0;bAttacking=false;}
  if(State==EWDGhostState::Listening){AI->StopMovement();if(Now<ReactAt)return;State=EWDGhostState::Investigating;NextRouteAt=0;}
  if(State==EWDGhostState::Investigating){if(FVector::Dist2D(GetActorLocation(),NoiseGoal)<110&&FMath::Abs(GetActorLocation().Z-NoiseGoal.Z)<180){State=EWDGhostState::Searching;SearchUntil=Now+6;}else if(Now>RememberUntil)State=EWDGhostState::Patrol;}

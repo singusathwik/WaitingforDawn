@@ -19,13 +19,15 @@
 #include "NavigationPath.h"
 
 AWDCampaignProbe::AWDCampaignProbe(){PrimaryActorTick.bCanEverTick=true;}
-void AWDCampaignProbe::Stage(const FString& N){Phase=N;At=GetWorld()->GetTimeSeconds();UE_LOG(LogTemp,Display,TEXT("WD_CAMPAIGN %s"),*N);if(FParse::Param(FCommandLine::Get(),TEXT("WDProbeScreenshots")))FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("Validation")/(N+TEXT(".png")),true,false);}
+void AWDCampaignProbe::Stage(const FString& N){Phase=N;At=GetWorld()->GetTimeSeconds();UE_LOG(LogTemp,Display,TEXT("WD_CAMPAIGN %s"),*N);if(FParse::Param(FCommandLine::Get(),TEXT("WDProbeScreenshots")) || (FParse::Param(FCommandLine::Get(),TEXT("WDCarScreenshots")) && (N==TEXT("Seated")||N==TEXT("Departure")||N==TEXT("Passenger")||N==TEXT("ClientDeparture"))))FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("Validation")/(N+TEXT(".png")),true,false);}
 void AWDCampaignProbe::Finish(bool Pass,const FString& Why)
 {
     Done=true;FString R=FString::Printf(TEXT("{\"passed\":%s,\"phase\":\"%s\",\"detail\":\"%s\",\"checks\":%d,\"keys\":%d,\"stair_flights_both_directions\":%d,\"fall_recoveries\":%d}"),Pass?TEXT("true"):TEXT("false"),*Phase,*Why,Checks,KeyIndex,Flight,Player?Player->FallRecoveryCount:-1);
     FString File=TEXT("campaign");
     if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetServer")))File=TEXT("house-net-server");
     if(FParse::Param(FCommandLine::Get(),TEXT("WDThreatTest")))File=TEXT("threat-encounter");
+    if(FParse::Param(FCommandLine::Get(),TEXT("WDAuditTest")))File=TEXT("component-audit");
+    if(FParse::Param(FCommandLine::Get(),TEXT("WDCarOnly")))File=TEXT("car-visual");
     if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetClient"))){int32 Observer=0;FParse::Value(FCommandLine::Get(),TEXT("WDObserver="),Observer);File=FString::Printf(TEXT("house-net-client%d"),Observer);}
     IFileManager::Get().MakeDirectory(*(FPaths::ProjectSavedDir()/TEXT("Validation")),true);FFileHelper::SaveStringToFile(R,*(FPaths::ProjectSavedDir()/TEXT("Validation")/(File+TEXT(".json"))));
     UE_LOG(LogTemp,Display,TEXT("WD_CAMPAIGN_RESULT %s"),*R);if(Player)UE_LOG(LogTemp,Display,TEXT("Position %s"),*Player->GetActorLocation().ToString());FPlatformMisc::RequestExitWithStatus(false,Pass?0:1);
@@ -54,16 +56,24 @@ void AWDCampaignProbe::StartFlight()
 void AWDCampaignProbe::Tick(float D)
 {
     Super::Tick(D);if(Done)return;double Now=GetWorld()->GetTimeSeconds();auto* GS=GetWorld()->GetGameState<AWDGameState>();if(!GS)return;
+    // Assertions sample the completed passenger update, not a partially ticked frame.
+    if(Player)AddTickPrerequisiteActor(Player);
     if(FParse::Param(FCommandLine::Get(),TEXT("WDVisualTour"))){TickTour();return;}
     if(FParse::Param(FCommandLine::Get(),TEXT("WDThreatTest"))){TickThreat();return;}
+    if(FParse::Param(FCommandLine::Get(),TEXT("WDAuditTest"))){TickAudit();return;}
     if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetServer"))){TickNetwork(true);return;}
     if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetClient"))){TickNetwork(false);return;}
     if(Now-At>100){Finish(false,TEXT("Stage timed out"));return;}
+    if(FParse::Param(FCommandLine::Get(),TEXT("WDCarScreenshots")) && (Phase==TEXT("Seated")||Phase==TEXT("Departure")) && Now-At>1 && LastThreatScreenshot!=Phase){
+        LastThreatScreenshot=Phase;FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("Validation")/(Phase+TEXT("-settled.png")),true,false);
+        UE_LOG(LogTemp,Display,TEXT("WD_CAR_VIEW pawn=%s view=%s rot=%s car_bounds=%s"),*Player->GetActorLocation().ToString(),*Player->GetPawnViewLocation().ToString(),*Player->GetViewRotation().ToString(),*Current->Mesh->Bounds.ToString());
+    }
     if(Phase==TEXT("Startup")){
         for(TActorIterator<AWDCharacter>It(GetWorld());It;++It)if(It->IsLocallyControlled())Player=*It;
         for(TActorIterator<AWDGhost>It(GetWorld());It;++It){Ghost=*It;Ghost->SetActorTickEnabled(false);if(auto* AI=Cast<AAIController>(Ghost->GetController()))AI->StopMovement();Ghost->GetCharacterMovement()->DisableMovement();}
         if(!Player||!Ghost||Now<5)return;
         GS->StartRound(EWDDifficulty::Easy,true);GS->Phase=EWDRoundPhase::Playing;Player->ToggleLight();
+        if(FParse::Param(FCommandLine::Get(),TEXT("WDCarOnly"))){for(TActorIterator<AWDInteractable> It(GetWorld());It;++It)if(It->Kind==EWDInteraction::Key)GS->AddKey(It->GrantsKey,TEXT("Visual fixture"));Stage(TEXT("CarLocked"));return;}
         if(FParse::Param(FCommandLine::Get(),TEXT("WDNavOnly"))){Stage(TEXT("Navigation"));return;}
         // A locked door must reject use before any key has been collected.
         Current=Find(TEXT("Door_Nursery"));Place(FVector(-65,-730,412));
@@ -130,7 +140,33 @@ void AWDCampaignProbe::Tick(float D)
         }
         Stage(TEXT("CarLocked"));
     }
-    else if(Phase==TEXT("CarLocked")&&Now-At>.7){Current=Find(TEXT("EscapeCar"));Place(FVector(850,-780,92));if(!Use(Current))return;if(GS->bRoundEnded){Finish(false,TEXT("Car escaped through locked garage"));return;}Stage(TEXT("Garage"));}
+    else if(Phase==TEXT("CarLocked")&&Now-At>.7){Current=Find(TEXT("EscapeCar"));Place(FVector(850,-780,92));if(!Use(Current))return;if(Player->RidingCar!=Current || GS->bRoundEnded){Finish(false,TEXT("Boarding failed or won without starting"));return;}Stage(TEXT("CarLockedStart"));}
+    else if(Phase==TEXT("CarLockedStart")&&Now-At>.7){Player->Use();++Checks;if(GS->bRoundEnded){Finish(false,TEXT("Car escaped through locked garage"));return;}Player->LeaveCar();++Checks;if(Player->RidingCar){Finish(false,TEXT("Cannot leave parked car"));return;}Stage(TEXT("Garage"));}
     else if(Phase==TEXT("Garage")&&Now-At>.7){Current=Find(TEXT("GarageLock"));Place(FVector(920,-1050,92));if(!Use(Current))return;if(!GS->bGarageUnlocked){Finish(false,TEXT("Garage lock failed"));return;}Stage(TEXT("Escape"));}
-    else if(Phase==TEXT("Escape")&&Now-At>1){Current=Find(TEXT("EscapeCar"));Place(FVector(850,-780,92));if(!Use(Current))return;if(GS->Phase!=EWDRoundPhase::Escaped){Finish(false,TEXT("Car escape did not finish round"));return;}Finish(true,TEXT("Three stair flights both ways, twelve visible keys, locks, duplicate prevention, wardrobe and bed, letter, four-storey navigation, noise pursuit, garage and car ending"));}
+    else if(Phase==TEXT("Escape")&&Now-At>1){Current=Find(TEXT("EscapeCar"));Place(FVector(850,-780,92));if(!Use(Current))return;if(!Player->RidingCar || GS->bRoundEnded){Finish(false,TEXT("Reboarding failed or auto-started"));return;}Stage(TEXT("Seated"));}
+    else if(Phase==TEXT("Seated")&&Now-At>2){
+        if(FParse::Param(FCommandLine::Get(),TEXT("WDCarUI"))){Stage(TEXT("TouchGetOut"));return;}
+        if(GS->TeamKeys.Num()!=12 || Current->BoardedCount()!=1 || !Current->AllSurvivorsAboard()){Finish(false,TEXT("Car passenger state invalid"));return;}
+        FHitResult Obstacle;FCollisionQueryParams Q(SCENE_QUERY_STAT(CarRoad),false,Current);Q.AddIgnoredActor(Player);
+        const FVector Start=Current->GetActorLocation()+FVector(0,0,90);
+        if(GetWorld()->SweepSingleByChannel(Obstacle,Start,Start+FVector(0,-1700,0),FQuat::Identity,ECC_Visibility,FCollisionShape::MakeBox(FVector(112,248,77)),Q)){
+            UE_LOG(LogTemp,Error,TEXT("WD_CAR_EXIT_BLOCKER %s at %s"),Obstacle.GetActor()?*Obstacle.GetActor()->GetName():TEXT("none"),*Obstacle.ImpactPoint.ToString());Finish(false,TEXT("Car departure path obstructed"));return;
+        }++Checks;
+        Player->SetSprint(true);Player->ToggleCrouch();++Checks;if(Player->bSprinting||Player->bIsCrouched){Finish(false,TEXT("Seated player can move"));return;}
+        Player->Use();++Checks;if(GS->Phase!=EWDRoundPhase::Escaped){Finish(false,TEXT("Engine did not finish round"));return;}GhostStart=Current->GetActorLocation();Stage(TEXT("Departure"));
+    }
+    else if(Phase==TEXT("TouchGetOut")&&!Player->RidingCar){++Checks;Place(FVector(850,-780,92));Player->GetController()->SetControlRotation((Current->GetInteractionPoint()-Player->GetPawnViewLocation()).Rotation());Stage(TEXT("TouchBoard"));}
+    else if(Phase==TEXT("TouchBoard")&&Player->RidingCar==Current){++Checks;Stage(TEXT("TouchStart"));}
+    else if(Phase==TEXT("TouchStart")&&GS->Phase==EWDRoundPhase::Escaped){++Checks;GhostStart=Current->GetActorLocation();Stage(TEXT("Departure"));}
+    else if(Phase==TEXT("Departure")&&Now-At>4){
+        if(Current->GetActorLocation().Y>GhostStart.Y-750 || FVector::Dist(Player->GetActorLocation(),Current->SeatLocation(Player->CarSeat))>10){
+            UE_LOG(LogTemp,Error,TEXT("WD_DEPARTURE_METRICS car=%s start=%s passenger=%s seat=%s lag=%.2f"),*Current->GetActorLocation().ToString(),*GhostStart.ToString(),*Player->GetActorLocation().ToString(),*Current->SeatLocation(Player->CarSeat).ToString(),FVector::Dist(Player->GetActorLocation(),Current->SeatLocation(Player->CarSeat)));
+            Finish(false,TEXT("Car or passenger did not leave garage"));return;
+        }
+        Player->LeaveCar();++Checks;if(!Player->RidingCar){Finish(false,TEXT("Player left departing car"));return;}
+        if(FParse::Param(FCommandLine::Get(),TEXT("WDCarUI"))){Stage(TEXT("WaitVictoryScreen"));return;}
+        Finish(true,TEXT("Three stair flights both ways; twelve keys and locks; hiding; letter; all-floor paths; noise and doors; board, blocked start, exit, reboard, engine, passenger and car departure"));
+    }
+    else if(Phase==TEXT("WaitVictoryScreen")&&GS->EndingAge>8.5){Stage(TEXT("VictoryScreen"));}
+    else if(Phase==TEXT("VictoryScreen")&&Now-At>3){Finish(true,TEXT("Actual Android Get Out, Board and Start Engine touches; car departure and victory screen"));}
 }

@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "environment": "Final 0.9.3 APK on API 35 emulator with ARM64 translation and host Vulkan",
+  "method": "ADB touch inputs through the normal UI without gameplay probe flags; captured screens visually reviewed",
+  "checks": [
+    "Home loads at 2400x1080",
+    "Difficulty cycles from Normal through Hard and Extreme to Easy",
+    "Play closes the home screen and begins the introduction",
+    "Skip Story enters gameplay with the Easy 40-minute clock",
+    "Shared bag opens and closes",
+    "Journal opens and folds",
+    "In-game menu opens",
+    "Resume returns to gameplay",
+    "Leave House returns to the home screen"
+  ],
+  "screenshots": "menu-android-093/",
+  "limits": "Emulator UI smoke check, not a physical-phone touch-comfort or audio-quality test"
+}

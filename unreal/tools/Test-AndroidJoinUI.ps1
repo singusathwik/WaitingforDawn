@@ -7,7 +7,11 @@ $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 & $Adb -s $Serial shell "am start -n org.waitingfordawn.unrealpreview/com.epicgames.unreal.GameActivity --es cmdline '-WDHouseNetClient -WDExpectedPlayers=2 -unattended'"
 $until=(Get-Date).AddSeconds(60)
 do{Start-Sleep -Seconds 1;$log=(& $Adb -s $Serial logcat -d -s UE)-join "`n"}while($log -notmatch 'Bringing up level for play took' -and (Get-Date)-lt $until)
-Start-Sleep -Seconds 2
+if($log -notmatch 'Bringing up level for play took'){throw 'Android home did not load'}
+# Allow the first rendered HUD frame to finish on ARM64 translation before tapping.
+Start-Sleep -Seconds 7
+& $Adb -s $Serial shell input tap 320 750
+Start-Sleep -Milliseconds 500
 & $Adb -s $Serial shell input tap 320 750
 Start-Sleep -Milliseconds 500
 & $Adb -s $Serial shell input tap 500 344
@@ -19,6 +23,8 @@ Start-Sleep -Seconds 1
 & $Adb -s $Serial shell input tap 2000 700
 Start-Sleep -Milliseconds 500
 $output=Join-Path $root 'artifacts/unreal-setup/android-network-ui-inner.log'
+# A previous run's Host ready line must not satisfy this run's readiness wait.
+Set-Content -LiteralPath $output -Value ''
 $inner=Start-Process (Join-Path $PSHOME 'pwsh.exe') -ArgumentList @('-NoProfile','-File',('"'+(Join-Path $PSScriptRoot 'Test-AndroidWindowsNetwork.ps1')+'"'),'-Port','7777','-ManualJoin','-EvidenceSuffix',$EvidenceSuffix) -WindowStyle Hidden -PassThru -RedirectStandardOutput $output -RedirectStandardError (Join-Path $root 'artifacts/unreal-setup/android-network-ui-inner.stderr')
 $null=$inner.Handle
 $until=(Get-Date).AddSeconds(45)

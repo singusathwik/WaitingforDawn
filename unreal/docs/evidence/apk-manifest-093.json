@@ -1,0 +1,13 @@
+{
+  "version": "0.9.3",
+  "version_code": 12,
+  "package": "org.waitingfordawn.unrealpreview",
+  "bytes": 177303241,
+  "sha256": "bee62c2bfe4a2377c55ba9b2823936bdb108c9707266a0ce24492d9461c34e9b",
+  "architecture": "arm64-v8a",
+  "min_sdk": 26,
+  "target_sdk": 35,
+  "signature_v2_verified": true,
+  "build": "Development",
+  "engine": "5.7.4"
+}

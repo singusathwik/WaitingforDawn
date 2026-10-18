@@ -45,6 +45,14 @@ public:
     bool CanGhostOpen() const;
     void OpenForGhost();
     void RattleForGhost();
+    bool IsFullyOpen() const { return bOpen && OpenFraction >= .99f; }
+    int32 BoardedCount() const;
+    int32 SurvivorsCount() const;
+    bool AllSurvivorsAboard() const;
+    FVector SeatLocation(int32 Seat) const;
+    FText CarStatus() const;
+    void Board(AWDCharacter* User);
+    void StartCar(AWDCharacter* User);
     UPROPERTY(Replicated) bool bGhostOpened = false;
 protected:
     virtual void BeginPlay() override;

@@ -41,7 +41,7 @@ void AWDGameState::Tick(float DeltaSeconds)
 }
 bool AWDGameState::AddKey(FName Key, const FString& Finder)
 {
-    if (!HasAuthority() || bRoundEnded || Key.IsNone() || TeamKeys.Contains(Key)) return false;
+    if (!HasAuthority() || bRoundEnded || Phase!=EWDRoundPhase::Playing || Key.IsNone() || TeamKeys.Contains(Key)) return false;
     TeamKeys.Add(Key);
     LastDiscovery = Finder + TEXT(" found ") + Key.ToString();
     DiscoveryAt = GetServerWorldTimeSeconds();
@@ -57,7 +57,7 @@ void AWDGameState::StartRound(EWDDifficulty Level, bool SkipStory)
 }
 void AWDGameState::EndRound(bool Escaped, const FString& Reason)
 {
-    if (!HasAuthority() || bRoundEnded) return;
+    if (!HasAuthority() || bRoundEnded || Phase!=EWDRoundPhase::Playing) return;
     Phase=Escaped?EWDRoundPhase::Escaped:EWDRoundPhase::Lost;
     bRoundEnded=true; EndingReason=Reason; ForceNetUpdate();
 }
@@ -72,7 +72,7 @@ bool AWDGameState::CanEscape() const
 }
 void AWDGameState::EmitNoise(FVector Location, float Radius, FName Source)
 {
-    if (!HasAuthority() || bRoundEnded) return;
+    if (!HasAuthority() || bRoundEnded || Phase!=EWDRoundPhase::Playing) return;
     UE_LOG(LogTemp, Display, TEXT("WD_NOISE source=%s at=%s"), *Source.ToString(), *Location.ToString());
     for (TActorIterator<AWDGhost> It(GetWorld()); It; ++It)
         if (FVector::DistSquared(It->GetActorLocation(), Location) <= FMath::Square(Radius))

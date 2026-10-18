@@ -30,6 +30,13 @@ void AWDInteractable::BeginPlay()
     ClosedLocation = Mesh->GetRelativeLocation();
     ClosedRotation = Mesh->GetRelativeRotation();
     OpenFraction = bOpen ? 1.f : 0.f;
+    if(Kind==EWDInteraction::Car){
+        SetReplicateMovement(true);SetNetUpdateFrequency(30);
+        // The car mesh's imported forward axis differs from the gameplay actor.
+        // Keep the boarding handle in actor space so art orientation cannot move it across the cabin.
+        Handle->AttachToComponent(Pivot,FAttachmentTransformRules::KeepRelativeTransform);
+        Handle->SetRelativeLocation(FVector(30,-105,105));
+    }
     if(Kind==EWDInteraction::Garage)Handle->AttachToComponent(Pivot,FAttachmentTransformRules::KeepWorldTransform);
     if (Kind != EWDInteraction::Door || !bBlocksPassage) Mesh->SetCanEverAffectNavigation(false);
     OnRep_State();
@@ -48,7 +55,7 @@ void AWDInteractable::Tick(float DeltaSeconds)
     if(Kind==EWDInteraction::Car)
     {
         auto* Round=GetWorld()->GetGameState<AWDGameState>();
-        if(Round && Round->Phase==EWDRoundPhase::Escaped && Round->EndingAge<7)
+        if(HasAuthority() && Round && Round->Phase==EWDRoundPhase::Escaped && Round->EndingAge<7)
             AddActorWorldOffset(FVector(0,-250*DeltaSeconds,0));
     }
     OpenFraction = FMath::FInterpConstantTo(OpenFraction, bOpen ? 1.f : 0.f, DeltaSeconds, bGhostOpened ? .65f : 2.5f);
@@ -76,7 +83,7 @@ FText AWDInteractable::GetPrompt() const
         return FText::FromString(TEXT("Locked - ") + DisplayName.ToString());
     if (Kind == EWDInteraction::Letter) return FText::FromString(TEXT("Read the keeper's letter"));
     if (Kind == EWDInteraction::Wardrobe || Kind == EWDInteraction::Bed) return FText::FromString(Occupant?TEXT("Occupied"):TEXT("Hide - ")+DisplayName.ToString());
-    if (Kind == EWDInteraction::Car) return FText::FromString(State && State->CanEscape()?TEXT("Start the car - escape together"):TEXT("Car needs the ignition key and an open garage"));
+    if (Kind == EWDInteraction::Car) return FText::FromString(TEXT("Board car - ")+FString::FromInt(BoardedCount())+TEXT(" / ")+FString::FromInt(SurvivorsCount())+TEXT(" aboard"));
     if (Kind == EWDInteraction::Noise) return FText::FromString(TEXT("Touch ")+DisplayName.ToString());
     const FString Verb = Kind == EWDInteraction::Key ? TEXT("Take ") : bOpen ? TEXT("Close ") : TEXT("Open ");
     return FText::FromString(Verb + DisplayName.ToString());
@@ -84,8 +91,8 @@ FText AWDInteractable::GetPrompt() const
 void AWDInteractable::Interact(AWDCharacter* User)
 {
     auto* State = GetWorld()->GetGameState<AWDGameState>();
-    if (!HasAuthority() || !User || !State || State->bRoundEnded || !IsAvailable() ||
-        User->FindInteractionTarget() != this || GetWorld()->GetTimeSeconds() < NextUseTime) return;
+    if (!HasAuthority() || !User || !User->CanAct() || User->HidingSpot || User->RidingCar || !State || State->Phase!=EWDRoundPhase::Playing || !IsAvailable() ||
+        User->FindInteractionTarget() != this || (Kind!=EWDInteraction::Car && GetWorld()->GetTimeSeconds() < NextUseTime)) return;
     if (!RequiredKey.IsNone() && !State->TeamKeys.Contains(RequiredKey)) return;
     if (!State->HasKeys(RequiredKeys)) return;
     NextUseTime = GetWorld()->GetTimeSeconds() + .45;
@@ -96,10 +103,7 @@ void AWDInteractable::Interact(AWDCharacter* User)
     }
     if (Kind == EWDInteraction::Car)
     {
-        if(State->CanEscape())for(TActorIterator<AWDCharacter> It(GetWorld());It;++It)
-            if(It->IsPlayerControlled()&&!It->bCaught&&(FVector::Dist2D(It->GetActorLocation(),GetActorLocation())>600 || FMath::Abs(It->GetActorLocation().Z-GetActorLocation().Z)>200))
-            {State->LastDiscovery=TEXT("Bring the surviving team to the car before starting it.");State->DiscoveryAt=State->GetServerWorldTimeSeconds();State->ForceNetUpdate();return;}
-        if (State->CanEscape()) { PlayInteractionSound(); State->EndRound(true, TEXT("The engine caught. Behind you, the first sunlight broke over Eleanor's house. You escaped together.")); }
+        Board(User);
         return;
     }
     if (Kind == EWDInteraction::Letter)

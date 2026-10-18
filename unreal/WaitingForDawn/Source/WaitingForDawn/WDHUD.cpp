@@ -75,9 +75,17 @@ void AWDHUD::DrawHUD()
     if(P->HidingSpot){bool Bed=P->HidingSpot->Kind==EWDInteraction::Bed;DrawRect(FLinearColor(.008,.005,.003,.98),0,0,W,H*(Bed?.30:.38));DrawRect(FLinearColor(.008,.005,.003,.98),0,H*(Bed?.65:.58),W,H);Text(TEXT("Stay quiet. Use the hand to leave."),W*.32,H*.68,1);}
     int Time=FMath::CeilToInt(GS->SecondsRemaining);Text(FString::Printf(TEXT("DAWN  %02d:%02d"),Time/60,Time%60),W*.45,22*S);
     Button(TEXT("Menu"),TEXT(""),22*S,18*S,56*S,56*S,true);Button(TEXT("Journal"),TEXT(""),22*S,88*S,56*S,56*S,true);Button(TEXT("Light"),TEXT(""),22*S,158*S,56*S,56*S,true);Button(TEXT("Bag"),TEXT(""),W-82*S,18*S,56*S,56*S,true);
+    if(!P->RidingCar){
     Ring(135*S,H-130*S,77*S,FLinearColor(.7,.68,.6,.5),3*S);Ring((135+PC->Stick.X*48)*S,H-130*S+PC->Stick.Y*48*S,30*S,FLinearColor(.9,.87,.75,.8),4*S);
     Button(TEXT("Use"),TEXT(""),W-115*S,H-245*S,80*S,80*S,true);Button(TEXT("Crouch"),TEXT(""),W-205*S,H-150*S,64*S,64*S,true);Button(TEXT("Run"),TEXT(""),W-110*S,H-140*S,64*S,64*S,true);Button(TEXT("Throw"),TEXT(""),W-205*S,H-245*S,64*S,64*S,true);
     DrawRect(FLinearColor(.035,.035,.035,.8),W*.32,H-35*S,W*.34,8*S);DrawRect(FLinearColor(.27,.55,.27),W*.32,H-35*S,W*.34*P->Stamina/100,8*S);Ring(W/2,H/2,2*S,FLinearColor(.85,.82,.7));
+    }else{
+        DrawRect(FLinearColor(.015,.015,.015,.85),W*.20,H*.69,W*.60,H*.27);
+        Text(FString::Printf(TEXT("IN THE CAR  |  SEAT %d  |  %d / %d ABOARD"),P->CarSeat+1,P->RidingCar->BoardedCount(),P->RidingCar->SurvivorsCount()),W*.24,H*.72,1.4);
+        Text(P->RidingCar->CarStatus().ToString(),W*.24,H*.78,1.1);
+        Button(TEXT("Use"),PLATFORM_ANDROID?TEXT("START ENGINE"):TEXT("START ENGINE [E]"),W*.25,H*.85,290*S,48*S);
+        Button(TEXT("LeaveCar"),PLATFORM_ANDROID?TEXT("GET OUT"):TEXT("GET OUT [Q]"),W*.56,H*.85,230*S,48*S);
+    }
     if(auto* T=P->FindInteractionTarget();T&&!P->HidingSpot){DrawRect(FLinearColor(0,0,0,.65),W*.3,H*.61,W*.4,35*S);Text(T->GetPrompt().ToString(),W*.32,H*.62,1.25);}
     if(GS->GetServerWorldTimeSeconds()-GS->DiscoveryAt<7)Text(GS->LastDiscovery,W*.26,65*S,1.15);
     float Danger=0;for(TActorIterator<AWDGhost>It(GetWorld());It;++It)Danger=FMath::Max(Danger,It->ThreatAt(P->GetActorLocation()));
@@ -108,7 +116,8 @@ void AWDHUD::NotifyHitBoxClick(FName N)
     if(N==TEXT("CloseBag"))N=TEXT("Bag");
     if(N==TEXT("CloseJournal")||N==TEXT("ReadJournal"))N=TEXT("Journal");
     if(N==TEXT("Resume"))N=TEXT("Menu");
-    if(N==TEXT("Play"))PC->StartGame(PC->SelectedDifficulty,false);else if(N==TEXT("Difficulty"))PC->SelectedDifficulty=(PC->SelectedDifficulty+1)%4;
+    if(N==TEXT("LeaveCar")){P->LeaveCar();return;}
+    if(N==TEXT("Play"))PC->StartGame(PC->SelectedDifficulty,false);else if(N==TEXT("Difficulty") && GetNetMode()!=NM_Client)PC->SelectedDifficulty=(PC->SelectedDifficulty+1)%4;
     else if(N==TEXT("Friends"))PC->OpenJoin();else if(N==TEXT("Skip"))PC->SkipStory();else if(N==TEXT("Exit"))UKismetSystemLibrary::QuitGame(this,PC,EQuitPreference::Quit,false);
     else if(N==TEXT("Home"))UGameplayStatics::OpenLevel(this,TEXT("House"));else if(N==TEXT("Retry"))PC->Retry();else if(N==TEXT("Use"))P->Use();else if(N==TEXT("Light"))P->ToggleLight();else if(N==TEXT("Crouch"))P->ToggleCrouch();else if(N==TEXT("Run"))P->SetSprint(!P->bSprinting);else if(N==TEXT("Throw"))P->ThrowBottle();else if(N==TEXT("Menu"))PC->ToggleMenu();else if(N==TEXT("Bag"))PC->ToggleBag();else if(N==TEXT("Journal"))PC->ToggleJournal();
 }

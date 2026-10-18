@@ -8,6 +8,8 @@ UCLASS()
 class WAITINGFORDAWN_API UWDJoinPanel : public UUserWidget
 {
     GENERATED_BODY()
+public:
+    static bool NormalizeAddress(const FString& Input,FString& Output);
 protected:
     virtual void NativeOnInitialized() override;
     UPROPERTY() TObjectPtr<UEditableTextBox> Address;

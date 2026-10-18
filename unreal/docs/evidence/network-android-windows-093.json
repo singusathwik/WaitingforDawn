@@ -1,0 +1,22 @@
+{
+  "environment": "Android API 35 ARM64 translation with host Vulkan GPU; Windows UE 5.7.4; emulator virtual network, not physical Wi-Fi",
+  "joined_through_android_ui": true,
+  "client": {
+    "passed": true,
+    "phase": "ClientDeparture",
+    "detail": "Remote drawer and key, hiding, exit, car boarding, disembark/reboard and synchronized team departure",
+    "checks": 7,
+    "keys": 0,
+    "stair_flights_both_directions": 0,
+    "fall_recoveries": 0
+  },
+  "host": {
+    "passed": true,
+    "phase": "TeamDeparture",
+    "detail": "2 processes: remote pickup, late join, hiding, actual boarding, unique seats, no abandonment, engine and moving car, passenger disconnect cleanup",
+    "checks": 7,
+    "keys": 0,
+    "stair_flights_both_directions": 0,
+    "fall_recoveries": 0
+  }
+}

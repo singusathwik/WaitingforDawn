@@ -2,6 +2,7 @@
 #include "Misc/AutomationTest.h"
 #include "WDGameState.h"
 #include "WDGhost.h"
+#include "WDJoinPanel.h"
 #include "Engine/Engine.h"
 #include "Engine/World.h"
 
@@ -74,6 +75,8 @@ bool FWDRoundLifecycle::RunTest(const FString& Parameters)
     UWorld* World=nullptr;for(const FWorldContext& C:GEngine->GetWorldContexts())if(C.WorldType==EWorldType::Editor)World=C.World();
     if(!World){AddError(TEXT("Editor world required"));return false;}
     auto* State=World->SpawnActor<AWDGameState>();State->Phase=EWDRoundPhase::Lobby;
+    TestFalse(TEXT("Lobby cannot grant keys"),State->AddKey(TEXT("Nursery"),TEXT("test")));
+    State->EndRound(true,TEXT("invalid"));TestFalse(TEXT("Lobby cannot escape"),State->bRoundEnded);
     State->StartRound(EWDDifficulty::Hard,false);TestTrue(TEXT("Play begins story"),State->Phase==EWDRoundPhase::Introduction);
     State->IntroRemaining=0;State->Tick(.01f);TestTrue(TEXT("Skip enters gameplay"),State->Phase==EWDRoundPhase::Playing);
     State->AddKey(TEXT("Ignition"),TEXT("test"));TestFalse(TEXT("Car cannot cross closed garage"),State->CanEscape());
@@ -81,6 +84,16 @@ bool FWDRoundLifecycle::RunTest(const FString& Parameters)
     State->EndRound(true,TEXT("Escaped"));TestTrue(TEXT("Escape wins"),State->Phase==EWDRoundPhase::Escaped);TestFalse(TEXT("Ended game rejects key grants"),State->AddKey(TEXT("Nursery"),TEXT("test")));
     State->bRoundEnded=false;State->Phase=EWDRoundPhase::Playing;State->SecondsRemaining=.001f;State->Tick(.02f);TestTrue(TEXT("Dawn loses"),State->Phase==EWDRoundPhase::Lost);
     State->Destroy();return true;
+}
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWDJoinAddress,"WaitingForDawn.Network.JoinAddress",EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FWDJoinAddress::RunTest(const FString& Parameters)
+{
+    FString Out;
+    for(const FString Input:{TEXT("192.168.1.20"),TEXT("100.90.10.2"),TEXT("10.0.2.2:7777"),TEXT("127.0.0.1:65535"),TEXT(" 192.168.1.20 ")})
+        TestTrue(*Input,UWDJoinPanel::NormalizeAddress(Input,Out));
+    for(const FString Input:{TEXT(""),TEXT("256.1.1.1"),TEXT("1.2.3.4?listen"),TEXT("1.2.3.4:0"),TEXT("1.2.3.4:65536"),TEXT("1.2.3.4:"),TEXT("1.2..4"),TEXT("+1.2.3.4"),TEXT("224.1.1.1"),TEXT("0.0.0.0"),TEXT("255.255.255.255"),TEXT("1.2.3.4:7:8")})
+        TestFalse(*Input,UWDJoinPanel::NormalizeAddress(Input,Out));
+    return true;
 }
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWDAttackGrace,"WaitingForDawn.Rules.VisibleAttackWindow",
     EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)

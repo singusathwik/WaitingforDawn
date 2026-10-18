@@ -1,38 +1,38 @@
-# Unreal 0.9.2 validation — 2026-10-18
+# Unreal 0.9.3 gameplay audit
 
-This is an art update to Eleanor in the existing Unreal development preview. The results below were executed on the delivered model and APK. They are automated checks and rendered captures, not a physical-phone certification or an unassisted human playthrough.
+These are bounded automated checks, not proof of a bug-free game, an unassisted human playthrough or physical-device certification. Prior evidence is preserved in [VALIDATION-0.9.2.md](VALIDATION-0.9.2.md).
 
-## Executed for 0.9.2
+## Executed checks
 
 | Check | Evidence and scope |
 |---|---|
-| Blender character | `evidence/blender-character-092.json`: 30,499 triangles, 42 bones, 42 skinned mesh objects, every vertex weighted, outward-facing facial polygons and packed source/baked images. The saved Blender file's hash is recorded. |
-| Source/export/import | `evidence/source-validation-092.json`: 23 existing FBX exports plus the new character, two baked maps and generated asset hashes. The five repaired animation clips and skeleton retain their hashes. `../../design/eleanor-092/unreal-import.json` records the actual map mesh, materials, shared physics asset and bind bounds. |
-| Android package | UE 5.7.4 ARM64/ASTC cook and Gradle build succeeded. Version 0.9.2/code 11; APK v2 signature verified. `evidence/apk-manifest-092.json` records bytes and SHA-256. Installed over the previous Unreal preview on the API 35 emulator. |
-| Windows encounter | `evidence/threat-win64-092.json`: 8 checks passed using the final mesh, with actual offscreen rendering. Screenshots are in `evidence/windows-screens-092/`. |
-| Android encounter | `evidence/threat-android-092.json`: the same 8 checks passed in the installed ARM64 APK. Actual 2400 × 1080 captures of approach, chase, ceiling pose and capture are in `evidence/android-screens-092/`; all four were visually inspected. |
-| Android campaign | `evidence/campaign-android-092.json`: 67 checks passed, twelve visible keys, dependency locks, duplicate pickup prevention, wardrobe/bed hiding, letter, navigation to all four floors, noise-driven pursuit/door opening and garage/car ending. Three stair flights were walked in both directions with zero fall recoveries. |
-| Android/Windows co-op | `evidence/network-android-windows-092.json`: the packaged Android client joined a Windows host through Home → Join with friends → entered IP → Join house. Remote use/pickup, shared state, hiding, ghost/door state receipt and disconnect cleanup passed over the emulator's virtual network. No protocol override was used. |
+| Native rules | `evidence/native-tests-093.json`: six passed, zero failed. Difficulty, noise deadlines, attack grace, story/dawn/end rules, stair collision and strict address parsing. |
+| Source/assets | `evidence/source-validation-093.json`: four-storey layout, twelve-key dependency graph, 23 FBX exports and the ghost's mesh, textures and protected animation/skeleton hashes. |
+| Windows component sweep | `evidence/component-audit-win64-093.json`: 275 checks. All 20 hiding spaces enter/exit; all 98 searchable drawers/portraits and all 16 room doors open/close. Lobby/story guards, bottle cooldown, blocked hide exit, caught occupancy cleanup and last-survivor loss. |
+| Android component sweep | `evidence/component-audit-android-093.json`: the same 275 checks passed in the final APK, including every hiding space, searchable container and room door. |
+| Windows campaign | `evidence/campaign-win64-093.json`: 73 checks, twelve actual pickups, three stair flights both directions, zero fall recoveries, all-floor navigation, noise pursuit/door opening, garage, boarding, blocked start, disembark/reboard and departure. |
+| Four-player co-op | `evidence/network-four-process-093.json`: four separate Windows processes, remote drawer/key/hiding actions, late joins, unique seats, simultaneous boarding, no abandonment, disembark/reboard, replicated departure and disconnected passenger cleanup. |
+| Network impairment | `evidence/network-four-process-093-lag.json`: repeated with 100 ms outgoing packet delay and 2% loss on each process, confirmed in engine logs. Loopback emulation, not an internet test. Rerun after the final passenger-update fix. |
+| Map/rendered car | `evidence/map-repair-093.json` and `evidence/car-win64-093/`. Portrait hinges, garage clearance, final cabin and exterior rendered car captures. |
+| Android package | `evidence/apk-manifest-093.json`: UE 5.7.4 ARM64/ASTC build, version 0.9.3/code 12, API 26 minimum/API 35 target, APK v2 signature verified and installed on the API 35 emulator. |
+| Android car touch interface | `evidence/car-ui-android-093.json` and `evidence/car-android-093/`: actual Get Out, Board and Start Engine touches, moving departure and the victory screen; nine checks. Screenshots were visually inspected. |
+| Android full campaign | `evidence/campaign-android-093.json`: 73 checks passed in the final installed APK, all twelve key pickups, three flights in both directions, zero fall recoveries, hiding, letter, navigation, ghost/door noise response, car-sized route clearance and the boarded-car ending. |
+| Android ghost encounters | `evidence/threat-android-093.json` and `evidence/android-screens-093/`: eight checks for visible approach, cancellable attack wind-up, sprint escape, ceiling pose bounds and face-framed capture. Approach and capture screenshots were visually inspected. |
+| Android to Windows co-op | `evidence/network-android-windows-093.json`: actual Home → Join with friends → entered host IP → Join house. Seven checks on each peer cover remote pickup, hiding, boarding, disembark/reboard and synchronized departure. Emulator virtual networking, not physical Wi-Fi. |
+| Normal Android menus/story | `evidence/menu-smoke-android-093.json` and `evidence/menu-android-093/`: normal launch with no gameplay probe flags, difficulty cycle, Play, Skip Story, bag, journal, menu, Resume and Leave House. Actual touch inputs and visually inspected screens. |
 
-The Android emulator uses ARM64 translation and host Vulkan graphics. Its rendering and timings are not measurements of physical-phone performance.
+The emulator uses ARM64 translation and host Vulkan graphics. These are not physical-phone performance measurements. Its logs contain occasional audio-buffer underruns and collision-trace budget warnings; sound smoothness and frame pacing still need physical-phone validation.
 
-## What these checks establish
+## Bugs corrected
 
-The encounter probe exercises actual chase AI and character movement over more than eight metres, a visible attack wind-up and sprint movement out of reach. Ceiling positioning and capture framing use controlled fixtures; those parts do not prove unrestricted wall climbing or an emergent attack at every location. The campaign uses real interaction/lock/pickup code while teleporting between room fixtures; it physically walks the stair flights. It does not establish that every route was exhaustively walked or that a new player can solve the game without assistance.
+The previous ending only required survivors within six metres of the car. Four replicated seats now provide Board, Start Engine and Get Out. The server requires all living connected players aboard, the ignition key and a fully raised garage door. Caught/disconnected players do not retain required seats. The parked car protects its occupants, but the dawn clock continues. Joining an ended match is rejected.
 
-The delivered mesh has a modeled face, recessed eyes, hair, sleeves, layered dress, nails and keepsake. The generated face source is projected and baked into the face UVs in Blender. Runtime screenshots confirm that the actual animated geometry is present in the APK, rather than relying on a Blender preview. Hair and cloth are weighted geometry without simulation. Eight opaque material slots avoid alpha-blended hair, but this is an asset budget decision, not a measured phone performance claim.
+Car movement previously ran separately on every peer. It now runs on the server and replicates, with passengers following their seats. An Android test exposed one frame of passenger lag at lower frame rates; passenger ticks now follow the car and test probes sample after the passenger update. The imported mesh's forward axis and boarding handle were corrected. A dresser and continuous skirting strip blocked the exit route; both are cleared. The campaign sweeps a car-sized box through the departure route. The Windows campaign preceded the final 180-degree mesh-facing correction; a dedicated rendered car recheck passed afterward. The departure camera now fills wide mobile displays.
 
-## Issues caught before release
+Both key portraits previously swung behind their wall, making their close handles unreachable. The component sweep reproduced and verified the repair. Other fixes stop crouched movement after defeat, free a caught survivor's hiding space even when its exit is blocked, discard stale joystick input when opening panels, reject gameplay actions outside Playing and limit retry to completed rounds. Separate players can board simultaneously without a shared furniture cooldown rejecting them.
 
-- Legacy skeletal FBX reimport alternated between metre and centimetre bounds. The importer now recreates only the generated mesh and checks bind scale/transforms before saving the map.
-- Automatic physics fitting of the clothing produced partial bounds that failed the encounter regression. The new mesh now reuses the existing compatible rig's full-body physics asset; the gameplay capsule is unchanged.
-- Facial polygons initially faced inward. Unreal's backface culling exposed internal mouth/eye geometry, despite the two-sided Blender preview looking intact. The final export has outward facial winding, checked by the Blender validator and by the actual Windows/Android close-ups.
-- The face texture initially repeated on the neck. The neck now uses a cloth collar, with internal sockets and teeth positioned behind the facial surface.
+## Test boundaries
 
-## Earlier tests and remaining limits
+The campaign uses real interaction/lock/pickup code and walks the stairs, but teleports between other room fixtures. The component sweep unlocks keys up front to inspect every searchable object. The network test earns its first key, then grants final keys to isolate boarding; it is not a four-human full campaign. Car visual/touch fixtures grant keys for inspection. These distinctions also apply to Android versions of the probes.
 
-The gameplay C++ is unchanged from 0.9.1. The five native automation tests, Windows campaign and four-process Windows network run recorded in [VALIDATION-0.9.1.md](VALIDATION-0.9.1.md) were not rerun for this art update. They are historical evidence, not additional 0.9.2 test passes. Current Android campaign/encounter and Android-to-Windows results are listed above.
-
-No physical Android phone, multi-phone Wi-Fi session, sustained thermal/battery test or iOS build was available. Audio/narration was not changed or re-evaluated in this update; the narrator remains synthesized. Ceiling crawling remains a visual pose over ground navigation. Fixed key locations, no save/resume, no revive, no internet relay and no host migration remain. Co-op bodies remain Epic template mannequins. The house geometry was retained.
-
-See [../README.md](../README.md) for controls and build instructions, and [../../ASSETS.md](../../ASSETS.md) for provenance and licenses.
+Physical Android phones, four-phone Wi-Fi, independent remote internet connections, sustained thermal/battery tests and iOS were unavailable. External VPN play is documented in [REMOTE-PLAY.md](REMOTE-PLAY.md), not verified across real locations. No built-in matchmaking/relay, host migration, save/resume or revive is implemented. Narration remains synthesized and existing art/audio are retained. Seated pawns occupy four positions; their standing meshes are hidden. Custom seated-body and door-entry animations are not implemented. Departure is scripted, not a player-drivable vehicle.

@@ -27,6 +27,8 @@ public:
     UPROPERTY(BlueprintReadOnly, Replicated) bool bLightOn = false;
     UPROPERTY(BlueprintReadOnly, Replicated) bool bSprinting = false;
     UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Hiding) TObjectPtr<AWDInteractable> HidingSpot;
+    UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Riding) TObjectPtr<AWDInteractable> RidingCar;
+    UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_Riding) int32 CarSeat = INDEX_NONE;
     UPROPERTY(VisibleAnywhere) TObjectPtr<UAudioComponent> Breath;
     UPROPERTY(BlueprintReadOnly, Replicated) int32 Bottles = 3;
     bool bJournalOpen = false;
@@ -36,6 +38,10 @@ public:
     UFUNCTION(Client, Reliable) void ShowLetter();
     UFUNCTION(Server, Reliable) void ThrowBottle();
     UFUNCTION() void OnRep_Hiding();
+    UFUNCTION() void OnRep_Riding();
+    UFUNCTION(Server, Reliable) void LeaveCar();
+    bool CanAct() const;
+    bool CanMove() const;
     UFUNCTION(BlueprintCallable) void Use();
     UFUNCTION(BlueprintCallable) void ToggleLight();
     UFUNCTION(BlueprintCallable) void ToggleCrouch();
@@ -59,6 +65,7 @@ private:
     double NextBump = 0;
     float DistanceWalked = 0;
     FVector PreviousPosition;
+    TWeakObjectPtr<AWDInteractable> RidingTickDependency;
     UPROPERTY() TObjectPtr<USoundBase> CreakSound;
     UPROPERTY() TObjectPtr<USoundBase> GlassSound;
     UPROPERTY() TObjectPtr<USoundBase> StingerSound;

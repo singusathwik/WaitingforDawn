@@ -65,7 +65,17 @@ void AWDCharacter::BeginPlay()
 }
 void AWDCharacter::Forward(float Value)
 {
-    if (!bCaught && Controller) AddMovementInput(FRotationMatrix(FRotator(0, Controller->GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::X), Value);
+    if (CanMove() && Controller) AddMovementInput(FRotationMatrix(FRotator(0, Controller->GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::X), Value);
+}
+bool AWDCharacter::CanAct() const
+{
+    const auto* GS=GetWorld()->GetGameState<AWDGameState>();
+    return !bCaught && GS && !GS->bRoundEnded && GS->Phase==EWDRoundPhase::Playing;
+}
+bool AWDCharacter::CanMove() const
+{
+    const auto* PC=Cast<AWDPlayerController>(Controller);
+    return CanAct() && !HidingSpot && !RidingCar && !(PC && (PC->bMenuOpen || PC->bBagOpen || bJournalOpen));
 }
 void AWDCharacter::EndPlay(const EEndPlayReason::Type Reason)
 {
@@ -74,14 +84,14 @@ void AWDCharacter::EndPlay(const EEndPlayReason::Type Reason)
 }
 void AWDCharacter::Right(float Value)
 {
-    if (!bCaught && Controller) AddMovementInput(FRotationMatrix(FRotator(0, Controller->GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::Y), Value);
+    if (CanMove() && Controller) AddMovementInput(FRotationMatrix(FRotator(0, Controller->GetControlRotation().Yaw, 0)).GetUnitAxis(EAxis::Y), Value);
 }
 void AWDCharacter::TurnRate(float Value) { AddControllerYawInput(Value * 90.f * GetWorld()->GetDeltaSeconds()); }
 void AWDCharacter::LookRate(float Value) { AddControllerPitchInput(Value * 70.f * GetWorld()->GetDeltaSeconds()); }
 void AWDCharacter::SprintOn() { ServerSprint(true); }
 void AWDCharacter::SprintOff() { ServerSprint(false); }
-void AWDCharacter::ServerSprint_Implementation(bool bEnabled) { bSprinting = bEnabled && !bCaught && Stamina > 5.f; }
-void AWDCharacter::ToggleCrouch() { if (bIsCrouched) UnCrouch(); else Crouch(); }
+void AWDCharacter::ServerSprint_Implementation(bool bEnabled) { bSprinting = bEnabled && CanAct() && !HidingSpot && !RidingCar && Stamina > 5.f; }
+void AWDCharacter::ToggleCrouch() { if(!CanMove())return; if (bIsCrouched) UnCrouch(); else Crouch(); }
 void AWDCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
 {
     Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
@@ -93,7 +103,7 @@ void AWDCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdj
     Camera->SetRelativeLocation(FVector(0,0,BaseEyeHeight));
 }
 void AWDCharacter::ToggleLight() { ServerToggleLight(); }
-void AWDCharacter::ServerToggleLight_Implementation() { if (!bCaught) bLightOn = !bLightOn; }
+void AWDCharacter::ServerToggleLight_Implementation() { if (CanAct()) bLightOn = !bLightOn; }
 void AWDCharacter::Use() { ServerUse(GetViewRotation()); }
 void AWDCharacter::ServerUse_Implementation(FRotator ViewRotation)
 {
@@ -106,12 +116,13 @@ void AWDCharacter::ServerUse_Implementation(FRotator ViewRotation)
     const auto* Round=GetWorld()->GetGameState<AWDGameState>();
     if(!Round || Round->Phase!=EWDRoundPhase::Playing) return;
     NextUse = GetWorld()->GetTimeSeconds() + .15;
+    if (RidingCar) { RidingCar->StartCar(this); return; }
     if (HidingSpot) { LeaveHiding(); return; }
     if (auto* Target = FindInteractionTarget()) Target->Interact(this);
 }
 AWDInteractable* AWDCharacter::FindInteractionTarget() const
 {
-    if (bCaught) return nullptr;
+    if (bCaught || RidingCar) return nullptr;
     const FVector Eye = GetPawnViewLocation();
     const FVector ForwardVector = GetViewRotation().Vector();
     AWDInteractable* Best = nullptr;
@@ -135,9 +146,10 @@ AWDInteractable* AWDCharacter::FindInteractionTarget() const
 }
 void AWDCharacter::Catch()
 {
-    if (!HasAuthority() || bCaught) return;
+    if (!HasAuthority() || !CanAct() || RidingCar) return;
     bCaught = true;
-    if (HidingSpot) LeaveHiding();
+    // A blocked hide exit must not leave a dead survivor occupying the furniture.
+    if (HidingSpot) {HidingSpot->Occupant=nullptr;HidingSpot->ForceNetUpdate();HidingSpot=nullptr;OnRep_Hiding();}
     bSprinting = false;
     PlayCue(StingerSound,GetActorLocation());
     if(auto* PC=Cast<AWDPlayerController>(Controller))
@@ -148,12 +160,14 @@ void AWDCharacter::Catch()
 void AWDCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+    if(RidingCar && CarSeat>=0)SetActorLocation(RidingCar->SeatLocation(CarSeat),false,nullptr,ETeleportType::TeleportPhysics);
     auto* Desired=bCaught?DeathAnimation.Get():GetVelocity().Size2D()>300?RunAnimation.Get():GetVelocity().Size2D()>5?WalkAnimation.Get():IdleAnimation.Get();
     if(Desired && Desired!=ActiveAnimation){ActiveAnimation=Desired;GetMesh()->PlayAnimation(Desired,!bCaught);}
-    GetMesh()->SetVisibility(!HidingSpot);
+    GetMesh()->SetVisibility(!HidingSpot && !RidingCar);
     const auto* GameState = GetWorld()->GetGameState<AWDGameState>();
-    const bool bStopped = bCaught || HidingSpot || (GameState && (GameState->bRoundEnded || GameState->Phase != EWDRoundPhase::Playing));
+    const bool bStopped = bCaught || HidingSpot || RidingCar || (GameState && (GameState->bRoundEnded || GameState->Phase != EWDRoundPhase::Playing));
     GetCharacterMovement()->MaxWalkSpeed = bStopped ? 0.f : bSprinting && Stamina > 0.f ? 430.f : 240.f;
+    GetCharacterMovement()->MaxWalkSpeedCrouched = bStopped ? 0.f : 120.f;
     Flashlight->SetVisibility(bLightOn && !HidingSpot && !bCaught);
     if (IsLocallyControlled())
     {
@@ -175,7 +189,7 @@ void AWDCharacter::Tick(float DeltaSeconds)
             if(It->Kind==EWDInteraction::Noise && FVector::Dist2D(GetActorLocation(),It->GetActorLocation())<65 && FMath::Abs(GetActorLocation().Z-It->GetActorLocation().Z)<120)
             {NextBump=Time+8;PlayCue(GlassSound,It->GetActorLocation());GetWorld()->GetGameState<AWDGameState>()->EmitNoise(It->GetActorLocation(),8000,TEXT("Disturbed clutter"));break;}
     // A loose-board event after roughly 25-50 walking steps, only on authored rotten patches.
-    if (DistanceWalked>2200 && !bIsCrouched && GameState)
+    if (!bStopped && DistanceWalked>2200 && !bIsCrouched && GameState)
     {
         FHitResult Floor;
         FCollisionQueryParams Params(SCENE_QUERY_STAT(LooseFloor),false,this);
@@ -187,8 +201,8 @@ void AWDCharacter::Tick(float DeltaSeconds)
         Stamina = FMath::Max(0.f, Stamina - DeltaSeconds * 18.f);
     else Stamina = FMath::Min(100.f, Stamina + DeltaSeconds * 12.f);
     if (Stamina <= 0) bSprinting = false;
-    if (GetCharacterMovement()->IsMovingOnGround()) LastSafePosition = GetActorLocation();
-    else if (GetVelocity().Z < -500.f && GetActorLocation().Z < LastSafePosition.Z - 250.f)
+    if (!bStopped && GetCharacterMovement()->IsMovingOnGround()) LastSafePosition = GetActorLocation();
+    else if (!bStopped && GetVelocity().Z < -500.f && GetActorLocation().Z < LastSafePosition.Z - 250.f)
     {
         // Last resort only. Regression tests must prove the stair collision independently.
         ++FallRecoveryCount;
@@ -221,6 +235,8 @@ void AWDCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
     DOREPLIFETIME(AWDCharacter, bLightOn);
     DOREPLIFETIME(AWDCharacter, bSprinting);
     DOREPLIFETIME(AWDCharacter, HidingSpot);
+    DOREPLIFETIME(AWDCharacter, RidingCar);
+    DOREPLIFETIME(AWDCharacter, CarSeat);
     DOREPLIFETIME(AWDCharacter, Bottles);
 }
 void AWDCharacter::ShowLetter_Implementation() { bJournalOpen=true; }
@@ -232,7 +248,7 @@ void AWDCharacter::OnRep_Hiding()
 }
 void AWDCharacter::EnterHiding(AWDInteractable* Spot)
 {
-    if (!HasAuthority() || bCaught || HidingSpot || !Spot || Spot->Occupant) return;
+    if (!HasAuthority() || !CanAct() || HidingSpot || RidingCar || !Spot || Spot->Occupant) return;
     Spot->Occupant=this; HidingSpot=Spot; bSprinting=false;
     OnRep_Hiding();
     SetActorLocation(Spot->GetActorTransform().TransformPosition(Spot->HideOffset),false,nullptr,ETeleportType::TeleportPhysics);
@@ -253,6 +269,7 @@ void AWDCharacter::LeaveHiding()
 void AWDCharacter::ThrowBottle_Implementation()
 {
     auto* State=GetWorld()->GetGameState<AWDGameState>();
+    if (RidingCar){LeaveCar();return;}
     if (!State || State->Phase!=EWDRoundPhase::Playing || bCaught || HidingSpot || Bottles<=0 || GetWorld()->GetTimeSeconds()<NextThrow) return;
     NextThrow=GetWorld()->GetTimeSeconds()+1; --Bottles;
     const FVector Start=GetPawnViewLocation(), End=Start+GetViewRotation().Vector()*950;
@@ -262,3 +279,31 @@ void AWDCharacter::ThrowBottle_Implementation()
 }
 void AWDCharacter::PlayCue_Implementation(USoundBase* Sound,FVector Location)
 { if (Sound) UGameplayStatics::PlaySoundAtLocation(this,Sound,Location,.6f); }
+
+void AWDCharacter::OnRep_Riding()
+{
+    if(RidingTickDependency.IsValid())RemoveTickPrerequisiteActor(RidingTickDependency.Get());
+    RidingTickDependency=RidingCar.Get();
+    // Update passengers after the vehicle, including at low mobile frame rates.
+    // Otherwise their cabin position trails the car by a whole frame.
+    if(RidingCar)AddTickPrerequisiteActor(RidingCar);
+    GetCharacterMovement()->StopMovementImmediately();
+    GetCharacterMovement()->SetMovementMode(RidingCar?MOVE_None:MOVE_Walking);
+    GetCapsuleComponent()->SetCollisionEnabled(RidingCar?ECollisionEnabled::NoCollision:ECollisionEnabled::QueryAndPhysics);
+    Camera->SetRelativeLocation(RidingCar?FVector(0,0,62):FVector(0,0,BaseEyeHeight));
+}
+void AWDCharacter::LeaveCar_Implementation()
+{
+    if(!HasAuthority() || !RidingCar || !CanAct())return;
+    auto* Car=RidingCar.Get();
+    // Try both sides and the rear; another boarding player must not trap a passenger.
+    FCollisionQueryParams Q(SCENE_QUERY_STAT(CarExit),false,this);Q.AddIgnoredActor(Car);
+    for(const FVector Local:{FVector(0,-160,92),FVector(0,160,92),FVector(-310,0,92)}){
+        const FVector Exit=Car->GetActorTransform().TransformPosition(Local);
+        FHitResult Floor;
+        if(GetWorld()->OverlapBlockingTestByChannel(Exit,FQuat::Identity,ECC_Pawn,FCollisionShape::MakeCapsule(34,90),Q) ||
+           !GetWorld()->LineTraceSingleByChannel(Floor,Exit,Exit-FVector(0,0,120),ECC_Visibility,Q))continue;
+        RidingCar=nullptr;CarSeat=INDEX_NONE;OnRep_Riding();SetActorLocation(Exit,false,nullptr,ETeleportType::TeleportPhysics);LastSafePosition=Exit;PreviousPosition=Exit;ForceNetUpdate();return;
+    }
+    auto* GS=GetWorld()->GetGameState<AWDGameState>();GS->LastDiscovery=TEXT("The car exit is blocked. Ask your teammate to step aside.");GS->DiscoveryAt=GS->GetServerWorldTimeSeconds();GS->ForceNetUpdate();
+}

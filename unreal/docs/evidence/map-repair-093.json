@@ -1,0 +1,11 @@
+{
+  "changed_this_run": [
+    "Hinged_portrait_Study",
+    "Hinged_portrait_Archive",
+    "EscapeCar"
+  ],
+  "portraits_open_into_room": 2,
+  "garage_trays_moved_clear": 6,
+  "garage_skirting_cut": true,
+  "scope": "portrait hinges, car forward axis, garage dresser/trays and skirting clearance"
+}

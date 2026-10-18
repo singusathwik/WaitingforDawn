@@ -47,7 +47,7 @@ void AWDPlayerController::SkipStory_Implementation()
 void AWDPlayerController::Retry_Implementation()
 {
     if (GetNetMode()==NM_ListenServer && !IsLocalController()) return;
-    if(auto* GS=GetWorld()->GetGameState<AWDGameState>())
+    if(auto* GS=GetWorld()->GetGameState<AWDGameState>();GS && GS->bRoundEnded)
         GetWorld()->ServerTravel(FString::Printf(TEXT("/Game/Maps/House?Start?SkipStory?Difficulty=%d%s"),static_cast<int32>(GS->Difficulty),GetNetMode()==NM_ListenServer?TEXT("?listen"):TEXT("")));
 }
 void AWDPlayerController::SetupInputComponent()
@@ -57,9 +57,9 @@ void AWDPlayerController::SetupInputComponent()
     InputComponent->BindAction("Bag",IE_Pressed,this,&AWDPlayerController::ToggleBag);
     InputComponent->BindAction("Journal",IE_Pressed,this,&AWDPlayerController::ToggleJournal);
 }
-void AWDPlayerController::ToggleMenu() { bMenuOpen=!bMenuOpen; }
-void AWDPlayerController::ToggleBag(){bBagOpen=!bBagOpen;bMenuOpen=false;if(auto* P=Cast<AWDCharacter>(GetPawn()))P->bJournalOpen=false;}
-void AWDPlayerController::ToggleJournal(){if(auto* P=Cast<AWDCharacter>(GetPawn()))P->bJournalOpen=!P->bJournalOpen;bBagOpen=false;bMenuOpen=false;}
+void AWDPlayerController::ToggleMenu() { bMenuOpen=!bMenuOpen;Stick=FVector2D::ZeroVector;MoveFinger=LookFinger=-1; }
+void AWDPlayerController::ToggleBag(){bBagOpen=!bBagOpen;bMenuOpen=false;Stick=FVector2D::ZeroVector;MoveFinger=LookFinger=-1;if(auto* P=Cast<AWDCharacter>(GetPawn()))P->bJournalOpen=false;}
+void AWDPlayerController::ToggleJournal(){if(auto* P=Cast<AWDCharacter>(GetPawn()))P->bJournalOpen=!P->bJournalOpen;Stick=FVector2D::ZeroVector;MoveFinger=LookFinger=-1;bBagOpen=false;bMenuOpen=false;}
 void AWDPlayerController::ShowScare_Implementation(FVector Face,FVector Facing)
 {
     ScareUntil=GetWorld()->GetTimeSeconds()+2.3;
@@ -94,7 +94,7 @@ void AWDPlayerController::PlayerTick(float DeltaSeconds)
     }
     if(ScareUntil>0){ScareUntil=0;SetViewTarget(P);if(StoryCamera)StoryCamera->Destroy();StoryCamera=nullptr;}
     bShowMouseCursor=bMenuOpen || JoinPanel || GS->Phase!=EWDRoundPhase::Playing || P->bCaught || bBagOpen || P->bJournalOpen;
-    if(GS->Phase==EWDRoundPhase::Playing && !bMenuOpen && !bBagOpen && !P->bJournalOpen && !JoinPanel && !P->bCaught && !P->HidingSpot)
+    if(P->CanMove() && !JoinPanel)
     {
         const FRotator Yaw(0,GetControlRotation().Yaw,0);
         P->AddMovementInput(FRotationMatrix(Yaw).GetUnitAxis(EAxis::X),-Stick.Y);
@@ -103,6 +103,7 @@ void AWDPlayerController::PlayerTick(float DeltaSeconds)
     if(GS->Phase==EWDRoundPhase::Escaped && GS->EndingAge<8)
     {
         if(!StoryCamera)StoryCamera=GetWorld()->SpawnActor<ACameraActor>();
+        StoryCamera->GetCameraComponent()->bConstrainAspectRatio=false;
         SetViewTarget(StoryCamera);
         for(TActorIterator<AWDInteractable>It(GetWorld());It;++It)if(It->Kind==EWDInteraction::Car)
         {StoryCamera->SetActorLocation(It->GetActorLocation()+FVector(-360,380,210));StoryCamera->SetActorRotation((It->GetActorLocation()+FVector(0,0,70)-StoryCamera->GetActorLocation()).Rotation());break;}
@@ -142,7 +143,8 @@ bool AWDPlayerController::InputTouch(const FInputDeviceId DeviceId,uint32 Handle
         if(static_cast<int32>(Handle)==LookFinger)
         {
             auto* GS=GetWorld()->GetGameState<AWDGameState>();
-            if(GS && GS->Phase==EWDRoundPhase::Playing && !bMenuOpen) { const FVector2D D=Location-LastLook; AddYawInput(D.X*.13f); AddPitchInput(D.Y*.13f); }
+            const auto* P=Cast<AWDCharacter>(GetPawn());
+            if(GS && GS->Phase==EWDRoundPhase::Playing && P && !P->bCaught && !bMenuOpen && !bBagOpen && !P->bJournalOpen) { const FVector2D D=Location-LastLook; AddYawInput(D.X*.13f); AddPitchInput(D.Y*.13f); }
             LastLook=Location;
         }
     }

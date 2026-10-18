@@ -1,6 +1,6 @@
-# Waiting for Dawn — Unreal 0.9.2
+# Waiting for Dawn — Unreal 0.9.3
 
-A playable Unreal Engine 5.7.4 horror survival development preview for Android ARM64 and Windows. Explore Eleanor's house, collect twelve shared keys, open the ground-floor garage and bring the surviving team to the car before dawn. This is the Unreal rebuild; the earlier Godot game remains at the repository root.
+A playable Unreal Engine 5.7.4 horror survival development preview for Android ARM64 and Windows. Explore Eleanor's house, collect twelve shared keys, open the ground-floor garage and board the car with the surviving team before dawn. This is the Unreal rebuild; the earlier Godot game remains at the repository root.
 
 ## The house and game loop
 
@@ -17,9 +17,11 @@ A playable Unreal Engine 5.7.4 horror survival development preview for Android A
 
 ## Play
 
-Android uses a left joystick, right-side look dragging, circular action buttons, bag/journal controls and a stamina bar. The home screen offers Play, Join with friends and Exit. Pick difficulty before Play. For LAN co-op, one player hosts, and the others enter that host's local IP while connected to the same Wi-Fi or hotspot. Android and Windows use UDP port 7777. There is no internet relay, NAT traversal or host migration.
+Android uses a left joystick, right-side look dragging, circular action buttons, bag/journal controls and a stamina bar. The home screen offers Play, Join with friends and Exit. Pick difficulty before Play. For LAN co-op, one player hosts, and the others enter that host's local IP while connected to the same Wi-Fi or hotspot. Android and Windows use UDP port 7777. The join field also accepts a private VPN IPv4 and optional port; see [remote-play instructions](docs/REMOTE-PLAY.md). There is no built-in internet relay, NAT traversal or host migration.
 
-Windows: WASD move, mouse look, E use, F flashlight, Left Ctrl crouch, Left Shift sprint, Q throw, I bag, J journal, Escape menu. Click Play/Join on the home screen. Start, skip and retry are controlled by the host.
+To finish: collect the twelve keys through their dependencies, unlock and raise the garage door, then approach the car and Use to board. Each living teammate must board their own seat. The car shows the boarding count and what is still missing. Once the garage is fully open, the ignition key is found and everyone alive is seated, any passenger can press Start Engine. The synchronized car departure leads to the victory screen. Caught players do not block departure; disconnected players free their seat. Get Out is available until departure. The timer continues while seated.
+
+Windows: WASD move, mouse look, E use/board/start engine, F flashlight, Left Ctrl crouch, Left Shift sprint, Q throw (Get Out when seated), I bag, J journal, Escape menu. Click Play/Join on the home screen. Start, skip and retry are controlled by the host.
 
 The Android preview uses package `org.waitingfordawn.unrealpreview` and installs separately from the legacy Godot app. It is a Development build with development signing, not a Play Store submission. ARM64, Android 8/API 26 or newer, and a compatible Vulkan or OpenGL ES 3.2 GPU are required. The packaged manifest and tested emulator are recorded in the validation report; minimum API is not a promise of acceptable performance on old phones.
 

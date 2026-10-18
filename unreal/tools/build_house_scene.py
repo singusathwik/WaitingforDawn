@@ -127,7 +127,7 @@ for r in house['rooms']:
     door.mesh.set_relative_scale3d(u.Vector(150/110,1,1))
     door.mesh.set_relative_rotation(u.Rotator(yaw=90),False,False);door.handle.set_relative_location(u.Vector(98,12,105),False,False);doors[i]=door
     # A human-scale hollow six-drawer dresser with six independent trays.
-    cx=x;cy=y-(300 if r['row']==0 else 160)
+    cx=x-(350 if r['name']=='Garage' else 0);cy=y-(300 if r['row']==0 else 160)
     prop('dresser',[cx,cy,z],180,.65)
     trays=[]
     for row in range(2):
@@ -173,7 +173,10 @@ for r in house['rooms']:
     n=action('Loose_crockery_'+r['name'],[x+200,y-40,z+20],u.WDInteraction.NOISE,cube,scale=.28);n.mesh.set_material(0,materials['paper'])
     # Skirting, cornices and vertical wall panelling give the architecture depth.
     for wall_y in (y-440 if r['row']==0 else -230,y+340):
-        box('Skirting',[x,wall_y,z+12],[1350,8,24]);box('Cornice',[x,wall_y,z+305],[1350,12,15])
+        if r['name']=='Garage' and wall_y==y-440:
+            box('GarageSkirtingLeft',[447.5,wall_y,z+12],[445,8,24]);box('GarageSkirtingRight',[1422.5,wall_y,z+12],[305,8,24])
+        else:box('Skirting',[x,wall_y,z+12],[1350,8,24])
+        box('Cornice',[x,wall_y,z+305],[1350,12,15])
     for j in range(6):box('Wallpanel',[side*1587,y-300+j*110,z+70],[8,90,120])
     # Original framed silhouettes, no extracted third-party artwork.
     for j in range(2):
@@ -198,13 +201,14 @@ for name in ('Study','Archive'):
     p=[r['x'],-275 if r['row']==0 else 485,r['z']+145]
     frame=action('Hinged_portrait_'+name,p,u.WDInteraction.DOOR,cube,scale=1)
     frame.mesh.set_relative_scale3d(u.Vector(.9,.05,1.0));frame.mesh.set_material(0,materials['wood']);frame.set_editor_property('blocks_passage',False)
-    frame.set_editor_property('open_yaw',100.0);frame.handle.set_relative_location(u.Vector(40,-8,0),False,False)
+    frame.set_editor_property('open_yaw',-100.0);frame.handle.set_relative_location(u.Vector(40,-8,0),False,False)
     if name=='Archive':frame.set_editor_property('required_keys',[u.Name('Safe')])
     k.set_actor_location(u.Vector(p[0],p[1]+8,p[2]),False,False);k.set_editor_property('container',frame)
     for entry in key_metadata:
         if entry['key']==name:entry.update(container='Hinged_portrait_'+name,approach=[p[0],p[1]-120,r['z']+92])
 
 car=action('EscapeCar',[1070,-760,0],u.WDInteraction.CAR,meshes['car'],yaw=-90)
+car.mesh.set_relative_rotation(u.Rotator(yaw=-90),False,False)
 car.handle.set_relative_location(u.Vector(-125,-20,105),False,False)
 car.set_editor_property('interaction_sound',audio['engine'])
 garage=action('GarageLock',[1070,-1207,140],u.WDInteraction.GARAGE,cube,required='Garage')

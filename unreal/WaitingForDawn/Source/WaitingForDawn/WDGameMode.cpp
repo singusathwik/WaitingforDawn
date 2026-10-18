@@ -19,7 +19,7 @@ void AWDGameMode::BeginPlay()
     if(auto* Navigation=FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld()))Navigation->Build();
     GetWorld()->SpawnActor<AWDAmbience>();
 #if !UE_BUILD_SHIPPING
-    if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseTest"))||FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetServer"))||FParse::Param(FCommandLine::Get(),TEXT("WDVisualTour"))||FParse::Param(FCommandLine::Get(),TEXT("WDThreatTest")))GetWorld()->SpawnActor<AWDCampaignProbe>();
+    if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseTest"))||FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetServer"))||FParse::Param(FCommandLine::Get(),TEXT("WDVisualTour"))||FParse::Param(FCommandLine::Get(),TEXT("WDThreatTest"))||FParse::Param(FCommandLine::Get(),TEXT("WDAuditTest")))GetWorld()->SpawnActor<AWDCampaignProbe>();
     if (FParse::Param(FCommandLine::Get(), TEXT("WDGameplayTest")) ||
         FParse::Param(FCommandLine::Get(), TEXT("WDNetworkServer"))) GetWorld()->SpawnActor<AWDGameplayProbe>();
 #endif
@@ -62,4 +62,6 @@ void AWDGameMode::PreLogin(const FString& Options, const FString& Address, const
 {
     Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
     if (GetNumPlayers() >= 4) ErrorMessage = TEXT("This house already has four survivors.");
+    if(const auto* GS=GetGameState<AWDGameState>(); GS && GS->bRoundEnded)
+        ErrorMessage=TEXT("This night has ended. Ask the host to start a new house.");
 }

@@ -1,0 +1,43 @@
+{
+  "environment": "Four separate Windows UE processes over loopback; not four physical phones",
+  "packet_lag_ms": 0,
+  "packet_loss_percent": 0,
+  "results": {
+    "house-net-server": {
+      "passed": true,
+      "phase": "TeamDeparture",
+      "detail": "4 processes: remote pickup, late join, hiding, actual boarding, unique seats, no abandonment, engine and moving car, passenger disconnect cleanup",
+      "checks": 9,
+      "keys": 0,
+      "stair_flights_both_directions": 0,
+      "fall_recoveries": 0
+    },
+    "house-net-client1": {
+      "passed": true,
+      "phase": "ClientDeparture",
+      "detail": "Late joining observer received shared state, boarded a unique seat and escaped in the replicated moving car",
+      "checks": 9,
+      "keys": 0,
+      "stair_flights_both_directions": 0,
+      "fall_recoveries": 0
+    },
+    "house-net-client2": {
+      "passed": true,
+      "phase": "ClientDeparture",
+      "detail": "Late joining observer received shared state, boarded a unique seat and escaped in the replicated moving car",
+      "checks": 9,
+      "keys": 0,
+      "stair_flights_both_directions": 0,
+      "fall_recoveries": 0
+    },
+    "house-net-client0": {
+      "passed": true,
+      "phase": "ClientDeparture",
+      "detail": "Remote drawer and key, hiding, exit, car boarding, disembark/reboard and synchronized team departure",
+      "checks": 11,
+      "keys": 0,
+      "stair_flights_both_directions": 0,
+      "fall_recoveries": 0
+    }
+  }
+}
