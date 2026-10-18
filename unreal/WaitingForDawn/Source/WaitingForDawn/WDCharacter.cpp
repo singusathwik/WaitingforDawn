@@ -23,7 +23,8 @@ AWDCharacter::AWDCharacter()
     Flashlight = CreateDefaultSubobject<USpotLightComponent>(TEXT("Torch"));
     Flashlight->SetupAttachment(Camera);
     Flashlight->SetRelativeLocation(FVector(10,12,-12));
-    Flashlight->SetIntensity(1800.f);
+    Flashlight->SetIntensityUnits(ELightUnits::Lumens);
+    Flashlight->SetIntensity(100.f);
     Flashlight->SetAttenuationRadius(1800.f);
     Flashlight->SetInnerConeAngle(15.f);
     Flashlight->SetOuterConeAngle(32.f);
@@ -51,6 +52,16 @@ void AWDCharacter::SprintOn() { ServerSprint(true); }
 void AWDCharacter::SprintOff() { ServerSprint(false); }
 void AWDCharacter::ServerSprint_Implementation(bool bEnabled) { bSprinting = bEnabled && !bCaught && Stamina > 5.f; }
 void AWDCharacter::ToggleCrouch() { if (bIsCrouched) UnCrouch(); else Crouch(); }
+void AWDCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+{
+    Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+    Camera->SetRelativeLocation(FVector(0,0,BaseEyeHeight));
+}
+void AWDCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+{
+    Super::OnEndCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+    Camera->SetRelativeLocation(FVector(0,0,BaseEyeHeight));
+}
 void AWDCharacter::ToggleLight() { ServerToggleLight(); }
 void AWDCharacter::ServerToggleLight_Implementation() { if (!bCaught) bLightOn = !bLightOn; }
 void AWDCharacter::Use() { ServerUse(); }
@@ -102,7 +113,7 @@ void AWDCharacter::Tick(float DeltaSeconds)
     // Short intermittent dips, not rapid strobing; the light remains usable.
     const float Time = GetWorld()->GetTimeSeconds();
     const float Dip = FMath::Fmod(Time, 19.f) > 18.55f ? .65f : 1.f;
-    Flashlight->SetIntensity(1800.f * Dip);
+    Flashlight->SetIntensity(100.f * Dip);
     if (!HasAuthority()) return;
     if (bSprinting && GetVelocity().SizeSquared2D() > 100.f)
         Stamina = FMath::Max(0.f, Stamina - DeltaSeconds * 18.f);
@@ -112,6 +123,7 @@ void AWDCharacter::Tick(float DeltaSeconds)
     else if (GetVelocity().Z < -500.f && GetActorLocation().Z < LastSafePosition.Z - 250.f)
     {
         // Last resort only. Regression tests must prove the stair collision independently.
+        ++FallRecoveryCount;
         TeleportTo(LastSafePosition + FVector(0,0,4), GetActorRotation(), false, false);
         GetCharacterMovement()->StopMovementImmediately();
         UE_LOG(LogTemp, Warning, TEXT("WD_FALL_RECOVERY %s"), *LastSafePosition.ToString());
@@ -132,9 +144,9 @@ void AWDCharacter::SetupPlayerInputComponent(UInputComponent* Input)
     Input->BindAction("Sprint", IE_Pressed, this, &AWDCharacter::SprintOn);
     Input->BindAction("Sprint", IE_Released, this, &AWDCharacter::SprintOff);
 }
-void AWDCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const
+void AWDCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-    Super::GetLifetimeReplicatedProps(Out);
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AWDCharacter, Stamina);
     DOREPLIFETIME(AWDCharacter, bCaught);
     DOREPLIFETIME(AWDCharacter, bLightOn);

@@ -94,7 +94,11 @@ void AWDGhost::Tick(float DeltaSeconds)
     }
     if (State == EWDGhostState::Investigating)
     {
-        if (FVector::Dist(GetActorLocation(), NoiseGoal) < 110.f)
+        // Sounds are often at floor/handle height; the capsule origin is above the floor.
+        // A 3D radius can be smaller than MoveTo's accepted horizontal distance, leaving
+        // the ghost parked forever in Investigating. Still reject another storey's sound.
+        if (FVector::Dist2D(GetActorLocation(), NoiseGoal) < 110.f &&
+            FMath::Abs(GetActorLocation().Z - NoiseGoal.Z) < 180.f)
         { State = EWDGhostState::Searching; SearchUntil = Now + 8.; }
         else if (Now > RememberUntil) State = EWDGhostState::Patrol;
     }
@@ -127,9 +131,9 @@ void AWDGhost::Tick(float DeltaSeconds)
     // and retry after dynamic navigation updates instead of discarding it on path failure.
     AI->MoveToLocation(Destination, 45.f, true, true, true, false, nullptr, true);
 }
-void AWDGhost::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const
+void AWDGhost::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-    Super::GetLifetimeReplicatedProps(Out);
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AWDGhost, State);
     DOREPLIFETIME(AWDGhost, NoiseGoal);
 }

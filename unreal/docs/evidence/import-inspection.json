@@ -1,0 +1,224 @@
+[
+  {
+    "name": "HollowCupboard",
+    "location": [
+      -520.0,
+      30.0,
+      0.0
+    ],
+    "rotation": {
+      "pitch": 0.0,
+      "yaw": 180.0,
+      "roll": 0.0
+    },
+    "centre": [
+      -520.0,
+      30.0,
+      100.0
+    ],
+    "extent": [
+      51.0,
+      29.0,
+      100.0
+    ],
+    "mesh": {
+      "asset": "/Game/Imported/SM_cupboard_shell.SM_cupboard_shell",
+      "relative_rotation": {
+        "pitch": 0.0,
+        "yaw": 180.0,
+        "roll": 0.0
+      },
+      "local_bounds": [
+        [
+          -51.0,
+          -29.0,
+          0.0
+        ],
+        [
+          51.0,
+          29.0,
+          200.0
+        ]
+      ],
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+    }
+  },
+  {
+    "name": "WholeHouseNavigation",
+    "location": [
+      0.0,
+      0.0,
+      320.0
+    ],
+    "rotation": {
+      "pitch": 0.0,
+      "yaw": 0.0,
+      "roll": 0.0
+    },
+    "centre": [
+      0.0,
+      0.0,
+      320.0
+    ],
+    "extent": [
+      800.0,
+      600.0,
+      500.0
+    ]
+  },
+  {
+    "name": "GroundFloorDoor",
+    "location": [
+      -200.0,
+      -200.0,
+      0.0
+    ],
+    "rotation": {
+      "pitch": 0.0,
+      "yaw": 0.0,
+      "roll": 0.0
+    },
+    "centre": [
+      -205.75,
+      -145.0,
+      119.0
+    ],
+    "extent": [
+      8.75,
+      55.0,
+      119.0
+    ],
+    "mesh": {
+      "asset": "/Game/Imported/SM_room_door.SM_room_door",
+      "relative_rotation": {
+        "pitch": 0.0,
+        "yaw": 90.0,
+        "roll": -0.0
+      },
+      "local_bounds": [
+        [
+          -0.0,
+          -3.0,
+          0.0
+        ],
+        [
+          110.0,
+          14.5,
+          238.0
+        ]
+      ],
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+    }
+  },
+  {
+    "name": "CupboardLeaf",
+    "location": [
+      -472.0,
+      0.0,
+      0.0
+    ],
+    "rotation": {
+      "pitch": 0.0,
+      "yaw": 180.0,
+      "roll": 0.0
+    },
+    "centre": [
+      -519.0,
+      -5.0,
+      100.0
+    ],
+    "extent": [
+      47.0,
+      8.0,
+      94.0
+    ],
+    "mesh": {
+      "asset": "/Game/Imported/SM_cupboard_leaf.SM_cupboard_leaf",
+      "relative_rotation": {
+        "pitch": 0.0,
+        "yaw": 0.0,
+        "roll": 0.0
+      },
+      "local_bounds": [
+        [
+          -0.0,
+          -3.0,
+          6.0
+        ],
+        [
+          94.0,
+          13.0,
+          194.0
+        ]
+      ],
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+    }
+  },
+  {
+    "name": "VisibleCupboardKey",
+    "location": [
+      -520.0,
+      20.0,
+      75.0
+    ],
+    "rotation": {
+      "pitch": 0.0,
+      "yaw": 0.0,
+      "roll": 0.0
+    },
+    "centre": [
+      -520.0,
+      22.7,
+      75.4
+    ],
+    "extent": [
+      3.36,
+      6.06,
+      0.56
+    ],
+    "mesh": {
+      "asset": "/Game/Imported/SM_key.SM_key",
+      "relative_rotation": {
+        "pitch": 0.0,
+        "yaw": 0.0,
+        "roll": 0.0
+      },
+      "local_bounds": [
+        [
+          -8.4,
+          -8.4,
+          -0.4
+        ],
+        [
+          8.4,
+          21.9,
+          2.4
+        ]
+      ],
+      "collision": "<CollisionEnabled.QUERY_AND_PHYSICS: 3>"
+    }
+  },
+  {
+    "name": "Eleanor",
+    "location": [
+      430.0,
+      -320.0,
+      90.0
+    ],
+    "rotation": {
+      "pitch": 0.0,
+      "yaw": 180.0,
+      "roll": 0.0
+    },
+    "centre": [
+      331.99,
+      -320.0,
+      129.076
+    ],
+    "extent": [
+      141.99,
+      80.0,
+      127.076
+    ]
+  }
+]

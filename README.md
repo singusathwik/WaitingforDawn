@@ -1,6 +1,6 @@
 # Waiting for Dawn — v0.8.3
 
-**Unreal rebuild in progress:** the separate [Unreal project](unreal/README.md) targets UE 5.7. It is development source with runtime validation pending, not a new APK release. The playable Godot release described below remains available.
+**Unreal rebuild in progress:** the separate [Unreal project](unreal/README.md) now compiles in UE 5.7.4. Its two-level development section has executed stair, cupboard/key, noise-pursuit and local two-instance multiplayer checks; see the [validation record](unreal/docs/VALIDATION.md). It is not a completed game or new APK release. The existing Godot release described below remains available.
 
 A first-person 3D cooperative horror escape game for Android and Windows, built with Godot 4.5.2. One player hosts; up to three friends join over local Wi-Fi. No account, microphone, analytics or online service is needed.
 

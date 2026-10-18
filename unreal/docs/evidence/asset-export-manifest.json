@@ -4,7 +4,7 @@
     "source": "assets/models/decay/sofa.glb",
     "source_sha256": "d5a28586100d6e1ab4cd9ab16793ed77f71fb1a453329ef46e4ea20d1c5a8982",
     "fbx": "SM_sofa.fbx",
-    "sha256": "b42a38af97ed977df0774f79f716fa121d1ffc98cd156e06b9e8301aae5da9a1",
+    "sha256": "d49ea93e01fec86700a9ec7e61b57c99ebd376855d4d998047cecfaf3c5dba24",
     "triangles": 6196,
     "blender_bounds_m": [
       2.9000000953674316,
@@ -17,7 +17,7 @@
     "source": "assets/models/decay/dining.glb",
     "source_sha256": "ba11dcf8939db22bd32916f87c84fdd208f7110ec83d8cc11af38d5212b6870d",
     "fbx": "SM_dining.fbx",
-    "sha256": "27cc4127c00766ed9d567c634349e9c94f0af0e641d7f336f88fedeb38d0581a",
+    "sha256": "8a4d0744f09f7588878f421f6045b752d30b0e0e003adaefa69b70525f65c530",
     "triangles": 3780,
     "blender_bounds_m": [
       2.600001335144043,
@@ -30,7 +30,7 @@
     "source": "assets/models/decay/fallen_chair.glb",
     "source_sha256": "d390f8766964a92775385255664128be7960d4d325a01451f5050789f8c1318b",
     "fbx": "SM_fallen_chair.fbx",
-    "sha256": "c8426bbe14a3c87281d7f8c9711d0b93110e1d5da31b8e1c3a75de7f9addb6a9",
+    "sha256": "3d7c9f35770656df9f342b5caea258b21b104bbf9bf6b17733cf480b852139ce",
     "triangles": 916,
     "blender_bounds_m": [
       1.3179594278335571,
@@ -43,7 +43,7 @@
     "source": "assets/models/decay/litter.glb",
     "source_sha256": "ba31b4399ff04f85bfcc7d91aaf83be35c3aaa1aa96724a152730ae06868cc0b",
     "fbx": "SM_litter.fbx",
-    "sha256": "a548b00737c17e7ed96fa1657ce77fdc4efe8786fa737823111fa54d5835a77b",
+    "sha256": "c92780f5081237dbb29e16523317d9a9f31a43a74bb1bc4f7bdf5e95d461a028",
     "triangles": 4342,
     "blender_bounds_m": [
       2.932196617126465,
@@ -56,7 +56,7 @@
     "source": "assets/models/decay/nursery_litter.glb",
     "source_sha256": "f8c9f04fa5799962dacec5b9eeb4af14f2be2fc9468d6749b64c94670120adf1",
     "fbx": "SM_nursery_litter.fbx",
-    "sha256": "acd7faf1a8fa741877154efe0d173583f1e166462dd5c1287cf5b7229722982b",
+    "sha256": "3abbb3b5cb9a9567d2c2f5812e97f44c9eb4f2f124e2d8e036856bd681c4ab6c",
     "triangles": 6308,
     "blender_bounds_m": [
       2.547792911529541,
@@ -69,7 +69,7 @@
     "source": "assets/models/repair/bed.glb",
     "source_sha256": "7ce4497bd4d243a664d5baa4f60e317f73e3d91aa29ffb0cd2bdd1dd8a5a8570",
     "fbx": "SM_bed.fbx",
-    "sha256": "c79d235847ceae931d4c2f81162f65f489d8e07dd496b75c1eeadfbcd2062147",
+    "sha256": "c99ba652ee0de41d352d14db25e6cc9a0749cd3b51a6f52f736efb016768bed6",
     "triangles": 2356,
     "blender_bounds_m": [
       1.9500000476837158,
@@ -82,7 +82,7 @@
     "source": "assets/models/repair/shelf.glb",
     "source_sha256": "29b95ae04835ccff9c1dd37ef9c0a5ed814935aacce3b5509a0382168ef90d1f",
     "fbx": "SM_shelf.fbx",
-    "sha256": "dde7fb498dc1ba480b40282ee6cd6442abb0ddccf8c989477e2dc7380b2a7c5c",
+    "sha256": "c299e8fca5a7799f6cab94f218ecb474662869956e27eef6f36b0ab33be10def",
     "triangles": 5184,
     "blender_bounds_m": [
       1.6800000667572021,
@@ -95,7 +95,7 @@
     "source": "assets/models/repair/radiator.glb",
     "source_sha256": "ea1b5e97f08d528ce2ef3a45cde01e936c1480306cddf9e0c533a093aad53761",
     "fbx": "SM_radiator.fbx",
-    "sha256": "42d5c5e042a11ac51a4c04f467b659d6c29db2a816f13e0c3461e9ed74f5b5a5",
+    "sha256": "b64a434d56eb46ab6c634e3f989006687c6ca1c728dc9a402845396f0a3568ce",
     "triangles": 1448,
     "blender_bounds_m": [
       1.2400000095367432,
@@ -108,7 +108,7 @@
     "source": "assets/models/repair/key.glb",
     "source_sha256": "6170d602c819453dbd1255c2c979313fbd0353f80ef43002ffad78a032de2fc4",
     "fbx": "SM_key.fbx",
-    "sha256": "bb6d182d5dd464aaa93c5443c9d862a0506f592199fa46e8b29c2451252073ec",
+    "sha256": "8cdef938fb51f90719cd639625fb07f7b9f44a6642f0bdf7d6063d509258ce87",
     "triangles": 708,
     "blender_bounds_m": [
       0.1679999977350235,
@@ -120,7 +120,7 @@
     "name": "cupboard_shell",
     "source": "original Blender geometry in unreal/tools/prepare_assets.py",
     "fbx": "SM_cupboard_shell.fbx",
-    "sha256": "6e430ad34280ee14c76e4cc0a4f68bb265d6b1e381794cf240369dd929c210d3",
+    "sha256": "e2a09e6524cc26c0203d57a1a89d89f1d116a4ff90c9e784390090ba2722e87e",
     "triangles": 756,
     "blender_bounds_m": [
       1.0199999809265137,
@@ -132,7 +132,7 @@
     "name": "cupboard_leaf",
     "source": "original Blender geometry in unreal/tools/prepare_assets.py",
     "fbx": "SM_cupboard_leaf.fbx",
-    "sha256": "db06ef9de5f1497d6c12f20fe686596c4dd9fbc5189b5931e9ca1aee26cb85f0",
+    "sha256": "e8edd027bf776e2b18eea57e84880d2ff94bce0678f03d9f0c2382159338f61d",
     "triangles": 756,
     "blender_bounds_m": [
       0.9399999976158142,
@@ -144,7 +144,7 @@
     "name": "room_door",
     "source": "original Blender geometry in unreal/tools/prepare_assets.py",
     "fbx": "SM_room_door.fbx",
-    "sha256": "f9ef15b31a1912f169b17f434d849e5802bf0d4eadfc3d1a595b05dd715731e8",
+    "sha256": "bee378c6293c012f2e1836b55f22a2b96055f955e6b5f3fcf74ec731a6a90a42",
     "triangles": 756,
     "blender_bounds_m": [
       1.100000023841858,
@@ -157,7 +157,7 @@
     "source": "assets/models/mourning_ghost.glb",
     "source_sha256": "5fcc224adcf9d671c387f7090b4c48c95a131d16f557f17e129d6671fac231d1",
     "fbx": "SK_mourning_ghost.fbx",
-    "sha256": "85fbd4c32c072c9f1c9bc2244fa8fb4721429338ff7c1f85e96f2bce014dba93",
+    "sha256": "f2e71adafe60b9fc7c8a3d5b33f8da5d19809412b924de2e792e1177ae8a1a77",
     "skeletal": true,
     "source_min_z_m": -1.0,
     "source_height_m": 8.938434600830078,

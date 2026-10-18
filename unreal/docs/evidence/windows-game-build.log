@@ -1,0 +1,23 @@
+Using bundled DotNet SDK version: 8.0.412 win-x64
+Running UnrealBuildTool: dotnet "..\..\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.dll" WaitingForDawn Win64 Development -Project=C:/Users/Sathwik/Downloads/HorrorGame/unreal/WaitingForDawn/WaitingForDawn.uproject -WaitMutex -NoHotReloadFromIDE
+Log file: C:\Users\Sathwik\AppData\Local\UnrealBuildTool\Log.txt
+Creating makefile for WaitingForDawn (.uproject file is newer)
+UHT compiled-in object format Default
+Building WaitingForDawn...
+Using Visual Studio 2022 14.44.35229 toolchain (E:\WaitingForDawnTools\VS2022\VC\Tools\MSVC\14.44.35207) and Windows 10.0.22621.0 SDK (C:\Program Files (x86)\Windows Kits\10).
+Determining max actions to execute in parallel (12 physical cores, 16 logical cores)
+  Executing up to 12 processes, one per physical core
+  Requested 1.5 GB memory per action, 5.33 GB available: limiting max parallel actions to 3
+Using Unreal Build Accelerator local executor to run 3 action(s)
+  Storage capacity 40Gb
+---- Starting trace: 261018_181219 ----
+UbaServer - Listening on 0.0.0.0:1345
+[1/3] Compile [x64] WDGameplayProbe.cpp
+[2/3] Link [x64] WaitingForDawn.exe
+[3/3] WriteMetadata WaitingForDawn.target [NoUba]
+
+Trace written to file C:/Users/Sathwik/AppData/Local/UnrealBuildTool/Log.uba with size 4.4kb
+Total time in Unreal Build Accelerator local executor: 13.99 seconds
+
+Result: Succeeded
+Total execution time: 16.09 seconds

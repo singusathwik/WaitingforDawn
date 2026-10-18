@@ -83,6 +83,17 @@ bpy.ops.file.pack_all()
 bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'interactive-furniture.blend'))
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
 bpy.ops.import_scene.gltf(filepath=str(ROOT/'assets/models/mourning_ghost.glb'))
+rig=next(o for o in bpy.context.scene.objects if o.type=='ARMATURE')
+# The source has separate hips and two foot-control roots. Unreal requires one root.
+# Retain every existing bone and animation channel beneath an unanimated master root.
+bpy.ops.object.select_all(action='DESELECT');rig.select_set(True)
+bpy.context.view_layer.objects.active=rig
+bpy.ops.object.mode_set(mode='EDIT')
+roots=[b for b in rig.data.edit_bones if b.parent is None]
+master=rig.data.edit_bones.new('DawnRoot');master.head=(0,0,0);master.tail=(0,0,.2)
+for bone in roots: bone.parent=master
+bpy.ops.object.mode_set(mode='OBJECT')
+assert len([b for b in rig.data.bones if b.parent is None])==1
 bpy.ops.object.select_all(action='SELECT')
 vertices=[o.matrix_world@Vector(v) for o in bpy.context.scene.objects if o.type=='MESH' for v in o.bound_box]
 ghost_min_z=min(v.z for v in vertices)

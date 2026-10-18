@@ -4,7 +4,7 @@ Target: **Unreal Engine 5.7**, Windows editor and Android ARM64. This is a new d
 
 The immediate milestone is one furnished two-level section: the parlour, stair hall and upper nursery landing. Establish movement, collision, interactions and noise-driven pursuit here before expanding the house. The user identified the fall-through near stairs on 2026-10-18.
 
-## Implemented source; runtime verification pending
+## Implementation and validation
 
 - First-person CharacterMovement, crouch, stamina, torch and view-based Use selection. Client and server select from the same reachable handles; the server authorizes actions.
 - Replicated opening/closing doors and storage, exposed keys, shared discoveries and four-player admission limit.
@@ -17,7 +17,7 @@ Not yet ported: final home/lobby UI, full twelve-key dependency chain and car es
 
 ## Build sequence
 
-Install UE **5.7.x** with Android target support. Install Visual Studio 2022 C++ Build Tools (MSVC 14.44, Windows SDK 22621 or newer). The engine is configured separately from the existing Godot Android toolchain. UE 5.7 requires Android SDK 35, build-tools 35.0.1, NDK r27c and JDK 21. Use Epic Turnkey to validate these before packaging; do not replace the JDK used by Godot.
+Install UE **5.7.x** with Android target support. Install Visual Studio 2022 C++ Build Tools (MSVC 14.44, Windows SDK 22621 or newer), plus the **.NET Framework 4.8 SDK and targeting pack** required by the editor's Swarm module. The engine is configured separately from the existing Godot Android toolchain. UE 5.7 requires Android SDK 35, build-tools 35.0.1, NDK r27c and JDK 21. Use Epic Turnkey to validate these before packaging; do not replace the JDK used by Godot.
 
 ```powershell
 # In repository root, using the installed Blender executable:
@@ -27,9 +27,13 @@ powershell -File unreal/tools/Build.ps1 -Action Check
 powershell -File unreal/tools/Build.ps1 -Action Editor
 powershell -File unreal/tools/Build.ps1 -Action Map
 powershell -File unreal/tools/Build.ps1 -Action Tests
+powershell -File unreal/tools/Build.ps1 -Action Gameplay
+powershell -File unreal/tools/Test-Network.ps1
 ```
 
 Open `WaitingForDawn/WaitingForDawn.uproject`, wait for shaders/navigation and play `StairHall`. WASD/mouse, E use, F torch, Ctrl crouch, Shift sprint. Choose difficulty with the map URL option `?Difficulty=0` (Easy) through `3` (Extreme). UI selection follows after gameplay validation.
+
+`Gameplay` starts an opt-in development probe in the actual game world. It drives CharacterMovement up and down the stairs, uses the cupboard, collects its visible key and measures the ghost's noise investigation. Results go to `WaitingForDawn/Saved/Validation/gameplay-probe.json`; failure exits nonzero. It is disabled in Shipping builds. See [the validation record](docs/VALIDATION.md) for executed results and remaining gaps.
 
 For local networking validation, start one instance with `/Game/Maps/StairHall?listen` and join another using `open 127.0.0.1`. Physical LAN tests must use two separate devices with the same Unreal build. Godot and Unreal clients are not protocol-compatible. Internet relay and host migration are not implemented.
 

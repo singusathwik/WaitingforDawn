@@ -29,6 +29,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FName GrantsKey;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) FVector OpenOffset = FVector(0,-45,0);
     UPROPERTY(EditAnywhere, BlueprintReadOnly) float OpenYaw = 100.f;
+    UPROPERTY(EditAnywhere, BlueprintReadOnly) bool bBlocksPassage = true;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) TObjectPtr<AWDInteractable> Container;
     UPROPERTY(EditAnywhere, BlueprintReadOnly) TObjectPtr<USoundBase> InteractionSound;
     UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_State) bool bOpen = false;

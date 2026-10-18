@@ -1,4 +1,6 @@
 * text=auto eol=lf
+*.uasset binary
+*.umap binary
 # These two fixture manifests are hashed byte-for-byte as bake/runtime evidence.
 design/rooms/eleanors-nursery/lighting-manifest.json -text whitespace=cr-at-eol
 assets/models/nursery/lighting-manifest.json -text whitespace=cr-at-eol

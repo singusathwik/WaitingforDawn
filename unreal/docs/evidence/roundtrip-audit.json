@@ -136,12 +136,12 @@
       "asset": "mourning_ghost",
       "mesh_count": 4,
       "bounds_m": [
-        3.676126718521118,
-        3.3734623193740845,
-        8.304882019758224
+        3.6761339902877808,
+        3.3734627962112427,
+        8.304881989955902
       ],
       "dimension_check": "PASS",
-      "bone_count": 41
+      "bone_count": 42
     }
   ],
   "native_reopen": "PASS",

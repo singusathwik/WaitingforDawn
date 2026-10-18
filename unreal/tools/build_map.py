@@ -5,6 +5,9 @@ import os, sys, json
 from pathlib import Path
 import unreal as u
 
+# Commandlets skip audio-device startup, so register the decoder before importing WAVs.
+u.load_module('BinkAudioDecoder')
+
 HERE=Path(__file__).resolve().parent
 sys.path.insert(0,str(HERE))
 from slice_layout import layout, verify_layout
@@ -25,14 +28,21 @@ def load(path):
     return value
 
 def import_file(path, name, options=None):
+    existing='/Game/Imported/'+name
+    if u.EditorAssetLibrary.does_asset_exist(existing):
+        return [load(existing)]
     task=u.AssetImportTask()
     for key,value in dict(filename=str(path),destination_path='/Game/Imported',destination_name=name,
                           automated=True,replace_existing=False,save=True).items():
         task.set_editor_property(key,value)
     if options: task.set_editor_property('options',options)
+    factory={'.fbx':u.FbxFactory,'.png':u.TextureFactory,'.jpg':u.TextureFactory,'.wav':u.SoundFactory}.get(path.suffix.lower())
+    if factory: task.set_editor_property('factory',factory())
     ASSET_TOOLS.import_asset_tasks([task])
     results=task.get_objects()
     if not results: raise RuntimeError(f'Import returned no objects: {path}')
+    # Legacy FBX produces separate skeleton/animation/material packages too.
+    u.EditorAssetLibrary.save_directory('/Game/Imported',only_if_is_dirty=True,recursive=True)
     return results
 
 meshes={}; ghost_mesh=None; ghost_animations={}; ghost_record=None
@@ -46,6 +56,8 @@ for entry in json.loads((STAGING/'assets.json').read_text(encoding='utf-8')):
     options.set_editor_property('import_textures',True)
     options.set_editor_property('automated_import_should_detect_type',False)
     options.set_editor_property('mesh_type_to_import',u.FBXImportType.FBXIT_SKELETAL_MESH if skeletal else u.FBXImportType.FBXIT_STATIC_MESH)
+    data=options.skeletal_mesh_import_data if skeletal else options.static_mesh_import_data
+    data.set_editor_property('convert_scene_unit',True)
     if not skeletal:
         options.static_mesh_import_data.set_editor_property('combine_meshes',True)
         options.static_mesh_import_data.set_editor_property('auto_generate_collision',False)
@@ -62,6 +74,11 @@ for entry in json.loads((STAGING/'assets.json').read_text(encoding='utf-8')):
     else:
         mesh=next((o for o in results if isinstance(o,u.StaticMesh)),None)
         if not mesh: raise RuntimeError('No static mesh: '+entry['name'])
+        bounds=mesh.get_bounds().box_extent
+        actual=sorted([bounds.x*2,bounds.y*2,bounds.z*2])
+        expected=sorted([v*100 for v in entry['blender_bounds_m']])
+        if any(abs(a-b)>1 for a,b in zip(actual,expected)):
+            raise RuntimeError(f"Incorrect Unreal centimetre scale for {entry['name']}: {actual} != {expected}")
         meshes[entry['name']]=mesh
         # Hollow cupboards need concave collision, not a convex solid box across the opening.
         body=mesh.get_editor_property('body_setup')
@@ -78,6 +95,10 @@ textures={
 }
 materials={}
 for name,texture in textures.items():
+    existing='/Game/Imported/M_'+name
+    if u.EditorAssetLibrary.does_asset_exist(existing):
+        materials[name]=load(existing)
+        continue
     mat=ASSET_TOOLS.create_asset('M_'+name,'/Game/Imported',u.Material,u.MaterialFactoryNew())
     tex=u.MaterialEditingLibrary.create_material_expression(mat,u.MaterialExpressionTextureSample)
     tex.set_editor_property('texture',texture)
@@ -99,7 +120,8 @@ for name in ('door','wail','key','ambient'):
         attenuation.set_editor_property('spatialize',True)
         attenuation.set_editor_property('attenuation_shape_extents',u.Vector(250,0,0))
         attenuation.set_editor_property('falloff_distance',2400)
-        settings=ASSET_TOOLS.create_asset('A_'+name,'/Game/Imported',u.SoundAttenuation,u.SoundAttenuationFactory())
+        existing='/Game/Imported/A_'+name
+        settings=load(existing) if u.EditorAssetLibrary.does_asset_exist(existing) else ASSET_TOOLS.create_asset('A_'+name,'/Game/Imported',u.SoundAttenuation,u.SoundAttenuationFactory())
         settings.set_editor_property('attenuation',attenuation)
         audio[name].set_editor_property('attenuation_settings',settings)
         u.EditorAssetLibrary.save_loaded_asset(settings)
@@ -108,13 +130,14 @@ for name in ('door','wail','key','ambient'):
 if not LEVELS.new_level(MAP): raise RuntimeError('Could not create map')
 cube=load('/Engine/BasicShapes/Cube.Cube')
 def spawn(cls,label,position,yaw=0):
-    actor=ACTORS.spawn_actor_from_class(cls,u.Vector(*position),u.Rotator(0,yaw,0))
+    actor=ACTORS.spawn_actor_from_class(cls,u.Vector(*position),u.Rotator(yaw=yaw))
     if not actor: raise RuntimeError('Could not spawn '+label)
     actor.set_actor_label(label)
     return actor
 
 for b in DATA['boxes']:
     actor=spawn(u.StaticMeshActor,b['name'],b['centre'])
+    if b.get('pitch'): actor.set_actor_rotation(u.Rotator(pitch=b['pitch']),False)
     component=actor.static_mesh_component
     component.set_static_mesh(cube)
     actor.set_actor_scale3d(u.Vector(*(s/100 for s in b['size'])))
@@ -135,19 +158,20 @@ ghost_class=u.load_class(None,'/Script/WaitingForDawn.WDGhost')
 if not interactive or not ghost_class: raise RuntimeError('Compile WaitingForDawnEditor before building the map')
 door=spawn(interactive,'GroundFloorDoor',DATA['door'])
 door.mesh.set_static_mesh(meshes['room_door'])
-door.mesh.set_relative_rotation(u.Rotator(0,90,0),False,False)
-door.handle.set_relative_location(u.Vector(98,-14,105),False,False)
+door.mesh.set_relative_rotation(u.Rotator(yaw=90),False,False)
+door.handle.set_relative_location(u.Vector(98,12,105),False,False)
 door.set_editor_property('display_name',u.Text('parlour door'))
 door.set_editor_property('interaction_sound',audio['door'])
 
-cabinet=spawn(u.StaticMeshActor,'HollowCupboard',DATA['cupboard'])
+cabinet=spawn(u.StaticMeshActor,'HollowCupboard',DATA['cupboard'],180)
 cabinet.static_mesh_component.set_static_mesh(meshes['cupboard_shell'])
 cabinet.static_mesh_component.set_collision_profile_name('BlockAll')
-cupboard=spawn(interactive,'CupboardLeaf',[-568,0,0])
+cupboard=spawn(interactive,'CupboardLeaf',[-472,0,0],180)
 cupboard.mesh.set_static_mesh(meshes['cupboard_leaf'])
-cupboard.handle.set_relative_location(u.Vector(82,-12,98),False,False)
+cupboard.handle.set_relative_location(u.Vector(82,12,98),False,False)
 cupboard.set_editor_property('display_name',u.Text('cupboard'))
-cupboard.set_editor_property('open_yaw',-100.0)
+cupboard.set_editor_property('open_yaw',100.0)
+cupboard.set_editor_property('blocks_passage',False)
 cupboard.set_editor_property('interaction_sound',audio['door'])
 key=spawn(interactive,'VisibleCupboardKey',[-520,20,75])
 key.mesh.set_static_mesh(meshes['key'])
@@ -166,19 +190,33 @@ ghost.set_editor_property('warning_sound',audio['wail'])
 ghost.mesh.set_skeletal_mesh_asset(ghost_mesh)
 ghost_scale=ghost_record['target_height_cm']/(ghost_record['source_height_m']*100)
 ghost.mesh.set_relative_scale3d(u.Vector(ghost_scale,ghost_scale,ghost_scale))
+ghost.mesh.set_relative_rotation(u.Rotator(yaw=-90),False,False)
 ghost.mesh.set_relative_location(u.Vector(0,0,-88-ghost_record['source_min_z_m']*100*ghost_scale),False,False)
 for clip,animation in ghost_animations.items(): ghost.set_editor_property(clip+'_animation',animation)
 
 for i,position in enumerate(DATA['lights']):
     light=spawn(u.PointLight,f'WarmFixture_{i}',position)
     light.point_light_component.set_mobility(u.ComponentMobility.MOVABLE)
-    light.point_light_component.set_intensity(700)
+    light.point_light_component.set_editor_property('intensity_units',u.LightUnits.LUMENS)
+    light.point_light_component.set_intensity(180)
+    light.point_light_component.set_editor_property('source_radius',8.0)
     light.point_light_component.set_light_color(u.LinearColor(1,.62,.32))
     light.point_light_component.set_attenuation_radius(700)
+for i,position in enumerate([[-430,-130,170],[350,-120,170],[-220,-130,480]]):
+    fill=spawn(u.PointLight,f'IndirectFill_{i}',position).point_light_component
+    fill.set_mobility(u.ComponentMobility.MOVABLE)
+    fill.set_editor_property('intensity_units',u.LightUnits.LUMENS)
+    fill.set_intensity(28)
+    fill.set_light_color(u.LinearColor(.42,.51,.65))
+    fill.set_cast_shadows(False)
+    fill.set_attenuation_radius(550)
 sky=spawn(u.SkyLight,'LowAmbient',[0,0,700])
 sky.light_component.set_intensity(.08)
 nav=spawn(u.NavMeshBoundsVolume,'WholeHouseNavigation',[0,0,320])
 nav.set_actor_scale3d(u.Vector(8,6,5))
+origin,extent=nav.get_actor_bounds(False)
+if extent.x<620 or extent.y<470 or extent.z<320:
+    raise RuntimeError('Navigation volume has no usable brush bounds; refusing an un-navigable map')
 world=u.get_editor_subsystem(u.UnrealEditorSubsystem).get_editor_world()
 u.SystemLibrary.execute_console_command(world,'RebuildNavigation')
 if not LEVELS.save_current_level(): raise RuntimeError('Map save failed')

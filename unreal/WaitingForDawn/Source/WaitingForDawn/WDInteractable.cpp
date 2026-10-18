@@ -26,7 +26,7 @@ void AWDInteractable::BeginPlay()
     ClosedLocation = Mesh->GetRelativeLocation();
     ClosedRotation = Mesh->GetRelativeRotation();
     OpenFraction = bOpen ? 1.f : 0.f;
-    if (Kind != EWDInteraction::Door) Mesh->SetCanEverAffectNavigation(false);
+    if (Kind != EWDInteraction::Door || !bBlocksPassage) Mesh->SetCanEverAffectNavigation(false);
     OnRep_State();
 }
 void AWDInteractable::OnRep_State()
@@ -81,7 +81,7 @@ void AWDInteractable::Interact(AWDCharacter* User)
     else
     {
         // Do not materialize a closing door through a player or a chasing ghost.
-        if (Kind == EWDInteraction::Door && bOpen)
+        if (Kind == EWDInteraction::Door && bBlocksPassage && bOpen)
         {
             const FVector Doorway = GetActorTransform().TransformPosition(FVector(0,55,100));
             FCollisionQueryParams Params(SCENE_QUERY_STAT(DoorClose), false, this);
@@ -99,9 +99,9 @@ void AWDInteractable::PlayInteractionSound_Implementation()
 {
     if (InteractionSound) UGameplayStatics::PlaySoundAtLocation(this, InteractionSound, GetActorLocation(), .55f);
 }
-void AWDInteractable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const
+void AWDInteractable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-    Super::GetLifetimeReplicatedProps(Out);
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AWDInteractable, bOpen);
     DOREPLIFETIME(AWDInteractable, bCollected);
 }

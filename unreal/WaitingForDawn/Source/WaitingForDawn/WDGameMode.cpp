@@ -4,6 +4,26 @@
 #include "WDHUD.h"
 #include "WDPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Tests/WDGameplayProbe.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
+
+void AWDGameMode::BeginPlay()
+{
+    Super::BeginPlay();
+#if !UE_BUILD_SHIPPING
+    if (FParse::Param(FCommandLine::Get(), TEXT("WDGameplayTest")) ||
+        FParse::Param(FCommandLine::Get(), TEXT("WDNetworkServer"))) GetWorld()->SpawnActor<AWDGameplayProbe>();
+#endif
+}
+void AWDGameMode::RestartPlayer(AController* NewPlayer)
+{
+    Super::RestartPlayer(NewPlayer);
+#if !UE_BUILD_SHIPPING
+    if (FParse::Param(FCommandLine::Get(),TEXT("WDNetworkServer")) && NewPlayer && NewPlayer->GetPawn())
+        NewPlayer->GetPawn()->SetActorLocation(NewPlayer->IsLocalController()?FVector(-350,-50,92):FVector(-520,-110,92),false,nullptr,ETeleportType::TeleportPhysics);
+#endif
+}
 
 AWDGameMode::AWDGameMode()
 {

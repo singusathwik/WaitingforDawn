@@ -7,5 +7,6 @@ class WAITINGFORDAWN_API AWDPlayerController : public APlayerController
 {
     GENERATED_BODY()
 public:
+    virtual void BeginPlay() override;
     AWDPlayerController();
 };

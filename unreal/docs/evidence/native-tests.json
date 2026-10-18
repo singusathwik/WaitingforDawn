@@ -1,0 +1,20 @@
+{
+  "succeeded": 3,
+  "succeededWithWarnings": 0,
+  "failed": 0,
+  "notRun": 0,
+  "tests": [
+    {
+      "name": "WaitingForDawn.Rules.Difficulty",
+      "state": "Success"
+    },
+    {
+      "name": "WaitingForDawn.Rules.NoiseCannotPostponePursuit",
+      "state": "Success"
+    },
+    {
+      "name": "WaitingForDawn.World.StairCollision",
+      "state": "Success"
+    }
+  ]
+}

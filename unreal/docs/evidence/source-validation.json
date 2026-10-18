@@ -2,7 +2,7 @@
   "scope": "Source and export checks only; not an Unreal runtime test",
   "layout": {
     "support_probes": 2586,
-    "boxes": 190,
+    "boxes": 128,
     "props": 9
   },
   "verified_fbx_exports": 13,

@@ -1,7 +1,7 @@
 """Authoring source shared by the Unreal map builder and independent geometry checks.
 All positions and dimensions are Unreal centimetres: X forward, Y right, Z up.
 """
-from math import sqrt
+from math import sqrt, atan2, degrees
 
 def layout():
     boxes = []
@@ -16,8 +16,11 @@ def layout():
         box(f"Stair_{i:02}", [-386+i*28,250,height/2], [29,150,height], "wood", "stair")
         for side in (-1,1):
             box(f"Stair_guard_{i:02}_{side}", [-386+i*28,250+side*79,height+60], [29,8,120], "wood", "guard", False)
-            box(f"Stair_newel_{i:02}_{side}", [-386+i*28,250+side*79,height+50], [5,5,100], "wood", "rail")
-            box(f"Stair_rail_{i:02}_{side}", [-386+i*28,250+side*79,height+100], [32,7,7], "wood", "rail")
+            if i%3==0 or i==19:
+                box(f"Stair_newel_{i:02}_{side}", [-386+i*28,250+side*79,height+50], [5,5,100], "wood", "rail")
+    for side in (-1,1):
+        box(f"Sloping_handrail_{side}",[-120,250+side*79,268],[sqrt(560**2+320**2),7,7],"wood","rail")
+        boxes[-1]['pitch']=degrees(atan2(320,560))
     for z in (0,320):
         for y in (-460,460): box(f"Outer_Y_{y}_{z}",[0,y,z+160],[1240,20,320])
         for x in (-610,610): box(f"Outer_X_{x}_{z}",[x,0,z+160],[20,900,320])

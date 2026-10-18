@@ -44,9 +44,9 @@ void AWDGameState::EmitNoise(FVector Location, float Radius, FName Source)
         if (FVector::DistSquared(It->GetActorLocation(), Location) <= FMath::Square(Radius))
             It->HearNoise(Location, ReactionDelay(Difficulty));
 }
-void AWDGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out) const
+void AWDGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-    Super::GetLifetimeReplicatedProps(Out);
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AWDGameState, Difficulty);
     DOREPLIFETIME(AWDGameState, SecondsRemaining);
     DOREPLIFETIME(AWDGameState, bRoundEnded);

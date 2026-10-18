@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$EngineRoot = 'D:\UE_5.7',
-    [ValidateSet('Check','Editor','Map','Tests','Windows','Android')][string]$Action = 'Check',
+    [ValidateSet('Check','Editor','Map','Tests','Gameplay','Windows','Android')][string]$Action = 'Check',
     [string]$OutputDirectory = 'E:\WaitingForDawnBuilds'
 )
 $ErrorActionPreference = 'Stop'
@@ -20,7 +20,14 @@ $vswhere = 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe
 if (!(Test-Path -LiteralPath $vswhere)) { throw 'Visual Studio C++ Build Tools are not installed.' }
 $vs = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
 if (!$vs) { throw 'Missing the MSVC x64 compiler. Install the C++ Build Tools workload.' }
-Write-Output "UE $($version.MajorVersion).$($version.MinorVersion).$($version.PatchVersion); C++ tools: $vs"
+$kitsRoot = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots' -ErrorAction SilentlyContinue).KitsRoot10
+if (!$kitsRoot) { $kitsRoot = 'C:\Program Files (x86)\Windows Kits\10' }
+$sdk = Get-ChildItem (Join-Path $kitsRoot 'Include') -Directory -ErrorAction SilentlyContinue | Where-Object {
+    (Test-Path (Join-Path $_.FullName 'um/Windows.h')) -and
+    (Test-Path (Join-Path $kitsRoot "Lib/$($_.Name)/um/x64/kernel32.lib"))
+} | Sort-Object Name -Descending | Select-Object -First 1
+if (!$sdk) { throw 'Windows SDK headers/libraries are not installed yet. Wait for the C++ tools installer to finish.' }
+Write-Output "UE $($version.MajorVersion).$($version.MinorVersion).$($version.PatchVersion); C++ tools: $vs; Windows SDK: $($sdk.Name)"
 if ($Action -eq 'Check') { exit 0 }
 if ($Action -eq 'Editor') {
     & $buildPath WaitingForDawnEditor Win64 Development "-Project=$projectPath" -WaitMutex -NoHotReloadFromIDE
@@ -28,7 +35,10 @@ if ($Action -eq 'Editor') {
     $mapScript = Join-Path $PSScriptRoot 'build_map.py'
     & $editorPath $projectPath -run=pythonscript "-script=$mapScript" -unattended -nosplash -stdout -FullStdOutLogOutput
 } elseif ($Action -eq 'Tests') {
-    & $editorPath $projectPath /Game/Maps/StairHall -unattended -NullRHI -nosplash '-ExecCmds=Automation RunTests WaitingForDawn' '-TestExit=Automation Test Queue Empty' '-ReportExportPath=Saved/Automation' -stdout -FullStdOutLogOutput
+    $reportPath = Join-Path (Split-Path $projectPath) 'Saved/Automation'
+    & $editorPath $projectPath /Game/Maps/StairHall -unattended -NullRHI -nosplash '-ExecCmds=Automation RunTests WaitingForDawn' '-TestExit=Automation Test Queue Empty' "-ReportExportPath=$reportPath" -stdout -FullStdOutLogOutput
+} elseif ($Action -eq 'Gameplay') {
+    & $editorPath $projectPath /Game/Maps/StairHall -game -WDGameplayTest -unattended -NullRHI -nosound -nosplash '-ExecCmds=t.MaxFPS 60' -stdout -FullStdOutLogOutput
 } else {
     if (!(Test-Path -LiteralPath (Join-Path (Split-Path $projectPath) 'Content/Maps/StairHall.umap'))) {
         throw 'Generate and validate StairHall first. Refusing to package an empty project.'
