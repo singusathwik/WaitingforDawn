@@ -1,0 +1,10 @@
+{
+  "version": "0.9.4",
+  "passed": true,
+  "environment": "API 35 Android emulator, ARM64 translation, host Vulkan; not a physical phone",
+  "upgrade": {"from_version": "0.9.3", "from_code": 12, "to_version": "0.9.4", "to_code": 13, "adb_install_r": "Success"},
+  "launcher": "Pixel launcher app drawer; new circular icon visually inspected",
+  "launch_method": "Tapped the actual Waiting for Dawn launcher icon",
+  "smoke_checks": ["Home screen reached", "Play started story", "Skip Story reached gameplay"],
+  "screenshots": ["icon-android-094/Launcher.png", "icon-android-094/LaunchedFromIcon.png", "icon-android-094/StartedGame.png"]
+}

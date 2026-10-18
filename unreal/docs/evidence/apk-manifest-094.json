@@ -1,0 +1,62 @@
+{
+  "version": "0.9.4",
+  "version_code": 13,
+  "package": "org.waitingfordawn.unrealpreview",
+  "bytes": 177841499,
+  "sha256": "9e43e40062794bb4d1f334a8789f6242418805a33b298f3b802c62cf66cf8900",
+  "architecture": "arm64-v8a",
+  "min_sdk": 26,
+  "target_sdk": 35,
+  "signature_v2_verified": true,
+  "build": "Development",
+  "engine": "5.7.4",
+  "adaptive_xml": "res/drawable-anydpi-v26/icon.xml",
+  "source_dimensions": [
+    1254,
+    1254
+  ],
+  "source_sha256": "4dc0a2892a631dc0a088880e0913bf191a1d8b476dd7876bbd79606762aa3e71",
+  "packaged_images": [
+    {
+      "path": "res/drawable/icon.png",
+      "size": 128,
+      "pixels_match_export": true
+    },
+    {
+      "path": "res/drawable-ldpi-v4/icon.png",
+      "size": 36,
+      "pixels_match_export": true
+    },
+    {
+      "path": "res/drawable-mdpi-v4/icon.png",
+      "size": 48,
+      "pixels_match_export": true
+    },
+    {
+      "path": "res/drawable-hdpi-v4/icon.png",
+      "size": 72,
+      "pixels_match_export": true
+    },
+    {
+      "path": "res/drawable-xhdpi-v4/icon.png",
+      "size": 96,
+      "pixels_match_export": true
+    },
+    {
+      "path": "res/drawable-xxhdpi-v4/icon.png",
+      "size": 144,
+      "pixels_match_export": true
+    },
+    {
+      "path": "res/drawable-xxxhdpi-v4/icon.png",
+      "size": 192,
+      "pixels_match_export": true
+    },
+    {
+      "path": "res/drawable-nodpi-v4/wfd_launcher_art.png",
+      "size": 512,
+      "pixels_match_export": true
+    }
+  ],
+  "native_library_unchanged_from_093": true
+}

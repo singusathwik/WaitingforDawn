@@ -1,6 +1,8 @@
-# Waiting for Dawn — Unreal 0.9.3
+# Waiting for Dawn — Unreal 0.9.4
 
 A playable Unreal Engine 5.7.4 horror survival development preview for Android ARM64 and Windows. Explore Eleanor's house, collect twelve shared keys, open the ground-floor garage and board the car with the surviving team before dawn. This is the Unreal rebuild; the earlier Godot game remains at the repository root.
+
+0.9.4 updates the Android launcher artwork and adds an adaptive icon. Gameplay is unchanged from 0.9.3. The original generated master and exact prompt are in [design/icon-094](../design/icon-094/PROMPT.md); `tools/export_android_icon.gd` recreates its density exports offline.
 
 ## The house and game loop
 
