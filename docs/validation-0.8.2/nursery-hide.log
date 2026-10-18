@@ -1,0 +1,13 @@
+--------- beginning of main
+
+10-18 12:44:49.917  3672  3695 I godot   : Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+10-18 12:44:50.009  3672  3695 E godot   : WARNING: Failed to load cached shader, recompiling.
+
+10-18 12:44:50.009  3672  3695 E godot   :    at: _load_from_cache (drivers/gles3/shader_gles3.cpp:612)
+
+10-18 12:44:50.338  3672  3695 I godot   : OpenGL API OpenGL ES 3.1 (4.5.0 NVIDIA 595.79) - Compatibility - Using Device: Google (NVIDIA Corporation) - Android Emulator OpenGL ES Translator (NVIDIA GeForce RTX 3050 4GB Laptop GPU/PCIe/SSE2)
+
+10-18 12:44:50.350  3672  3695 I godot   :
+
+10-18 12:45:01.979  3672  3695 I godot   : NURSERY RENDER nursery-hide camera=(6.43, 6.51, 6.0) triangles=294966

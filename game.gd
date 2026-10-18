@@ -1,7 +1,7 @@
 extends Node3D
 signal important_state_received
 ## All gameplay mutations execute on peer 1. Clients send bounded input and action intents.
-const VERSION = "0.8.1"
+const VERSION = "0.8.2"
 const DIFFICULTIES = [
 	{"name":"Easy","chase":2.7,"patrol":1.6,"vision":12.0,"hearing":0.7,"memory":2.0,"grace":18.0,"drain":16.0,"regen":20.0,"bottles":5},
 	{"name":"Normal","chase":3.5,"patrol":2.0,"vision":16.0,"hearing":1.0,"memory":3.0,"grace":10.0,"drain":22.0,"regen":14.0,"bottles":3},
@@ -28,7 +28,7 @@ const MAP = [
  "#.......#........",
  "#...............#",
  "#.......#.......#",
- "#################"]
+ "############....#"]
 var people: Dictionary = {}
 var actors: Dictionary = {}
 var commands: Dictionary = {}
@@ -40,7 +40,7 @@ var world: Node3D
 var camera: Camera3D
 var lamp: SpotLight3D
 var ghost: Node3D
-var ghost_pos = Vector3(42, 0, 33)
+var ghost_pos = Vector3(42,0,33)
 var ghost_mode = "patrol"
 var ghost_goal = Vector3.ZERO
 var ghost_timer = 0.0
@@ -49,6 +49,10 @@ var keys: Array = []
 var found: Array = []
 var door_open = false
 var door: Node3D
+var garage_exit: Node3D
+var garage_exit_shape: CollisionShape3D
+var garage_exit_tween: Tween
+var escape_car: Node3D
 var key_meshes: Array = []
 var snapshot_clock = 0.0
 var input_clock = 0.0
@@ -117,6 +121,11 @@ var horror: Node
 var noise_warning_until=0
 var atmosphere: Node
 var quitting=false
+var home: Control
+var startup_ready=false
+var step_distance: Dictionary={}
+var next_creak_step: Dictionary={}
+var repair_layout: Node
 
 func _difficulty() -> Dictionary:
 	return DIFFICULTIES[difficulty]
@@ -160,9 +169,12 @@ func _ready():
 	exploration=preload("res://exploration.gd").new()
 	add_child(exploration)
 	exploration.geometry(self)
+	repair_layout=preload("res://estate_layout.gd").new()
+	add_child(repair_layout)
+	repair_layout.build(self)
 	_build_navigation()
 	nursery.seed_navigation()
-	for pos in [Vector3(15,0,18),Vector3(72,5,9),Vector3(72,-5,30)]:
+	for pos in [Vector3(15,0,18),Vector3(9,5,9),Vector3(9,-5,30)]:
 		glass_meshes.append(_box(world,pos+Vector3(0,0.025,0),Vector3(1.8,0.05,1.8),Color(0.32,0.53,0.54)))
 	_load_settings()
 	_build_ui()
@@ -185,9 +197,16 @@ func _ready():
 	if OS.get_name() != "iOS":
 		udp.set_broadcast_enabled(true)
 		udp.bind(DISCOVERY_PORT, "0.0.0.0")
+	home=preload("res://home_screen.gd").new()
+	ui.add_child(home)
+	home.build(self)
+	home.hide()
+	startup_ready=true
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--test="): test_mode = arg.get_slice("=", 1)
-	if test_mode!="": difficulty=1
+	if test_mode!="":
+		difficulty=1
+		get_tree().create_timer(1600 if test_mode=="traverse" else 115).timeout.connect(func(): _quit(1))
 	if test_mode in ["host","host4","lobbyhost","departurehost","repeat-host"]: _host()
 	elif test_mode in ["client","mismatch","late","waiting","full","departclient","timeout"]:
 		ip_edit.text = "127.0.0.1"
@@ -207,14 +226,14 @@ func _ready():
 			_act(1,"use")
 			ghost_pos=slot.entry+Vector3(0,0,3).rotated(Vector3.UP,slot.angle)
 		elif test_mode=="searchview":
-			people[1].pos=Vector3(72,5,6)
+			people[1].pos=Vector3(9,5,6)
 			actors[1].position=people[1].pos
 			yaw=0; pitch=-.2
 		elif test_mode=="clueview":
 			horror.clues=[0,1,2]
 			horror.show_journal()
 		else:
-			people[1].pos=Vector3(66,5,9)
+			people[1].pos=Vector3(3,5,9)
 			actors[1].position=people[1].pos
 			_act(1,"use")
 			yaw=PI/2
@@ -222,6 +241,10 @@ func _ready():
 		var driver=preload("res://tests/exploration.gd").new()
 		add_child(driver)
 		driver.setup(self)
+	elif test_mode.begins_with("repair-"):
+		var driver=preload("res://tests/repair_views.gd").new()
+		add_child(driver)
+		driver.setup(self,test_mode.trim_prefix("repair-"))
 	elif test_mode.begins_with("nursery-"):
 		var driver=preload("res://tests/nursery.gd").new()
 		add_child(driver)
@@ -233,11 +256,14 @@ func _ready():
 	elif test_mode == "traverse":
 		_host()
 		_start()
+		for i in [0,1,2]: horror.opened[i]=true
+		horror.apply_doors(false)
 		grace=10000
 		Engine.time_scale=4
 		test_route=_test_key_route(0)
 	elif test_mode == "benchmark": _host(); _start(); grace=10000
 	_refresh_menu()
+	if test_mode=="": home.show(); menu.hide()
 	if test_mode.begins_with("search-") or test_mode.begins_with("room-"):
 		var driver=preload("res://tests/search_network.gd").new()
 		add_child(driver)
@@ -337,10 +363,6 @@ func _build_world():
 		_box(world,p,Vector3(6,0.03,4),Color(0.29,0.19,0.18))
 		for x in [-2.7,2.7]: _box(world,p+Vector3(x,0.02,0),Vector3(0.12,0.02,3.8),Color(0.53,0.41,0.27))
 	door = _box(world,Vector3(33,1.5,24),Vector3(2.8,3,0.3),Color(0.38,0.24,0.12),true)
-	_box(world,Vector3(42,0.8,33),Vector3(3,1.6,5.5),Color(0.18,0.31,0.29),true)
-	_box(world,Vector3(42,1.9,33.5),Vector3(2.5,1.0,2.5),Color(0.08,0.14,0.17))
-	for x in [40.5,43.5]:
-		for z in [31.2,34.8]: _box(world,Vector3(x,0.5,z),Vector3(0.5,1,1),Color(0.025,0.025,0.03))
 	ghost = Node3D.new()
 	world.add_child(ghost)
 	var body = MeshInstance3D.new()
@@ -368,18 +390,16 @@ func _build_world():
 	world.visible = false
 
 func _hiding_spots() -> Array:
-	return [Vector3(4,0,11),Vector3(45,0,11),Vector3(4,0,35),Vector3(69,5,6),Vector3(69,-5,27),Vector3(69,-10,57)]
+	return [Vector3(4,0,11),Vector3(45,0,11),Vector3(4,0,35),Vector3(6,5,6),Vector3(6,-5,27),Vector3(6,-10,27)]
 
 func _build_estate():
 	# Each wing has a single wide ramp. Floors and navigation share the same coordinates.
 	nursery=preload("res://nursery_room.gd").new()
 	world.add_child(nursery)
 	nursery.build(self)
-	_room(Vector3(75,-5,30),"BASEMENT / THE BOILER",Color(0.23,0.28,0.22),"west_south")
-	_room(Vector3(75,-10,60),"UNDERGROUND CRYPT",Color(0.24,0.25,0.3),"north")
-	_ramp(Vector3(49.5,0,9),Vector3(64.5,5,9))
-	_ramp(Vector3(49.5,0,30),Vector3(64.5,-5,30))
-	_ramp(Vector3(75,-5,40.5),Vector3(75,-10,49.5))
+	_room(Vector3(12,-5,30),"BASEMENT / THE BOILER",Color(0.23,0.28,0.22),"west_south")
+	_room(Vector3(12,-10,30),"UNDERGROUND CRYPT",Color(0.24,0.25,0.3),"south")
+
 	_box(world,Vector3(-12,-0.2,18),Vector3(27,0.4,21),Color(0.16,0.22,0.17),true)
 	for pos in [Vector3(-25.5,1.5,18),Vector3(-12,1.5,7.5),Vector3(-12,1.5,28.5)]:
 		_box(world,pos,Vector3(0.5,3,21) if pos.x < -25 else Vector3(27,3,0.5),Color(0.18,0.22,0.23),true)
@@ -387,19 +407,19 @@ func _build_estate():
 	for x in [-21,-15,-9]:
 		for z in [12,24]:
 			_box(world,Vector3(x,0.65,z),Vector3(0.8,1.3,0.35),Color(0.37,0.4,0.4),true)
-	for spot in [Vector3(78,-5,30),Vector3(78,-10,60)]:
+	for spot in [Vector3(15,-5,30),Vector3(15,-10,30)]:
 		_box(world,spot+Vector3(0,0.5,0),Vector3(2.4,1,1.2),Color(0.31,0.24,0.19),true)
 	for x in [67,83]:
 		for z in [54,66]: _box(world,Vector3(x,-8.2,z),Vector3(0.7,3.6,0.7),Color(0.31,0.32,0.36))
 	for x in [68,70,72]:
 		_box(world,Vector3(x,-3.2,20.5),Vector3(0.22,3.2,0.22),Color(0.33,0.32,0.23))
-	_sign("CRYPT / VEHICLE KEY  ↓",Vector3(75,-2.3,36.8),Color(0.8,0.6,0.3))
+	_sign("CRYPT / VEHICLE KEY  ↓",Vector3(12,-2.3,36.8),Color(0.8,0.6,0.3))
 
 func _room(center: Vector3,label: String,color: Color,opening: String):
 	_box(world,center+Vector3(0,-0.2,0),Vector3(21,0.4,21),color,true)
 	_box(world,center+Vector3(0,3.8,0),Vector3(21,0.3,21),color.darkened(0.5))
 	for side in ["west","east","north","south"]:
-		var gap=(side=="east" and center.y in [5.0,-5.0]) or (side=="west" and opening.begins_with("west")) or (side=="south" and opening=="west_south") or (side=="north" and opening=="north")
+		var gap=(side=="east" and (center.y in [5.0,-5.0] or opening=="east")) or (side=="west" and opening.begins_with("west")) or (side=="south" and opening in ["west_south","south"]) or (side=="north" and opening=="north")
 		if gap:
 			for offset in [-6.0,6.0]:
 				var pos=center+Vector3(-10.5 if side=="west" else 10.5,1.8,offset) if side in ["west","east"] else center+Vector3(offset,1.8,-10.5 if side=="north" else 10.5)
@@ -413,8 +433,8 @@ func _ramp(a: Vector3,b: Vector3):
 	var horizontal=Vector2(b.x-a.x,b.z-a.z).length()
 	var along_x=absf(b.x-a.x)>1
 	var mesh=_box(world,(a+b)*0.5-Vector3(0,0.15,0),Vector3(a.distance_to(b),0.3,3) if along_x else Vector3(3,0.3,a.distance_to(b)),Color(0.31,0.27,0.21),true)
-	if along_x: mesh.rotation.z=atan2(b.y-a.y,horizontal)
-	else: mesh.rotation.x=-atan2(b.y-a.y,horizontal)
+	if along_x: mesh.rotation.z=atan2(b.y-a.y,b.x-a.x)
+	else: mesh.rotation.x=-atan2(b.y-a.y,b.z-a.z)
 	var ceiling=_box(world,(a+b)*.5+Vector3(0,3.8,0),mesh.mesh.size,Color(.12,.11,.1))
 	ceiling.rotation=mesh.rotation
 	for offset in [-1.6,1.6]:
@@ -433,19 +453,14 @@ func _build_navigation():
 	for z in range(14):
 		for x in range(17):
 			if MAP[z][x]!="#": _nav_add(Vector3(x*3,0,z*3))
-	for center in [Vector3(75,5,9),Vector3(75,-5,30),Vector3(75,-10,60),Vector3(-12,0,18)]:
+	for center in [Vector3(12,5,9),Vector3(12,-5,30),Vector3(12,-10,30),Vector3(-12,0,18)]:
 		for x in range(-3,4):
 			for z in range(-3,4): _nav_add(center+Vector3(x*3,0,z*3))
 	for p in nav_ids:
 		for offset in [Vector3(3,0,0),Vector3(0,0,3)]:
 			if nav_ids.has(p+offset): navigation.connect_points(nav_ids[p],nav_ids[p+offset])
-	for pair in [[Vector3(48,0,9),Vector3(66,5,9)],[Vector3(48,0,30),Vector3(66,-5,30)],[Vector3(75,-5,39),Vector3(75,-10,51)]]:
-		var previous=_nav_add(pair[0])
-		for step in range(1,7):
-			var next=_nav_add(pair[0].lerp(pair[1],float(step)/6))
-			navigation.connect_points(previous,next)
-			previous=next
-	for obstacle in [Vector3(6,0,6),Vector3(33,0,6),Vector3(6,0,30),Vector3(18,0,9),Vector3(36,0,12),Vector3(42,0,33),Vector3(78,-5,30),Vector3(78,-10,60)]:
+	repair_layout.navigation()
+	for obstacle in [Vector3(6,0,6),Vector3(33,0,6),Vector3(6,0,30),Vector3(18,0,9),Vector3(36,0,12),Vector3(42,0,33),Vector3(15,-5,30),Vector3(15,-10,30)]:
 		if nav_ids.has(obstacle): navigation.set_point_disabled(nav_ids[obstacle],true)
 
 func _nav_path(a: Vector3,b: Vector3) -> PackedVector3Array:
@@ -455,7 +470,7 @@ func _build_ui():
 	ui = CanvasLayer.new()
 	add_child(ui)
 	var back = TextureRect.new()
-	back.texture=load("res://assets/ui/title.png")
+	back.texture=load("res://assets/ui/manor.png")
 	back.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	back.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	back.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -501,7 +516,9 @@ func _build_ui():
 	stack.add_child(ip_edit)
 	var row = HBoxContainer.new()
 	stack.add_child(row)
-	_button(row,"SOLO",func(): _host(); _start())
+	_button(row,"BACK",func():
+		if phase=="menu": menu.hide(); home.show()
+		elif phase=="playing": _show_pause())
 	_button(row,"HOST ROOM",_host)
 	_button(row,"JOIN IP",_join)
 	_button(row,"CREDITS",func(): credits.popup_centered(Vector2i(900,560)))
@@ -562,7 +579,7 @@ func _build_ui():
 	stack.add_child(texture_toggle)
 	var help = Label.new()
 	help.text = "WASD move • mouse look • Shift sprint • Ctrl crouch\nE interact / revive • F light • Q throw • Esc release mouse / menu\nSearch for 12 linked keys. Escape by car before 6 AM.
-B: shared bag • J: recovered papers. Flashlight works below ground."
+B: shared bag • J: recovered papers. Use your torch wherever the house is dark."
 	help.add_theme_font_size_override("font_size",16)
 	stack.add_child(help)
 	hud = Label.new()
@@ -818,8 +835,9 @@ func _start():
 	prop_clock.clear()
 	witnessed_hides.clear()
 	door_open=false
+	if is_instance_valid(escape_car): escape_car.position=Vector3(42,0,33)
 	keys=[]
-	var groups = [[Vector3(72,5,6),Vector3(81,5,12)],[Vector3(72,-5,27),Vector3(81,-5,33)],[Vector3(72,-10,57),Vector3(81,-10,63)]]
+	var groups = [[Vector3(9,5,6),Vector3(18,5,12)],[Vector3(9,-5,27),Vector3(18,-5,33)],[Vector3(9,-10,27),Vector3(18,-10,33)]]
 	for group in groups: keys.append(group[rng.randi_range(0,group.size()-1)])
 	keys=dawn.choose_keys()
 	var i = 0
@@ -832,10 +850,12 @@ func _start():
 	commands.clear()
 	last_action.clear()
 	noise_clock.clear()
-	ghost_pos=Vector3(42,0,36)
+	step_distance.clear()
+	next_creak_step.clear()
+	ghost_pos=Vector3(27,0,18)
 	ghost_goal=Vector3(30,0,18)
 	ghost_mode="patrol"
-	grace=_difficulty().grace+(36 if test_mode=="" else 0)
+	grace=_difficulty().grace+(36 if test_mode=="" and round_id==0 else 0)
 	round_id+=1
 	begin_match.rpc(people,keys,round_id,difficulty)
 
@@ -854,8 +874,8 @@ func begin_match(data: Dictionary,placements: Array,round_number: int,level: int
 	door_open=false
 	for glass in glass_meshes: glass.show()
 	phase="playing"
-	grace=_difficulty().grace+(36 if test_mode=="" else 0)
-	ghost_pos=Vector3(42,0,36)
+	grace=_difficulty().grace+exploration.intro_left
+	ghost_pos=Vector3(27,0,18)
 	ghost.position=ghost_pos
 	move_finger=-1
 	look_finger=-1
@@ -865,6 +885,7 @@ func begin_match(data: Dictionary,placements: Array,round_number: int,level: int
 	light_on=false
 	message=""
 	menu.hide()
+	if is_instance_valid(home): home.hide()
 	ui.get_node("Backdrop").hide()
 	world.show()
 	for actor in actors.values(): actor.queue_free()
@@ -894,13 +915,13 @@ func begin_match(data: Dictionary,placements: Array,round_number: int,level: int
 	for k in key_meshes: k.queue_free()
 	key_meshes.clear()
 	for i in range(keys.size()):
-		var k=_box(world,keys[i]+Vector3(0,0.8,0),Vector3(0.7,0.16,0.3),Color(0.9,0.65,0.2))
-		k.material_override=_material(Color(0.9,0.65,0.2),true)
+		var k=preload("res://repaired_art.gd").model(world,"key",keys[i])
+		k.scale=Vector3.ONE*1.4
 		key_meshes.append(k)
 	_update_door()
 	yaw=0.0
 	pitch=0.0
-	if not _is_mobile() and test_mode == "": Input.mouse_mode=Input.MOUSE_MODE_CAPTURED
+	if not _is_mobile() and test_mode == "": Input.mouse_mode=Input.MOUSE_MODE_VISIBLE if exploration.intro_left>0 else Input.MOUSE_MODE_CAPTURED
 	for glass in glass_meshes: glass.show()
 	_refresh_menu()
 
@@ -913,6 +934,11 @@ func _refresh_menu():
 	for id in people: roster.text += ("✓  " if people[id].ready else "○  ")+people[id].name+("  [HOST]" if id==1 else "")+"     "
 	start_button.disabled=not multiplayer.is_server() or phase not in ["lobby","won","lost"]
 	ready_button.disabled=phase != "lobby"
+	ready_button.visible=phase=="lobby"
+	name_edit.visible=phase in ["menu","connecting","lobby"]
+	ip_edit.visible=name_edit.visible
+	start_button.text="Try again" if phase in ["won","lost"] else "Start game"
+	start_button.visible=phase in ["lobby","won","lost"]
 	touch.visible=phase=="playing" and not menu.visible
 	hud.visible=phase in ["playing","escaping"]
 	hint.visible=hud.visible
@@ -938,7 +964,8 @@ func _leave(reason: String):
 	people.clear()
 	pending.clear()
 	world.hide()
-	menu.show()
+	menu.hide()
+	home.show()
 	ui.get_node("Backdrop").show()
 	message=reason
 	Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
@@ -957,11 +984,7 @@ func _exit_tree():
 	audio_stream=null
 
 func _toggle_light():
-	var p=people.get(multiplayer.get_unique_id(),{})
-	if p.get("pos",Vector3.ZERO).y>=0:
-		horror.notice="The torch is for the unlit floors below."
-		horror.notice_until=Time.get_ticks_msec()+2500
-	else: light_on=not light_on
+	light_on=not light_on
 
 func _show_pause():
 	menu.visible=not menu.visible
@@ -1079,23 +1102,35 @@ func _simulate_players(delta: float):
 		var vertical=actor.velocity.y
 		actor.velocity=direction*speed
 		actor.velocity.y=vertical-delta*18 if not actor.is_on_floor() else -0.2
+		var previous_position=actor.position
 		actor.move_and_slide()
+		# Step over small landing seams without jumping or allowing walls/furniture to be climbed.
+		if direction.length()>.1 and actor.get_slide_collision_count()>0:
+			var ahead=actor.position+direction.normalized()*.36
+			var query=PhysicsRayQueryParameters3D.create(ahead+Vector3.UP*.22,ahead-Vector3.UP*.08,1)
+			var support=world.get_world_3d().direct_space_state.intersect_ray(query)
+			if not support.is_empty() and support.normal.y>.8:
+				var rise=support.position.y-actor.position.y
+				if rise>.015 and rise<.18 and not actor.test_move(actor.global_transform.translated(Vector3.UP*(rise+.015)),direction.normalized()*.1):
+					actor.position.y+=rise+.015
 		p.pos=actor.position
 		p.yaw=cmd.yaw
-		p.light=cmd.light and p.pos.y<0
-		noise_clock[id]=noise_clock.get(id,0.0)+delta
-		if direction.length()>0.1 and noise_clock[id]>0.65:
-			noise_clock[id]=0
-			_noise(p.pos,3 if cmd.crouch else (14 if speed>4 else 6))
-			if not cmd.crouch and p.pos.y>=0 and int(floor(p.pos.x/3)+floor(p.pos.z/3))%7==0:
+		p.light=cmd.light
+		# Count travelled footsteps, not frames or button presses. Only marked loose boards creak.
+		if direction.length()>.1:
+			step_distance[id]=step_distance.get(id,0.0)+Vector2(actor.position.x-previous_position.x,actor.position.z-previous_position.z).length()
+			if not next_creak_step.has(id): next_creak_step[id]=rng.randi_range(20,50)*.65
+			if step_distance[id]>=next_creak_step[id] and repair_layout.loose_board(p.pos) and not cmd.crouch:
+				step_distance[id]=0.0
+				next_creak_step[id]=rng.randi_range(20,50)*.65
 				exploration.disturb(p.pos)
-				sound_event.rpc(p.pos,.5,"creak")
-			if not cmd.crouch: sound_event.rpc(p.pos,0.28 if speed<4 else 0.45,"foot_stone" if p.pos.y<0 or p.pos.x<0 else "foot_wood")
+				sound_event.rpc(p.pos,.6,"creak")
 		if direction.length()>0.1:
 			for i in range(glass_meshes.size()):
 				if not broken.has(i) and p.pos.distance_to(glass_meshes[i].position)<1.2:
 					broken.append(i)
 					_noise(p.pos,22)
+					exploration.disturb(p.pos)
 					sound_event.rpc(p.pos,0.8,"glass")
 					_sync_important()
 			if actor.get_slide_collision_count()>0 and Time.get_ticks_msec()-int(prop_clock.get(id,0))>1500:
@@ -1133,7 +1168,7 @@ func _visual_update(delta: float):
 	camera.rotation=Vector3(pitch,yaw,0)
 	horror.hide_camera(p)
 	if shake and not p.down and not p.hidden: camera.position.y+=sin(Time.get_ticks_msec()*0.012)*touch_move.length()*0.025
-	lamp.visible=light_on and p.pos.y<0 and not p.hidden and not p.down
+	lamp.visible=light_on and not p.hidden and not p.down
 	environment.ambient_light_energy=brightness*(.001 if camera.position.y<0 else .35)
 	var pulse=fmod(Time.get_ticks_msec()/1000.0,19.0)
 	lamp.light_energy=2.35*(.16 if pulse>17.8 and sin(pulse*87)>-.2 else 1.0)
@@ -1147,8 +1182,8 @@ func _visual_update(delta: float):
 		button.modulate=Color(1,.83,.5) if active else Color.WHITE
 	if horror.threat()>.35: hint.text+="\n"+("Stay quiet. Footsteps close outside." if p.hidden else "FOOTSTEPS CLOSE — FIND COVER")
 	for i in range(key_meshes.size()):
-		key_meshes[i].visible=false
-		key_meshes[i].rotation.y+=delta
+		key_meshes[i].visible=exploration.key_available(i) and not found.has(i)
+		key_meshes[i].global_position=exploration.key_display_position(i)
 	touch.visible=not menu.visible and exploration.intro_left<=0
 	exploration.cinematic_camera()
 
@@ -1159,20 +1194,34 @@ func _prompt(id: int) -> String:
 	if p.hidden: return horror.prompt(id)
 	for other in people:
 		if other!=id and people[other].down and p.pos.distance_to(people[other].pos)<2.4: return "USE — revive "+people[other].name
-	for i in range(keys.size()):
-		if exploration.key_available(i) and not found.has(i) and p.pos.distance_to(keys[i])<2.4: return "USE — collect shared key"
+	var hide_target=horror.aimed_hiding(id)
+	if hide_target>=0: return "USE — "+("hide in wardrobe" if horror.slots[hide_target].kind=="cupboard" else "crawl under bed")
 	var search_prompt=exploration.prompt(id)
 	if not search_prompt.is_empty(): return search_prompt
 	var interaction=horror.prompt(id)
 	if not interaction.is_empty(): return interaction
-	if p.pos.distance_to(Vector3(33,0,24))<3: return "USE — open / slam garage" if found.has(10) else "Garage requires its matching key"
-	if p.pos.distance_to(Vector3(42,0,30))<3: return "USE — board the last ride" if door_open and found.has(11) else "Bring the garage and ignition keys"
+	if _near_garage_lock(p.pos): return "USE — open / close garage" if found.has(10) else "Garage requires its matching key"
+	if _near_car(p.pos): return "USE — board the last ride" if door_open and found.has(11) else "Bring the garage and ignition keys"
 	return ""
+
+func _near_garage_lock(p: Vector3) -> bool:
+	return p.distance_to(Vector3(33,0,24))<3.1 or p.distance_to(Vector3(44.7,0,38.4))<2.5
+
+func _near_car(p: Vector3) -> bool:
+	return p.distance_to(Vector3(42,0,30))<3 or p.distance_to(Vector3(42,0,33))<3.3
 
 @rpc("authority","call_local","reliable")
 func interaction_notice(text: String):
 	horror.notice=text
 	horror.notice_until=Time.get_ticks_msec()+7000
+
+@rpc("authority","call_local","unreliable")
+func noise_reply(source: Vector3):
+	var p=people.get(multiplayer.get_unique_id(),{})
+	if not p.is_empty() and p.pos.distance_to(source)<10:
+		horror.notice="She heard that. Find cover."
+		horror.notice_until=Time.get_ticks_msec()+2600
+		atmosphere.noise_alert=1.5
 
 func _request_action(action: String):
 	if phase!="playing": return
@@ -1212,31 +1261,33 @@ func _act(id: int,action: String):
 					break
 			if not done:
 				for i in range(keys.size()):
-					if exploration.key_available(i) and not found.has(i) and p.pos.distance_to(keys[i])<2.4 and _line_clear(p.pos,keys[i]):
+					if exploration.key_available(i) and exploration.target(id)==exploration.index_for_key(i) and not found.has(i):
 						dawn.collect(id,i)
 						sound_event.rpc(keys[i],0.45,"key")
 						done=true
 						break
+			if not done and horror.aimed_hiding(id)>=0: done=horror.use(id)
 			if not done: done=exploration.use(id)
 			if not done: done=horror.use(id)
-			if not done and p.pos.distance_to(Vector3(33,0,24))<=3.1 and found.has(10):
+			if not done and _near_garage_lock(p.pos) and found.has(10):
 				door_open=not door_open
 				_update_door()
 				_noise(p.pos,20)
 				sound_event.rpc(p.pos,0.7,"door")
-			elif not done and p.pos.distance_to(Vector3(42,0,30))<3 and door_open and found.has(11):
+			elif not done and _near_car(p.pos) and door_open and found.has(11):
 				p.boarded=true
 	_sync_important()
 	_check_outcome()
 
 func _sync_important():
 	important_state.rpc(people,found,door_open,broken,horror.opened,horror.clues,round_id)
-	exploration.sync_state.rpc(exploration.searched,round_id)
+	exploration.sync_state.rpc(exploration.searched,round_id,exploration.opened)
 
 func _land_bottle(pos: Vector3,thrown_round: int):
 	await get_tree().create_timer(.5).timeout
 	if phase=="playing" and round_id==thrown_round and multiplayer.is_server():
 		_noise(pos,24)
+		exploration.disturb(pos)
 		sound_event.rpc(pos,.8,"glass")
 
 @rpc("authority","call_local","reliable")
@@ -1264,6 +1315,13 @@ func bottle_visual(origin: Vector3,target: Vector3):
 func _update_door():
 	door.visible=not door_open
 	door.get_child(0).get_child(0).set_deferred("disabled",door_open)
+	if is_instance_valid(garage_exit):
+		garage_exit_shape.set_deferred("disabled",door_open)
+		if garage_exit.get_meta("opened",false)!=door_open:
+			garage_exit.set_meta("opened",door_open)
+			if garage_exit_tween: garage_exit_tween.kill()
+			garage_exit_tween=create_tween()
+			garage_exit_tween.tween_property(garage_exit,"position:y",3.6 if door_open else 0.0,1.3).set_trans(Tween.TRANS_SINE)
 	grid.set_point_solid(Vector2i(11,8),not door_open)
 	if nav_ids.has(Vector3(33,0,24)): navigation.set_point_disabled(nav_ids[Vector3(33,0,24)],not door_open)
 
@@ -1283,7 +1341,7 @@ func _noise(pos: Vector3,radius: float):
 	if ghost_pos.distance_to(pos)<radius*attenuation*_difficulty().hearing and ghost_mode!="chase":
 		ghost_goal=pos
 		ghost_mode="investigate"
-		ghost_timer=5
+		ghost_timer=180
 		if Time.get_ticks_msec()>noise_warning_until:
 			noise_warning_until=Time.get_ticks_msec()+8000
 			sound_event.rpc(ghost_pos,.6,"wail")
@@ -1322,17 +1380,31 @@ func _tick_ghost(delta: float):
 		elif ghost_mode=="search" and ghost_timer<=0: ghost_mode="return"
 		elif ghost_mode=="return": ghost_mode="patrol"; ghost_goal=Vector3(30,0,18)
 		elif ghost_mode=="patrol" and ghost_pos.distance_to(ghost_goal)<1:
-			var choices=[Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(30,0,18),Vector3(72,5,6),Vector3(72,-5,27),Vector3(72,-10,57),Vector3(-12,0,18)]
+			var choices=[Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(30,0,18),Vector3(9,5,6),Vector3(9,-5,27),Vector3(9,-10,27),Vector3(-12,0,18)]
 			ghost_goal=choices[rng.randi_range(0,choices.size()-1)]
 	if ghost_mode=="search": return
 	var path=_nav_path(ghost_pos,ghost_goal)
+	if path.is_empty():
+		# A closed room cannot strand her indefinitely. Approach its nearest reachable side.
+		var nearest_point=ghost_pos
+		var best_distance=INF
+		for point in navigation.get_point_ids():
+			if navigation.is_point_disabled(point): continue
+			var candidate=navigation.get_point_position(point)
+			if candidate.distance_to(ghost_goal)>=best_distance: continue
+			var route=_nav_path(ghost_pos,candidate)
+			if route.size()>1: nearest_point=candidate; best_distance=candidate.distance_to(ghost_goal)
+		ghost_goal=nearest_point
+		path=_nav_path(ghost_pos,ghost_goal)
+		if path.size()<2: ghost_mode="search"; ghost_timer=2
 	if path.size()>1:
 		var target=path[1]
-		var step=ghost_pos.move_toward(target,delta*(_difficulty().chase if ghost_mode=="chase" else _difficulty().patrol))
+		var speed=_difficulty().chase if ghost_mode=="chase" else _difficulty().patrol*1.65 if ghost_mode=="investigate" else _difficulty().patrol
+		var step=ghost_pos.move_toward(target,delta*speed)
 		if not horror.blocks(ghost_pos,step): ghost_pos=step
 	elif path.size()==1:
 		var step=ghost_pos.move_toward(ghost_goal,delta*(_difficulty().chase if ghost_mode=="chase" else _difficulty().patrol))
-		if not horror.blocks(ghost_pos,step): ghost_pos=step
+		if _line_clear(ghost_pos,step): ghost_pos=step
 
 func _check_outcome():
 	if phase!="playing": return
@@ -1350,6 +1422,7 @@ func _check_outcome():
 @rpc("authority","call_local","reliable")
 func escape_started():
 	phase="escaping"
+	for actor in actors.values(): actor.hide()
 	hint.text="THE LAST RIDE\nThe engine turns…"
 	touch.hide()
 	sound_event(Vector3(42,0,30),1,"engine")
@@ -1367,6 +1440,7 @@ func _process(delta):
 	if phase=="escaping":
 		camera.position=camera.position.lerp(Vector3(42,2.6,29),delta*2)
 		camera.rotation=Vector3(0,PI,0)
+		if is_instance_valid(escape_car): escape_car.position.z+=delta*6
 	if test_mode=="benchmark" and test_clock>2: frames.append(delta*1000)
 	if phase=="connecting" and Time.get_ticks_msec()>connect_deadline: _leave("Connection timed out. Room may be full, Wi-Fi may isolate clients, or UDP %s is blocked." % PORT + _network_help())
 	if multiplayer.is_server():
@@ -1428,6 +1502,8 @@ func _tick_test(delta: float):
 			var delta_key=keys[test_destination]-(people[1].pos+Vector3(0,1.65,0))
 			yaw=atan2(-delta_key.x,-delta_key.z)
 			pitch=atan2(delta_key.y,Vector2(delta_key.x,delta_key.z).length())
+			last_action.clear()
+			_act(1,"use")
 			last_action.clear()
 			_act(1,"use")
 			print("TEST reached key ",test_destination," at ",people[1].pos," collected=",found.size()," target=",exploration.target(1)," key=",keys[test_destination]," prompt=",_prompt(1))
@@ -1525,11 +1601,11 @@ func _test_rules():
 	await get_tree().physics_frame
 	assert(phase=="playing")
 	assert(hud.visible and touch.visible and not menu.visible,"Match HUD transition failed")
-	for i in [6,7]: horror.opened[i]=true
+	for i in [0,1,2,6,7]: horror.opened[i]=true
 	horror.apply_doors(false)
 	for key in keys:
 		assert(not _nav_path(Vector3(9,0,9),exploration.approach(key)).is_empty(),"Unreachable key "+str(key))
-	for candidate in [Vector3(72,5,6),Vector3(81,5,12),Vector3(72,-5,27),Vector3(81,-5,33),Vector3(72,-10,57),Vector3(81,-10,63)]:
+	for candidate in [Vector3(9,5,6),Vector3(18,5,12),Vector3(9,-5,27),Vector3(18,-5,33),Vector3(9,-10,27),Vector3(18,-10,33)]:
 		assert(not _nav_path(Vector3(9,0,9),candidate).is_empty(),"Unreachable random placement")
 	_accept_input(99,{"move":Vector2.ONE,"yaw":0.0})
 	assert(not commands.has(99),"Unregistered input accepted")
@@ -1539,9 +1615,9 @@ func _test_rules():
 	actors[2]=CharacterBody3D.new()
 	world.add_child(actors[2])
 	for n in range(exploration.compartments.size()):
-		if keys.has(exploration.compartments[n].pos): exploration.searched.append(n)
-	people[1].pos=keys[0]
-	people[2].pos=keys[0]
+		if keys.has(exploration.compartments[n].pos): exploration.searched.append(n); exploration.opened.append(n)
+	_test_aim_key(1,0)
+	_test_aim_key(2,0)
 	_act(1,"use")
 	_act(2,"use")
 	assert(found.size()==1,"Duplicate pickup")
@@ -1730,31 +1806,31 @@ func _test_horror():
 		assert(not horror.clue_text(i).contains("MOON"),"Pinpoint spoiler returned")
 	assert(horror.clues.size()==3)
 	print("PASS thematic papers discovered and shared without pinpoint markers")
-	people[1].pos=Vector3(66,5,9)
+	people[1].pos=Vector3(25.5,5,9)
 	actors[1].position=people[1].pos
-	ghost_pos=Vector3(60,3,9)
+	ghost_pos=Vector3(21,5,9)
 	last_action.clear()
 	_act(1,"use")
 	assert(not horror.opened[4],"Upper door did not close")
-	assert(not _line_clear(Vector3(63,5,9),Vector3(66,5,9)))
-	assert(horror.blocks(Vector3(63,5,9),Vector3(66,5,9)),"Closed doorway did not block direct entry")
+	assert(not _line_clear(Vector3(22.5,5,9),Vector3(25.5,5,9)))
+	assert(horror.blocks(Vector3(22.5,5,9),Vector3(25.5,5,9)),"Closed doorway did not block direct entry")
 	await get_tree().physics_frame
 	for i in range(30):
 		_accept_input(1,{"move":Vector2(-1,0),"yaw":0.0})
 		_simulate_players(.05)
-	assert(people[1].pos.x>64.7,"Player passed through shut door")
-	ghost_pos=Vector3(63,4.166667,9)
+	assert(people[1].pos.x>24.2,"Player passed through shut door")
+	ghost_pos=Vector3(22,5,9)
 	ghost_mode="investigate"
-	ghost_goal=Vector3(69,5,9)
+	ghost_goal=Vector3(27,5,9)
 	grace=0
 	for i in range(60): _tick_ghost(.05)
-	assert(ghost_pos.x<64.5,"Ghost crossed closed door")
-	people[1].pos=Vector3(66,5,9)
+	assert(ghost_pos.x<24,"Ghost crossed closed door")
+	people[1].pos=Vector3(25.5,5,9)
 	actors[1].position=people[1].pos
 	last_action.clear()
 	_act(1,"use")
 	assert(horror.opened[4])
-	assert(not _nav_path(Vector3(63,4.166667,9),Vector3(69,5,9)).is_empty())
+	assert(not _nav_path(Vector3(22,5,9),Vector3(27,5,9)).is_empty())
 	print("PASS shut room door blocks physics, sight and ghost path; reopening restores route")
 	grace=10000
 	for slot_index in [0,6]:
@@ -1786,11 +1862,11 @@ func _test_horror():
 	last_action.clear()
 	_act(1,"use")
 	assert(witnessed_hides.has(1),"Witnessed hiding not remembered")
-	ghost_pos=slot.entry+Vector3(0,0,.5)
+	ghost_pos=slot.entry+Vector3(0,0,0.5)
 	_tick_ghost(.01)
 	assert(people[1].down and not people[1].hidden,"Ghost failed to search witnessed hiding place")
 	_start()
-	assert(horror.clues.is_empty() and horror.opened.count(false)==2 and not horror.opened[6] and not horror.opened[7] and not people[1].hidden)
+	assert(horror.clues.is_empty() and horror.opened.count(false)==5 and not horror.opened[6] and not horror.opened[7] and not people[1].hidden)
 	set_physics_process(false)
 	grace=0
 	ghost_pos=Vector3(12,0,18)
@@ -1809,3 +1885,13 @@ func _test_key_route(index: int) -> PackedVector3Array:
 	var path=_nav_path(people[1].pos,destination)
 	path.append(destination)
 	return path
+
+func _test_aim_key(id: int,index: int):
+	var p=exploration.approach(keys[index])
+	people[id].pos=p
+	if actors.has(id):actors[id].position=p
+	var d=keys[index]-(p+Vector3(0,1.65,0))
+	var view_yaw=atan2(-d.x,-d.z)
+	var view_pitch=atan2(d.y,Vector2(d.x,d.z).length())
+	if id==multiplayer.get_unique_id():yaw=view_yaw;pitch=view_pitch
+	_accept_input(id,{"move":Vector2.ZERO,"yaw":view_yaw,"pitch":view_pitch})

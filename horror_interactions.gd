@@ -2,18 +2,18 @@ extends Node
 ## Host-owned interactions. Peers receive state; geometry and camera presentation are local.
 const DOORS = [
 	{"pos":Vector3(9,0,15),"axis":2,"name":"Parlour"},
-	{"pos":Vector3(33,0,15),"axis":2,"name":"Archive"},
+	{"pos":Vector3(33,0,15),"axis":2,"name":"Kitchen"},
 	{"pos":Vector3(9,0,24),"axis":2,"name":"Mourning room"},
 	{"pos":Vector3(24,0,9),"axis":0,"name":"East hallway"},
-	{"pos":Vector3(64.5,5,9),"axis":0,"name":"Nursery"},
-	{"pos":Vector3(64.5,-5,30),"axis":0,"name":"Boiler room"},
-	{"pos":Vector3(75,-5,40.5),"axis":2,"name":"Crypt stair"},
-	{"pos":Vector3(75,-10,49.5),"axis":2,"name":"Crypt"},
-	{"pos":Vector3(85.5,5,9),"axis":0,"name":"Nursery east"},
-	{"pos":Vector3(85.5,-5,30),"axis":0,"name":"Service passage"}
+	{"pos":Vector3(24,5,9),"axis":0,"name":"Nursery"},
+	{"pos":Vector3(24,-5,30),"axis":0,"name":"Boiler room"},
+	{"pos":Vector3(12,-5,40.5),"axis":2,"name":"Crypt stair"},
+	{"pos":Vector3(12,-10,40.5),"axis":2,"name":"Crypt"},
+	{"pos":Vector3(22.5,5,9),"axis":0,"name":"Nursery east"},
+	{"pos":Vector3(22.5,-5,30),"axis":0,"name":"Service passage"}
 ]
-const NOTES = [Vector3(81,5,6),Vector3(69,5,12),Vector3(69,-5,33)]
-const BEDS = [Vector3(15,0,33),Vector3(78,5,15),Vector3(78,-5,36)]
+const NOTES = [Vector3(18,5,6),Vector3(6,5,12),Vector3(6,-5,33)]
+const BEDS = [Vector3(15,0,33),Vector3(15,5,15),Vector3(15,-5,36)]
 var game
 var opened: Array = []
 var clues: Array = []
@@ -31,15 +31,18 @@ var wood: StandardMaterial3D
 
 func setup(g):
 	game=g
-	wood=preload("res://realistic_art.gd").pbr("old_wooden_floor_01",.5)
+	wood=StandardMaterial3D.new()
+	wood.albedo_texture=load("res://assets/textures/worn-oak.png")
+	wood.albedo_color=Color(.48,.46,.4)
+	wood.roughness=.95
 	for p in game._hiding_spots(): _cupboard(p)
 	for p in BEDS: _bed(p)
 	for spec in DOORS: _door(spec)
 	for i in range(NOTES.size()):
 		if i<2: continue # Keeper and diary meshes are part of the approved native room.
 		var p=NOTES[i]
-		if i!=0: panel(game.world,p+Vector3(0,.55,0),Vector3(.8,1.1,.5))
-		var paper=game._box(game.world,p+Vector3(0,.35 if i==0 else 1.13,0),Vector3(.6,.025,.4),Color(.7,.62,.42))
+		if i!=0: panel(game.world,p+Vector3(0,0.55,0),Vector3(0.8,1.1,0.5))
+		var paper=game._box(game.world,p+Vector3(0,.35 if i==0 else 1.13,0),Vector3(0.6,0.025,0.4),Color(.7,.62,.42))
 		paper.material_override=game._material(Color(.7,.62,.42),true)
 		game._sign(["KEEPER'S LETTER","NURSERY DIARY","BOILER LOG"][i],p+Vector3(0,1.8,0))
 	# Cache graph edges cut by each doorway. Both AI navigation and physics honor doors.
@@ -100,7 +103,7 @@ func panel(parent: Node3D,p: Vector3,size: Vector3,solid=false) -> MeshInstance3
 	return mesh
 
 func _cupboard(p: Vector3):
-	if p==Vector3(69,5,6):
+	if p==Vector3(6,5,6):
 		game.nursery.register_hiding(self,"cupboard",p)
 		return
 	var angle=PI/2 if p.x<40 or p.x>60 else -PI/2
@@ -108,44 +111,49 @@ func _cupboard(p: Vector3):
 	game.world.add_child(root)
 	root.position=p
 	root.rotation.y=angle
-	for x in [-.83,.83]: panel(root,Vector3(x,1.15,0),Vector3(.12,2.3,1.5),true)
-	panel(root,Vector3(0,1.15,-.72),Vector3(1.7,2.3,.1),true)
-	for y in [.06,2.3]: panel(root,Vector3(0,y,0),Vector3(1.85,.12,1.6))
-	var front_blocker=panel(root,Vector3(0,1.15,.73),Vector3(1.6,2.3,.09),true)
+	for x in [-.83,.83]: panel(root,Vector3(x,1.15,0),Vector3(0.12,2.3,1.5),true)
+	panel(root,Vector3(0,1.15,-0.72),Vector3(1.7,2.3,0.1),true)
+	for y in [.06,2.3]: panel(root,Vector3(0,y,0),Vector3(1.85,0.12,1.6))
+	var front_blocker=panel(root,Vector3(0,1.15,0.73),Vector3(1.6,2.3,0.09),true)
 	front_blocker.visible=false
 	var hinge=Node3D.new()
 	root.add_child(hinge)
-	hinge.position=Vector3(-.8,0,.73)
+	hinge.position=Vector3(-0.8,0,0.73)
 	# A real eye-level aperture, not an opaque replacement screen.
-	panel(hinge,Vector3(.8,.73,0),Vector3(1.6,1.46,.09))
-	panel(hinge,Vector3(.8,1.93,0),Vector3(1.6,.74,.09))
-	for x in [.06,1.54]: panel(hinge,Vector3(x,1.51,0),Vector3(.12,.1,.09))
+	panel(hinge,Vector3(0.8,0.73,0),Vector3(1.6,1.46,0.09))
+	panel(hinge,Vector3(0.8,1.93,0),Vector3(1.6,0.74,0.09))
+	for x in [.06,1.54]: panel(hinge,Vector3(x,1.51,0),Vector3(0.12,0.1,0.09))
 	for x in [.12,1.48]:
-		for y in [.65,1.97]: panel(hinge,Vector3(x,y,.06),Vector3(.05,.95,.04))
-	for y in [.19,1.12,1.72,2.2]: panel(hinge,Vector3(.8,y,.06),Vector3(1.4,.05,.04))
-	game._box(hinge,Vector3(1.4,1.0,.1),Vector3(.06,.2,.08),Color(.5,.38,.17))
+		for y in [.65,1.97]: panel(hinge,Vector3(x,y,.06),Vector3(0.05,0.95,0.04))
+	for y in [.19,1.12,1.72,2.2]: panel(hinge,Vector3(.8,y,.06),Vector3(1.4,0.05,0.04))
+	for child in root.get_children():
+		if child is MeshInstance3D:child.hide()
+	for child in hinge.get_children():
+		if child is MeshInstance3D:child.hide()
+	preload("res://repaired_art.gd").model(root,"wardrobe_case")
+	preload("res://repaired_art.gd").model(hinge,"wardrobe_leaf")
 	leaves.append(hinge)
-	slots.append({"pos":p,"entry":p+Vector3(0,0,1.6).rotated(Vector3.UP,angle),"eye":p+Vector3(0,1.51,.43).rotated(Vector3.UP,angle),"angle":angle,"kind":"cupboard"})
+	slots.append({"pos":p,"entry":p+Vector3(0,0,1.6).rotated(Vector3.UP,angle),"eye":p+Vector3(0,1.51,0.43).rotated(Vector3.UP,angle),"angle":angle,"kind":"cupboard"})
 	occupied.append(false)
 	game._sign("CUPBOARD / USE",p+Vector3(0,2.6,0))
 
 func _bed(p: Vector3):
-	if p==Vector3(78,5,15):
+	if p==Vector3(15,5,15):
 		game.nursery.register_hiding(self,"bed",p)
 		return
-	var angle=PI if p.x<60 else -PI/2
+	var angle=PI if p.y==0 else -PI/2
 	var root=Node3D.new()
 	game.world.add_child(root)
 	root.position=p
 	root.rotation.y=angle
 	for x in [-.85,.85]:
-		for z in [-1.3,1.3]: panel(root,Vector3(x,.45,z),Vector3(.13,.9,.13),true)
-	panel(root,Vector3(0,.72,0),Vector3(1.9,.15,2.9),true)
-	panel(root,Vector3(0,1.1,-1.4),Vector3(2,1.3,.12),true)
-	var mattress=game._box(root,Vector3(0,.91,0),Vector3(1.8,.25,2.7),Color(.3,.25,.2))
-	mattress.material_override=preload("res://realistic_art.gd").pbr("quatrefoil_jacquard_fabric",.7)
-	game._box(root,Vector3(0,1.09,-.9),Vector3(1.2,.15,.55),Color(.48,.43,.32))
-	slots.append({"pos":p,"entry":p+Vector3(0,0,2).rotated(Vector3.UP,angle),"eye":p+Vector3(0,.25,.2).rotated(Vector3.UP,angle),"angle":angle,"kind":"bed"})
+		for z in [-1.3,1.3]: panel(root,Vector3(x,.45,z),Vector3(0.13,0.9,0.13),true)
+	panel(root,Vector3(0,0.72,0),Vector3(1.9,0.15,2.9),true)
+	panel(root,Vector3(0,1.1,-1.4),Vector3(2,1.3,0.12),true)
+	for child in root.get_children():
+		if child is MeshInstance3D: child.hide()
+	preload("res://repaired_art.gd").model(root,"bed")
+	slots.append({"pos":p,"entry":p+Vector3(0,0,2).rotated(Vector3.UP,angle),"eye":p+Vector3(0,0.25,0.2).rotated(Vector3.UP,angle),"angle":angle,"kind":"bed"})
 	leaves.append(null)
 	occupied.append(false)
 	game._sign("UNDER BED / USE",p+Vector3(0,1.8,0))
@@ -155,15 +163,14 @@ func _door(spec: Dictionary):
 	game.world.add_child(root)
 	root.position=spec.pos
 	root.rotation.y=PI/2 if spec.axis==0 else 0
-	var blocker=panel(root,Vector3(0,1.7,0),Vector3(3,3.4,.16),true)
+	var blocker=panel(root,Vector3(0,1.7,0),Vector3(3,3.4,0.16),true)
 	blocker.visible=false
 	var pivot=Node3D.new()
 	root.add_child(pivot)
 	pivot.position=Vector3(-1.5,0,0)
-	panel(pivot,Vector3(1.5,1.7,0),Vector3(3,3.4,.13))
-	for x in [.15,1.5,2.85]: panel(pivot,Vector3(x,1.7,.09),Vector3(.08,3.1,.06))
-	for y in [.16,1.1,2.3,3.23]: panel(pivot,Vector3(1.5,y,.09),Vector3(2.8,.08,.06))
-	game._box(pivot,Vector3(2.7,1.3,.17),Vector3(.1,.25,.1),Color(.55,.4,.16))
+	var leaf=preload("res://repaired_art.gd").model(pivot,"door",Vector3(.15,0,0))
+	for side in [-1,1]: panel(root,Vector3(side*1.55,1.75,0),Vector3(.12,3.5,.28))
+	panel(root,Vector3(0,3.46,0),Vector3(3.2,.14,.28))
 	game._sign(spec.name+" / DOOR",spec.pos+Vector3(0,3.5,0))
 	doors.append({"pivot":pivot,"shape":blocker.get_child(0).get_child(0),"tween":null})
 	opened.append(true)
@@ -188,7 +195,7 @@ func reset():
 	journal.hide()
 	notice=""
 	local_hidden=false
-	for i in range(opened.size()): opened[i]=not is_instance_valid(game.dawn) or i not in [6,7]
+	for i in range(opened.size()): opened[i]=not is_instance_valid(game.dawn) or i not in [0,1,2,6,7]
 	apply_doors(false)
 	for i in range(occupied.size()):
 		occupied[i]=false
@@ -231,7 +238,7 @@ func receive(door_state: Array,read_clues: Array):
 				tween.tween_property(leaf,"rotation:y",-1.3,.25)
 				tween.tween_interval(.8)
 				tween.tween_property(leaf,"rotation:y",0.0,.5)
-		if occupied[i]!=used and slots[i].pos==Vector3(69,5,6): game.nursery.wardrobe(used)
+		if occupied[i]!=used and slots[i].pos==Vector3(6,5,6): game.nursery.wardrobe(used)
 		occupied[i]=used
 
 func near_door(p: Vector3) -> int:
@@ -346,3 +353,14 @@ func threat() -> float:
 	if game.phase!="playing" or game.grace>0: return 0.0
 	var d=game.camera.position.distance_to(game.ghost_pos+Vector3.UP)
 	return clampf(1-d/15.0,0,1)*(.35 if blocks(game.camera.position,game.ghost_pos+Vector3.UP) else 1.0)
+
+func aimed_hiding(id: int) -> int:
+	var p=game.people[id]
+	if p.hidden: return p.hide_slot
+	var view_yaw=game.yaw if id==game.multiplayer.get_unique_id() else game.commands.get(id,{}).get("yaw",p.yaw)
+	var direction=Vector3(0,0,-1).rotated(Vector3.UP,view_yaw)
+	for i in range(slots.size()):
+		var slot=slots[i]
+		var delta=slot.pos-p.pos
+		if p.pos.distance_to(slot.entry)<1.9 and absf(p.pos.y-slot.pos.y)<.4 and direction.dot(delta.normalized())>.55: return i
+	return -1

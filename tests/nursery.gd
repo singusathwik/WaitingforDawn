@@ -26,22 +26,22 @@ func run():
 		assert(g.nursery.baked_material.albedo_texture.get_width()==2048)
 		g.nursery.set_texture_detail(false)
 		assert(g.nursery.baked_material.albedo_texture.get_width()==4096)
-		g.people[1].pos=Vector3(75,-5,30);g.actors[1].position=g.people[1].pos
+		g.people[1].pos=Vector3(12,-5,30);g.actors[1].position=g.people[1].pos
 		g.light_on=false
 		var key=InputEventKey.new();key.keycode=KEY_F;key.pressed=true
 		g._unhandled_input(key);g._visual_update(.01)
 		assert(g.lamp.visible and g.environment.ambient_light_energy<.002)
-		g.people[1].pos=Vector3(66,5,9);g.actors[1].position=g.people[1].pos
+		g.people[1].pos=Vector3(3,5,9);g.actors[1].position=g.people[1].pos
 		g._visual_update(.01)
-		assert(not g.lamp.visible,"Torch must stay off upstairs")
+		assert(g.lamp.visible,"Torch must work upstairs")
 		for i in range(12):
 			var c=g.exploration.compartments[i]
 			assert(c.get("native",false))
 			assert(c.mesh==g.nursery.drawer(i))
-			assert(not g._nav_path(Vector3(66,5,9),g.exploration.approach(c.pos)).is_empty(),"Native drawer unreachable "+str(i))
+			assert(not g._nav_path(Vector3(3,5,9),g.exploration.approach(c.pos)).is_empty(),"Native drawer unreachable "+str(i))
 		# The new partitions must stop physical sight and ghost shortcuts.
-		assert(not g._line_clear(Vector3(78,5,9),Vector3(78,5,3)))
-		assert(g._line_clear(Vector3(80.5,5,9),Vector3(80.5,5,7)))
+		assert(not g._line_clear(Vector3(15,5,9),Vector3(15,5,3)))
+		assert(g._line_clear(Vector3(17.5,5,9),Vector3(17.5,5,7)))
 		for index in [3,7]:
 			var slot=g.horror.slots[index]
 			g.people[1].pos=slot.entry;g.actors[1].position=slot.entry
@@ -57,10 +57,13 @@ func run():
 		g._quit()
 		return
 	# Render the actual game from approved review coordinates; this also works in the APK.
-	var p=Vector3(77.1,5,5.9)
-	var target=Vector3(81,5.8,3)
-	if mode=="nursery-drawers": p=Vector3(74.2,5,6.7);target=Vector3(72,6,3)
-	if mode=="nursery-wardrobe": p=Vector3(72.3,5,7.1);target=Vector3(69,6.2,6)
+	var p=Vector3(14.1,5,5.9)
+	var target=Vector3(18,5.8,3)
+	if mode=="nursery-drawers":
+		g.found=[0]
+		g.exploration.sync_state([0],g.round_id,[0])
+		p=Vector3(11.2,5,6.7);target=Vector3(9,6,3)
+	if mode=="nursery-wardrobe": p=Vector3(9.3,5,7.1);target=Vector3(6,6.2,6)
 	if mode in ["nursery-hide","nursery-bed"]:
 		var slot=g.horror.slots[3 if mode=="nursery-hide" else 7]
 		p=slot.entry

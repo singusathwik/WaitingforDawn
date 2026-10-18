@@ -3,18 +3,25 @@ func _initialize(): run.call_deferred()
 func run():
  var g=load("res://main.tscn").instantiate()
  root.add_child(g)
- for i in range(5): await physics_frame
+ while not g.startup_ready: await physics_frame
  g.test_mode="estate-walk"
  g._host(); g._start(); g.set_physics_process(false); g.grace=10000
+ for i in [0,1,2,6,7]: g.horror.opened[i]=true
+ g.horror.apply_doors(false)
+ await physics_frame
  Engine.time_scale=4
  var total=0.0
- for goal in [Vector3(105,5,9),Vector3(105,10,39),Vector3(105,5,9),Vector3(132,-5,9),Vector3(105,-5,30),Vector3(75,-5,30),Vector3(12,0,18)]:
+ var last_report=0.0
+ for goal in [Vector3(36,5,9),Vector3(36,10,9),Vector3(36,5,9),Vector3(36,-5,9),Vector3(36,-5,30),Vector3(12,-5,30),Vector3(12,-10,30),Vector3(12,10,9),Vector3(12,0,18)]:
   var path=g._nav_path(g.people[1].pos,goal)
   assert(not path.is_empty(),"Empty estate route")
   while not path.is_empty():
    await physics_frame
-   var delta=g.get_physics_process_delta_time()
+   var delta=Engine.time_scale/Engine.physics_ticks_per_second
    total+=delta
+   if total-last_report>20:
+    last_report=total
+    print("WALK ",g.people[1].pos," -> ",path[0])
    if total>650:
     print("ESTATE WALK FAIL ",g.people[1].pos," target ",path[0])
     quit(1);return

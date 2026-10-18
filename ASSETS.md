@@ -89,3 +89,12 @@ The updated 34.59-second introduction is original story text synthesized offline
 ## 0.8.1 nursery art
 
 The nursery room is authored locally in Blender, following the approved room and prop references in `design/rooms/eleanors-nursery/`. Native cradle, dressers, wardrobe, shelving, joinery and window details are original project geometry. The walnut albedo and design references use the built-in image generator; exact prompts and provenance are included in that package. Existing Poly Haven furniture/surfaces and the Rosswet keeper retain the licenses above. The runtime room bakes these sources and lighting into an atlas; source and export hashes are in `design/rooms/eleanors-nursery/runtime/export.json`. No paid Meshy service or engine migration was used.
+
+
+## 0.8.2 repair assets
+
+Original Blender meshes in `assets/models/repair/`: hollow drawer, dresser, paneled door, bed, estate car, radiator, bookshelf, kitchen stove/sink/wall cupboards, debris, key, wardrobe case/leaf and facade. Editable source and topology counts are in `design/repair-082/`; regenerate with `scripts/build_repair_assets.py`. Runtime materials use the already credited Poly Haven maps plus an original generated worn-oak image. Car weathering and kitchen tile shaders are original code.
+
+`assets/ui/manor.png` and `assets/textures/worn-oak.png` were created with the built-in OpenAI image generator on 2026-10-18. The first is an empty haunted manor at night with no person/monster; the second is a worn timber grain texture. No reference stock artwork or commercial-game image is bundled. The new home and opening use the empty-manor image; the older title illustration remains a credited legacy asset.
+
+The revised original introduction text was synthesized using the installed Windows Microsoft George voice at rate -2, then band-limited with subtle delay/reverb and saved mono at 22,050 Hz (34.74 seconds). It is synthesized narration, not a recorded actor. Existing sound effects and ghost licensing remain unchanged.

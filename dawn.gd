@@ -1,6 +1,6 @@
 extends Node
 ## Twelve-key dependency chain. Locks apply to every candidate container, not just the winning drawer.
-const NAMES = ["Brass key", "Nursery key", "Pantry key", "Washroom key", "Attic key", "Furnace key", "Crypt ward", "Mourning key", "Locket key", "Portrait key", "Garage key", "Ignition key"]
+const NAMES = ["Brass key", "Nursery key", "Pantry key", "Washroom key", "Bedroom key", "Furnace key", "Crypt ward", "Mourning key", "Locket key", "Portrait key", "Garage key", "Ignition key"]
 const USES = ["nursery dresser", "pantry cupboard", "washroom cabinet", "attic dresser", "furnace workbench", "coal cabinet", "crypt doors and burial drawers", "keepsake chest", "portrait backs", "toy chest", "garage and sink cabinet", "car ignition"]
 const POOLS = [[36,37,38,39,40,41],[0,1,2,3,4,5],[60,61,62,63,64,65],[48,49,50,51,52,53],[54,55,56,57,58,59],[12,13,14,15,16,17],[18,19,20,21,22,23],[24,25,26,27,28,29],[30,31,32,33,34,35],[77,78,79,80],[6,7,8,9,10,11],[42,43,44,45,46,47]]
 const MINUTES = [40.0,32.0,26.0,20.0]

@@ -9,6 +9,7 @@ var breathing: AudioStreamPlayer
 var pursuit: AudioStreamPlayer
 var overlay: ColorRect
 var danger = 0.0
+var noise_alert=0.0
 var elapsed = 0.0
 var next_creak = 8.0
 var was_down = false
@@ -44,9 +45,11 @@ func setup(owner_game):
 	game.lamp.spot_angle=38
 	game.lamp.light_energy=2.0
 	game.lamp.spot_attenuation=1.1
-	game.lamp.shadow_enabled=not game._is_mobile()
+	# Keep the same stable flashlight path on phones and desktop. Compatibility
+	# spot shadows produced diagonal self-shadow bands on the thick wall shell.
+	game.lamp.shadow_enabled=false
 	for x in [9,18,33,42]: _window(Vector3(x,2,1.55))
-	for center in [Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(75,-5,30),Vector3(75,-10,60)]:
+	for center in [Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(12,-5,30),Vector3(12,-10,30)]:
 		_fixture(center+Vector3(-4,2.8,-4),Color(1,.62,.32))
 	game.nursery.fixtures(self)
 	# Architectural profiles are exported meshes with worn wood PBR maps.
@@ -102,18 +105,18 @@ func _window(p: Vector3):
 	glass.emission=Color(.025,.045,.065)
 	pane.material_override=glass
 	game.world.add_child(pane)
-	pane.position=p+Vector3(0,0,.025)
+	pane.position=p+Vector3(0,0,0.025)
 	_fixture(p+Vector3(0,0,1),Color(.27,.48,.7),false)
 
 func _portrait(p: Vector3):
-	game._box(game.world,p,Vector3(1.4,1.8,.09),Color(.35,.25,.12))
-	game._box(game.world,p+Vector3(0,0,.06),Vector3(1.2,1.6,.02),Color(.045,.055,.05))
-	_sphere(game.world,p+Vector3(0,.18,.11),Vector3(.28,.38,.03),Color(.28,.27,.21))
-	game._box(game.world,p+Vector3(0,-.4,.1),Vector3(.65,.6,.02),Color(.09,.1,.085))
+	game._box(game.world,p,Vector3(1.4,1.8,0.09),Color(.35,.25,.12))
+	game._box(game.world,p+Vector3(0,0,0.06),Vector3(1.2,1.6,0.02),Color(.045,.055,.05))
+	_sphere(game.world,p+Vector3(0,0.18,0.11),Vector3(0.28,0.38,0.03),Color(.28,.27,.21))
+	game._box(game.world,p+Vector3(0,-0.4,0.1),Vector3(0.65,0.6,0.02),Color(.09,.1,.085))
 
 func _fixture(p: Vector3,color: Color,lantern=true):
 	if lantern:
-		preload("res://realistic_art.gd").place(game.world,"Lantern_01",p-Vector3(0,.28,0),.55)
+		preload("res://realistic_art.gd").place(game.world,"Lantern_01",p-Vector3(0,0.28,0),.55)
 	var light=OmniLight3D.new()
 	game.world.add_child(light)
 	light.position=p
@@ -170,7 +173,7 @@ func _build_ghost():
 	head_bone=scare_skeleton.find_bone("head")
 	var fill=OmniLight3D.new()
 	game.camera.add_child(fill)
-	fill.position=Vector3(.2,.15,-.3)
+	fill.position=Vector3(0.2,0.15,-0.3)
 	fill.omni_range=1.3
 	fill.light_color=Color(.55,.69,.72)
 	fill.light_energy=.18
@@ -249,7 +252,8 @@ func _process(delta):
 	var close=0.0
 	if active and game.ghost.visible and is_instance_valid(game.horror):
 		close=game.horror.threat()
-	danger=lerpf(danger,close,1-exp(-delta*3))
+	noise_alert=maxf(0,noise_alert-delta)
+	danger=lerpf(danger,maxf(close,noise_alert*.18),1-exp(-delta*3))
 	overlay.material.set_shader_parameter("danger",danger)
 	pursuit.volume_db=lerpf(-60,-13,danger) if active else -60
 	ambience.volume_db=-24 if active else -33
@@ -263,17 +267,13 @@ func _process(delta):
 		var chase=game.ghost_mode=="chase" and close>.25
 		if chase and not was_chased: play("stinger",game.ghost_pos,.55)
 		was_chased=chase
-		next_creak-=delta
-		if next_creak<=0:
-			next_creak=randf_range(10,19)
-			play("creak",game.camera.position+Vector3(sin(elapsed)*7,0,cos(elapsed)*7),.22)
 		game.ghost.rotation.z=sin(stride)*.025
 
 
 	# Only three nearby decorative lights + the flashlight contribute at once.
-	fixtures.sort_custom(func(a,b): return a.position.distance_squared_to(game.camera.position)<b.position.distance_squared_to(game.camera.position))
+	fixtures.sort_custom(func(a,b): return a.global_position.distance_squared_to(game.camera.position)<b.global_position.distance_squared_to(game.camera.position))
 	for i in range(fixtures.size()):
-		fixtures[i].visible=active and i<3 and fixtures[i].position.y>0
+		fixtures[i].visible=active and i<3 and fixtures[i].global_position.y>0
 		if i<3: fixtures[i].light_energy=(float(fixtures[i].get_meta("base_energy",.7))+sin(elapsed*2.7+i)*.025)*(.25 if scare_time>0 else (.12 if fmod(elapsed+i*3,17)<.18 else 1.0))
 
 func stop_audio():
@@ -288,23 +288,23 @@ func stop_audio():
 
 func _dress_house():
 	# Uneven skirting, pane cracks and water-damaged plaster add scale and age.
-	for center in [Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(75,5,9),Vector3(75,-5,30),Vector3(75,-10,60)]:
+	for center in [Vector3(12,0,9),Vector3(36,0,9),Vector3(12,0,33),Vector3(12,5,9),Vector3(12,-5,30),Vector3(12,-10,30)]:
 		for side in [-1,1]:
 			for height in [.12,.23]:
-				game._box(game.world,center+Vector3(side*5.65,height,0),Vector3(.12,.07,10.8),Color(.12,.10,.075))
+				game._box(game.world,center+Vector3(side*5.65,height,0),Vector3(0.12,0.07,10.8),Color(.12,.10,.075))
 	for x in [9,18,33,42]:
 		for i in range(5):
-			var crack=game._box(game.world,Vector3(x-.6+i*.17,2.6-i*.13,1.69),Vector3(.012,.28,.008),Color(.055,.075,.08))
+			var crack=game._box(game.world,Vector3(x-.6+i*.17,2.6-i*.13,1.69),Vector3(0.012,0.28,0.008),Color(.055,.075,.08))
 			crack.rotation.z=.5+sin(i)*.5
 	for node in game.world.get_children():
 		if node is MeshInstance3D and node.mesh is BoxMesh:
 			if node.mesh.size.y==2.35: curtains.append(node)
 	# A worn central runner, edging and loose papers remain outside collision paths.
 	for z in [12,18,21]:
-		game._box(game.world,Vector3(27,.025,z),Vector3(1.9,.018,2.7),Color(.16,.055,.035))
-		for x in [-.88,.88]: game._box(game.world,Vector3(27+x,.037,z),Vector3(.06,.012,2.7),Color(.32,.23,.12))
+		game._box(game.world,Vector3(27,.025,z),Vector3(1.9,0.018,2.7),Color(.16,.055,.035))
+		for x in [-.88,.88]: game._box(game.world,Vector3(27+x,.037,z),Vector3(0.06,0.012,2.7),Color(.32,.23,.12))
 	for i in range(18):
-		var paper=game._box(game.world,Vector3(16+sin(i*4.7)*2,.035,17+cos(i*2.1)*2),Vector3(.18,.008,.28),Color(.30,.28,.21))
+		var paper=game._box(game.world,Vector3(16+sin(i*4.7)*2,.035,17+cos(i*2.1)*2),Vector3(0.18,0.008,0.28),Color(.30,.28,.21))
 		paper.rotation.y=i*1.7
 
 func _build_architecture():

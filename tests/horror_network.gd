@@ -45,10 +45,10 @@ func host_step():
 		stage=1
 	elif stage==1 and game.horror.clues.has(0):
 		print("HORROR NET PASS client discovered shared clue")
-		place(client,Vector3(66,5,9))
+		place(client,Vector3(25.5,5,9))
 		stage=2
 	elif stage==2 and not game.horror.opened[4]:
-		assert(game.horror.blocks(Vector3(63,5,9),Vector3(66,5,9)))
+		assert(game.horror.blocks(Vector3(22.5,5,9),Vector3(25.5,5,9)))
 		print("HORROR NET PASS client closed authoritative room door")
 		place(client,game.horror.slots[3].entry)
 		stage=3
@@ -76,7 +76,7 @@ func host_step():
 		deadline=time+1
 		stage=8
 	elif stage==8 and time>deadline:
-		assert(game.horror.clues.is_empty() and game.horror.opened.count(false)==2 and not game.horror.opened[6] and not game.horror.opened[7])
+		assert(game.horror.clues.is_empty() and game.horror.opened.count(false)==5 and not game.horror.opened[6] and not game.horror.opened[7])
 		print("HORROR NET PASS restart cleared clues, doors and hiding")
 		game._quit()
 		set_process(false)
@@ -91,12 +91,12 @@ func client_step():
 	if game.phase=="playing":
 		var p=game.people[game.multiplayer.get_unique_id()]
 		if game.round_id==2:
-			assert(game.horror.clues.is_empty() and game.horror.opened.count(false)==2 and not game.horror.opened[6] and not game.horror.opened[7] and not p.hidden)
+			assert(game.horror.clues.is_empty() and game.horror.opened.count(false)==5 and not game.horror.opened[6] and not game.horror.opened[7] and not p.hidden)
 			stage=10
 			return
 		if stage==1 and p.pos.distance_to(game.horror.NOTES[0])<2: act()
 		if game.horror.clues.has(0) and stage==1: saw_clue=true; stage=2
-		if stage==2 and p.pos.distance_to(Vector3(66,5,9))<.5: act()
+		if stage==2 and p.pos.distance_to(Vector3(25.5,5,9))<.5: act()
 		if not game.horror.opened[4] and stage==2: saw_door=true; stage=3
 		if stage==3 and p.pos.distance_to(game.horror.slots[3].entry)<.5:
 			game.yaw=PI/2

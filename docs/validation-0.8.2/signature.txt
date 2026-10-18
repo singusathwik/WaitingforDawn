@@ -1,0 +1,17 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Hollow House Local Distribution
+Signer #1 certificate SHA-256 digest: a60346ef9fa95c931ce67f3774d9d8bba44e02bf3c1c7a7f8e526f3a2b74bb76
+Signer #1 certificate SHA-1 digest: 4e37701243bf0a0a8fba8ab96deb31799ae94aa5
+Signer #1 certificate MD5 digest: a8ab12535c192ddf25f1334568c86ba2
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: 9f0a9a11a286da98300b2c71c470a75df80132f126015011d319c144707a1dd3
+Signer #1 public key SHA-1 digest: 4fbcac5dbbe8acf5495a1bf3eff67cfca16ebd36
+Signer #1 public key MD5 digest: 14456c413654983b1717168de8d509ea

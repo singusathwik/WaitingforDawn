@@ -40,9 +40,11 @@ static func place(parent: Node3D,asset: String,pos: Vector3,height: float,angle:
 static func setup_house(game):
 	var wallpaper=pbr("decrepit_wallpaper",.42)
 	var wood=pbr("old_wooden_floor_01",.3)
+	wood.albedo_color=Color(.48,.46,.41)
+	wood.roughness=1.0
 	var plaster=pbr("rough_plaster_broken",.38)
 	for node in game.world.get_children():
-		if not node is MeshInstance3D or not node.mesh is BoxMesh: continue
+		if not node is MeshInstance3D or not node.mesh is BoxMesh or node.has_meta("outdoor_ground"): continue
 		var size=node.mesh.size
 		if size.y>=3 and maxf(size.x,size.z)>=3:
 			node.material_override=wallpaper if node.position.y>=0 else plaster
@@ -50,10 +52,10 @@ static func setup_house(game):
 			node.material_override=wood if node.position.y<0.1 or is_equal_approx(node.position.y,4.8) else plaster
 		elif size.x>10 or size.z>10: node.material_override=wood
 		# Replace visual furniture only. Its stable collision shape remains active.
-		if size.is_equal_approx(Vector3(2.4,1.3,1.4)) or size.is_equal_approx(Vector3(2.7,.15,1.6)) or size.is_equal_approx(Vector3(.8,1.1,.8)) or size.is_equal_approx(Vector3(.8,.8,.15)) or size.is_equal_approx(Vector3(1.6,2,1.2)):
+		if size.is_equal_approx(Vector3(2.4,1.3,1.4)) or size.is_equal_approx(Vector3(2.7,0.15,1.6)) or size.is_equal_approx(Vector3(0.8,1.1,0.8)) or size.is_equal_approx(Vector3(0.8,0.8,0.15)) or size.is_equal_approx(Vector3(1.6,2,1.2)):
 			node.visible=false
 		# Replace old flat rugs with timber; a rug asset can be introduced separately.
-		if size.is_equal_approx(Vector3(6,.03,4)) or size.is_equal_approx(Vector3(.12,.02,3.8)): node.visible=false
+		if size.is_equal_approx(Vector3(6,0.03,4)) or size.is_equal_approx(Vector3(0.12,0.02,3.8)): node.visible=false
 	for p in [Vector3(6,0,6),Vector3(33,0,6),Vector3(6,0,30)]:
 		place(game.world,"ClassicConsole_01",p,1.3)
 	for p in [Vector3(18,0,9),Vector3(36,0,12)]:

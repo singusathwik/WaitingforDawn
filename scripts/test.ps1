@@ -1,19 +1,36 @@
-param([string]$Godot = "$env:USERPROFILE/.cache/hollow-house/engine/Godot_v4.5.2-stable_win64_console.exe", [switch]$InteractionsOnly)
+param([string]$Godot = "$env:USERPROFILE/.cache/hollow-house/engine/Godot_v4.5.2-stable_win64.exe", [switch]$InteractionsOnly)
 $ErrorActionPreference = 'Stop'
 $project = Split-Path $PSScriptRoot -Parent
 $results = Join-Path $project 'artifacts/tests'
+$script:started = @()
+trap {
+    foreach ($child in $script:started) { if (!$child.HasExited) { Stop-Process -Id $child.Id -ErrorAction SilentlyContinue } }
+    throw $_
+}
 New-Item -ItemType Directory -Force $results | Out-Null
 function Launch([string]$Mode, [string]$Label) {
     $process = Start-Process -FilePath $Godot -ArgumentList '--headless','--path',('"'+$project+'"'),'--',"--test=$Mode" -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $results "$Label.log") -RedirectStandardError (Join-Path $results "$Label.err")
     $null = $process.Handle
+    $script:started += $process
     return $process
 }
 function Check($Process,[string]$Label) {
-    if (!$Process.WaitForExit(120000)) { $Process.Kill(); throw "$Label timed out" }
+    $deadline = [DateTime]::UtcNow.AddSeconds(120)
+    while (!$Process.WaitForExit(300)) {
+        $liveErrors = Get-Content (Join-Path $results "$Label.err") -Raw
+        if ($liveErrors -match 'SCRIPT ERROR|ERROR:') { $Process.Kill(); throw "$Label failed: $liveErrors" }
+        if ([DateTime]::UtcNow -gt $deadline) { $Process.Kill(); throw "$Label timed out" }
+    }
     $Process.Refresh()
     Get-Content (Join-Path $results "$Label.log")
     $errors = Get-Content (Join-Path $results "$Label.err") -Raw
     if ($Process.ExitCode -ne 0 -or $errors -match 'SCRIPT ERROR|ERROR:') { throw "$Label failed: $errors" }
+}
+function LaunchScript([string]$Path,[string]$Label) {
+    $process = Start-Process -FilePath $Godot -ArgumentList '--headless','--path',('"'+$project+'"'),'--script',$Path -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $results "$Label.log") -RedirectStandardError (Join-Path $results "$Label.err")
+    $null = $process.Handle
+    $script:started += $process
+    return $process
 }
 if (!$InteractionsOnly) {
 $rules = Launch 'rules' 'rules'
@@ -74,8 +91,8 @@ Check $scares 'scares'
 $art = Launch 'art' 'art'
 Check $art 'art'
 
-& $Godot --headless --path $project --script res://tests/ios_configuration.gd
-if ($LASTEXITCODE) { throw "iOS configuration checks failed" }
+$ios = LaunchScript 'res://tests/ios_configuration.gd' 'ios-config'
+Check $ios 'ios-config'
 
 $difficulty = Launch "difficulty" "difficulty"
 Check $difficulty "difficulty"
@@ -104,3 +121,5 @@ Start-Sleep -Milliseconds 700
 $clientProcess = Launch 'room-client' 'room-client'
 Check $hostProcess 'room-host'
 Check $clientProcess 'room-client'
+$repair = LaunchScript 'res://tests/repair_regressions.gd' 'repair-regressions'
+Check $repair 'repair-regressions'

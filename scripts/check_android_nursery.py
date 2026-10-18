@@ -7,10 +7,10 @@ import subprocess,time,threading,argparse,json
 from PIL import Image,ImageStat
 from http.server import HTTPServer,BaseHTTPRequestHandler
 ROOT=Path(__file__).resolve().parents[1]
-parser=argparse.ArgumentParser();parser.add_argument('--network',action='store_true');parser.add_argument('--skip-install',action='store_true');parser.add_argument('--mode',choices=['nursery-view','nursery-hide','nursery-bed','nursery-drawers','nursery-benchmark']);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--network',action='store_true');parser.add_argument('--wide',action='store_true');parser.add_argument('--skip-install',action='store_true');parser.add_argument('--mode',choices=['nursery-view','nursery-hide','nursery-bed','nursery-drawers','nursery-benchmark','repair-home','repair-kitchen','repair-garage','repair-drawer','repair-stairs','repair-exterior']);args=parser.parse_args()
 adb=Path.home()/'.cache/wired-android/sdk/platform-tools/adb.exe'
-godot=Path.home()/'.cache/hollow-house/engine/Godot_v4.5.2-stable_win64_console.exe'
-out=ROOT/'artifacts/android-081';out.mkdir(exist_ok=True)
+godot=Path.home()/'.cache/hollow-house/engine/Godot_v4.5.2-stable_win64.exe'
+out=ROOT/'artifacts/android-082';out.mkdir(exist_ok=True)
 def call(*argv,timeout=90,check=True):
     return subprocess.run([str(adb),'-s','emulator-5554',*argv],capture_output=True,timeout=timeout,check=check)
 call('start-server');call('reconnect','offline',check=False)
@@ -21,7 +21,7 @@ for i in range(45):
 else:raise RuntimeError('Emulator did not boot')
 print('ANDROID READY',call('shell','getprop','ro.build.version.release').stdout.decode().strip(),flush=True)
 if not args.skip_install:
-    print(call('install','-r',str(ROOT/'artifacts/WaitingForDawn-0.8.1.apk'),timeout=180).stdout.decode().strip(),flush=True)
+    print(call('install','-r',str(ROOT/'artifacts/WaitingForDawn-0.8.2.apk'),timeout=180).stdout.decode().strip(),flush=True)
 call('reverse','tcp:8871','tcp:8871')
 package='org.hollowhouse.lastride';prefix=''
 class Collector(BaseHTTPRequestHandler):
@@ -36,8 +36,9 @@ class Collector(BaseHTTPRequestHandler):
 server=HTTPServer(('127.0.0.1',8871),Collector)
 threading.Thread(target=server.serve_forever,daemon=True).start()
 try:
+    if args.wide: call('shell','wm','size','1080x2400')
     if not args.network:
-        for mode,extra in [('nursery-view',[]),('nursery-hide',[]),('nursery-bed',[]),('nursery-drawers',[]),('nursery-view',['--nursery-low']),('nursery-benchmark',[])]:
+        for mode,extra in [('nursery-view',[]),('nursery-hide',[]),('nursery-bed',[]),('nursery-drawers',[]),('nursery-view',['--nursery-low']),('nursery-benchmark',[]),('repair-home',[]),('repair-kitchen',[]),('repair-garage',[]),('repair-drawer',[]),('repair-stairs',[]),('repair-exterior',[])]:
             if args.mode and (mode!=args.mode or extra):continue
             prefix=mode+('-low' if extra else '')
             (out/(prefix+'.png')).unlink(missing_ok=True)
@@ -51,12 +52,13 @@ try:
                 if 'ERROR:' in log or 'FATAL EXCEPTION' in log:
                     (out/(prefix+'.log')).write_text(log,encoding='utf-8')
                     raise RuntimeError(log[-4000:])
-                if 'NURSERY RENDER '+mode in log:
+                if 'NURSERY RENDER '+mode in log or 'REPAIR RENDER '+mode in log:
                     (out/(prefix+'.log')).write_text(log,encoding='utf-8');completed=True;break
             assert completed and (out/(prefix+'.png')).is_file(), 'Missing Android render: '+prefix
             with Image.open(out/(prefix+'.png')) as capture:
                 # Exclude HUD borders: an error can leave only the 2D HUD visible.
                 w,h=capture.size
+                if args.wide: assert abs(w/h-2400/1080)<.015, f'Letterboxed viewport: {w}x{h}'
                 scene=capture.convert('RGB').crop((w//4,h//4,3*w//4,3*h//4))
                 assert max(ImageStat.Stat(scene).stddev)>4, 'Blank Android 3D viewport: '+prefix
             print('ANDROID PASS',prefix,flush=True)
@@ -77,4 +79,5 @@ try:
 finally:
     call('shell','am','force-stop',package,check=False)
     call('reverse','--remove','tcp:8871',check=False)
+    if args.wide: call('shell','wm','size','reset',check=False)
     server.shutdown()

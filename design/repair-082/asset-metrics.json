@@ -1,0 +1,54 @@
+{
+  "drawer": {
+    "vertices": 624,
+    "triangles": 1200
+  },
+  "dresser": {
+    "vertices": 720,
+    "triangles": 1384
+  },
+  "door": {
+    "vertices": 832,
+    "triangles": 1600
+  },
+  "bed": {
+    "vertices": 1224,
+    "triangles": 2356
+  },
+  "car": {
+    "vertices": 4234,
+    "triangles": 8128
+  },
+  "radiator": {
+    "vertices": 752,
+    "triangles": 1448
+  },
+  "shelf": {
+    "vertices": 2688,
+    "triangles": 5184
+  },
+  "kitchen": {
+    "vertices": 1136,
+    "triangles": 2240
+  },
+  "debris": {
+    "vertices": 296,
+    "triangles": 540
+  },
+  "key": {
+    "vertices": 360,
+    "triangles": 708
+  },
+  "wardrobe_case": {
+    "vertices": 496,
+    "triangles": 952
+  },
+  "wardrobe_leaf": {
+    "vertices": 848,
+    "triangles": 1632
+  },
+  "facade": {
+    "vertices": 9576,
+    "triangles": 18468
+  }
+}

@@ -17,6 +17,8 @@ func run():
  await get_tree().physics_frame
  await get_tree().physics_frame
  g._host(); g._start(); g.set_physics_process(false); g.grace=10000
+ for i in [0,1,2]: g.horror.opened[i]=true
+ g.horror.apply_doors(false)
  await get_tree().physics_frame
  assert(g.exploration.compartments.size()==81)
  assert(g.keys.size()==12)
@@ -33,6 +35,9 @@ func run():
   aim(selected)
   assert(g.exploration.target(1)==selected,"Aim failed: "+str(selected))
   g._act(1,"use")
+  assert(not g.found.has(key),"Opening should reveal, not collect")
+  assert(g.exploration.key_available(key))
+  g.last_action.clear(); g._act(1,"use")
   assert(g.found.has(key),"Progression key missing: "+str(key))
   g.last_action.clear(); g._act(1,"use")
   assert(g.found.size()==key+1,"Duplicate key awarded")

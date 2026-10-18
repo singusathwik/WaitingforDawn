@@ -65,8 +65,8 @@ func _host_step():
 		game._start()
 		game.grace=1000
 		for n in range(game.exploration.compartments.size()):
-			if game.keys.has(game.exploration.compartments[n].pos): game.exploration.searched.append(n)
-		for id in game.people: place(id,game.keys[0])
+			if game.keys.has(game.exploration.compartments[n].pos): game.exploration.searched.append(n); game.exploration.opened.append(n)
+		for id in game.people: game._test_aim_key(id,0)
 		game._sync_important()
 		deadline=elapsed+1
 		stage=1
@@ -82,7 +82,7 @@ func _host_step():
 	elif stage==2 and elapsed>deadline:
 		if not check(not game.people[1].down,"remote revive"): return
 		print("COOP PASS remote revive")
-		for i in range(1,12): place(1,game.keys[i]); use(1)
+		for i in range(1,12): game._test_aim_key(1,i); use(1)
 		place(1,Vector3(33,0,22))
 		use(1)
 		if not check(game.door_open and game.found.size()==12,"shared objectives and garage"): return
@@ -112,7 +112,7 @@ func _host_step():
 		game._start()
 		game.grace=1000
 		for n in range(game.exploration.compartments.size()):
-			if game.keys.has(game.exploration.compartments[n].pos): game.exploration.searched.append(n)
+			if game.keys.has(game.exploration.compartments[n].pos): game.exploration.searched.append(n); game.exploration.opened.append(n)
 		if not check(game.found.is_empty() and not game.door_open,"restart reset"): return
 		deadline=elapsed+1
 		stage=6
@@ -133,6 +133,8 @@ func _client_step():
 			return
 		if stage==1:
 			if not check(game.difficulty==3 and game.people[game.multiplayer.get_unique_id()].bottles==1,"match difficulty replication"): return
+			game._test_aim_key(game.multiplayer.get_unique_id(),0)
+			game.input_request.rpc_id(1,{"move":Vector2.ZERO,"yaw":game.yaw,"pitch":game.pitch})
 			game._request_action("use")
 			stage=2
 		if game.found.size()==1: saw_key=true

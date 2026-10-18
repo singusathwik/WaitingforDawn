@@ -1,0 +1,13 @@
+--------- beginning of main
+
+10-18 12:46:18.060  4278  4301 I godot   : Godot Engine v4.5.2.stable.official.6ce3de25a - https://godotengine.org
+
+10-18 12:46:18.197  4278  4301 E godot   : WARNING: Failed to load cached shader, recompiling.
+
+10-18 12:46:18.197  4278  4301 E godot   :    at: _load_from_cache (drivers/gles3/shader_gles3.cpp:612)
+
+10-18 12:46:18.478  4278  4301 I godot   : OpenGL API OpenGL ES 3.1 (4.5.0 NVIDIA 595.79) - Compatibility - Using Device: Google (NVIDIA Corporation) - Android Emulator OpenGL ES Translator (NVIDIA GeForce RTX 3050 4GB Laptop GPU/PCIe/SSE2)
+
+10-18 12:46:18.495  4278  4301 I godot   :
+
+10-18 12:46:33.768  4278  4301 I godot   : REPAIR RENDER repair-kitchen viewport=(2400, 1080)

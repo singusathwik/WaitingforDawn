@@ -1,0 +1,28 @@
+{
+  "version": "0.8.2",
+  "version_code": 10,
+  "engine": "4.5.2.stable.6ce3de25a",
+  "android_api": {
+    "min": 24,
+    "target": 35
+  },
+  "artifacts": {
+    "WaitingForDawn-0.8.2.apk": {
+      "bytes": 111002164,
+      "sha256": "2addb0d0128ceb7488ac3c0c37c04f3fe621d976a4abbee35eb73972b9245f75"
+    },
+    "WaitingForDawn-0.8.2.exe": {
+      "bytes": 156314416,
+      "sha256": "3b319409cdabca020a768d351a63b5f789542a788e62148c8b98f64428315de0"
+    }
+  },
+  "full_android_render_apk_sha256": "da9c7ec7a3840341d6aaf15382a9e2deb91ea0972c2f627ad7cd423d692cb3de",
+  "final_apk_checks": [
+    "install/update",
+    "signature",
+    "manifest",
+    "2400x1080 exterior capture",
+    "Android-to-Windows drawer/key/shared-state/restart/disconnect"
+  ],
+  "certificate_sha256": "a60346ef9fa95c931ce67f3774d9d8bba44e02bf3c1c7a7f8e526f3a2b74bb76"
+}
