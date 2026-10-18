@@ -1,7 +1,8 @@
 param(
     [string]$Adb='E:/WaitingForDawnTools/Android/sdk/platform-tools/adb.exe',
     [string]$Serial='emulator-5560',
-    [string]$Apk='E:/WaitingForDawnBuilds/Android_ASTC/WaitingForDawn-arm64.apk'
+    [string]$Apk='E:/WaitingForDawnBuilds/Android_ASTC/WaitingForDawn-arm64.apk',
+    [ValidatePattern('^[a-zA-Z0-9-]+$')][string]$EvidenceSuffix='092'
 )
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
@@ -22,6 +23,6 @@ do {
 $log | Set-Content (Join-Path $root 'artifacts/unreal-setup/android-campaign.log')
 if(!$match.Success){throw 'Android campaign timed out'}
 $result=$match.Groups[1].Value
-$result | Set-Content (Join-Path $root 'unreal/docs/evidence/campaign-android.json')
+$result | Set-Content (Join-Path $root "unreal/docs/evidence/campaign-android-$EvidenceSuffix.json")
 if(!($result | ConvertFrom-Json).passed){throw $result}
 Write-Output $result

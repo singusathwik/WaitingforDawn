@@ -1,4 +1,4 @@
-param([string]$Adb='E:/WaitingForDawnTools/Android/sdk/platform-tools/adb.exe',[string]$Serial='emulator-5560',[int]$Port=7783,[switch]$ManualJoin)
+param([string]$Adb='E:/WaitingForDawnTools/Android/sdk/platform-tools/adb.exe',[string]$Serial='emulator-5560',[int]$Port=7783,[switch]$ManualJoin,[ValidatePattern('^[a-zA-Z0-9-]+$')][string]$EvidenceSuffix='092')
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 $project=Join-Path $root 'unreal/WaitingForDawn/WaitingForDawn.uproject'
@@ -37,6 +37,6 @@ try {
     if($file.LastWriteTime-lt $started){throw 'Stale host result'}
     $hostResult=Get-Content $file.FullName -Raw | ConvertFrom-Json
     if(!$hostResult.passed){throw $hostResult.detail}
-    [ordered]@{environment='Android API 35 ARM64 translation with host Vulkan GPU; Windows UE 5.7.4; emulator virtual network, not physical Wi-Fi';joined_through_android_ui=[bool]$ManualJoin;client=$client;host=$hostResult} | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $root 'unreal/docs/evidence/network-android-windows.json')
+    [ordered]@{environment='Android API 35 ARM64 translation with host Vulkan GPU; Windows UE 5.7.4; emulator virtual network, not physical Wi-Fi';joined_through_android_ui=[bool]$ManualJoin;client=$client;host=$hostResult} | ConvertTo-Json -Depth 6 | Set-Content (Join-Path $root "unreal/docs/evidence/network-android-windows-$EvidenceSuffix.json")
     Write-Output 'Android client and Windows host PASS'
 } finally {if($server -and !$server.HasExited){Stop-Process -Id $server.Id}}

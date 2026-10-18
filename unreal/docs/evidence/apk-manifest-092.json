@@ -1,0 +1,16 @@
+{
+  "version": "0.9.2",
+  "version_code": 11,
+  "package": "org.waitingfordawn.unrealpreview",
+  "abi": "arm64-v8a",
+  "minimum_api": 26,
+  "target_api": 35,
+  "configuration": "Development",
+  "signing": "Android development certificate; verified APK v2 signature",
+  "bytes": 177286989,
+  "sha256": "994276b83e1981e02a5d84f8cc07cfa87a6cbc875ee3f97a5c6f07f0983299d9",
+  "engine": "Unreal Engine 5.7.4",
+  "build_success": true,
+  "tested_android": "API 35 x86_64 emulator, ARM64 native translation, host Vulkan graphics",
+  "physical_phone_tested": false
+}

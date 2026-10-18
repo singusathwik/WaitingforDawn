@@ -24,4 +24,19 @@ if manifest.exists():
     report['verified_fbx_exports']=len(entries)
     report['static_triangles']=sum(e.get('triangles',0) for e in entries)
 else: report['verified_fbx_exports']=0
+art=ROOT/'design/eleanor-092'
+ghost=json.loads((art/'manifest.json').read_text())
+assert hashlib.sha256((art/ghost['fbx']).read_bytes()).hexdigest()==ghost['sha256']
+assert hashlib.sha256((ROOT/ghost['source']).read_bytes()).hexdigest()==ghost['source_sha256']
+assert 0<ghost['triangles']<35000 and ghost['bones']==42 and ghost['root_bones']==['DawnRoot']
+for texture in ghost['maps']:
+    assert hashlib.sha256((art/texture['file']).read_bytes()).hexdigest()==texture['sha256']
+imported=json.loads((art/'unreal-import.json').read_text())
+assert imported['fbx_sha256']==ghost['sha256'] and len(imported['slots'])==8
+assert imported['face_source_sha256']==hashlib.sha256((art/'face_projection.png').read_bytes()).hexdigest()
+for name,digest in imported['generated_asset_hashes'].items():
+    assert hashlib.sha256((PROJECT/'Content/Eleanor092'/name).read_bytes()).hexdigest()==digest
+for name,digest in imported['protected_asset_hashes'].items():
+    assert hashlib.sha256((PROJECT/'Content/Imported'/name).read_bytes()).hexdigest()==digest
+report['eleanor_redesign']={'triangles':ghost['triangles'],'bones':ghost['bones'],'material_slots':8,'verified_maps':len(ghost['maps']),'unchanged_animation_and_skeleton_assets':len(imported['protected_asset_hashes'])}
 print(json.dumps(report,indent=2))

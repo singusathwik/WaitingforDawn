@@ -1,0 +1,23 @@
+{
+  "source": "assets/models/wraith.glb",
+  "source_sha256": "e81fc20e52edf2cf1db69e69a0ab8b3537cf95be2f798e98530f19b5987459b9",
+  "fbx": "SK_EleanorDread.fbx",
+  "sha256": "cc85f9b4fc4e28c2fe117078a4ffd062151ffd9cd956938f97913a3032653fb8",
+  "triangles": 30499,
+  "mesh_objects": 42,
+  "bones": 42,
+  "root_bones": [
+    "DawnRoot"
+  ],
+  "maps": [
+    {
+      "file": "face_albedo.png",
+      "sha256": "9d30576657506bcd56dd029216b454ba13a00d1540cbd157e2c11166e9768a94"
+    },
+    {
+      "file": "cloth_albedo.png",
+      "sha256": "b74a2cf64b1d960f40e3fca9e0e816fcd40aa8ee509416b12ab82eb734b9e49f"
+    }
+  ],
+  "provenance": "Original face, hair, clothing, nails and keepsake. Credited Rosswet armature, arm geometry and animations retained; CC BY 3.0, see ASSETS.md."
+}

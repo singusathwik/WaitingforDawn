@@ -2,13 +2,13 @@
 
 Explore Eleanor's house with up to four survivors. Search the furniture, follow the keeper's letter, hide when she approaches, and unlock the garage and car before dawn.
 
-The current project is the **Unreal Engine 5.7.4 rebuild, version 0.9.1** under [`unreal/`](unreal/README.md). It contains a four-storey house with 16 rooms, three physical stair flights, twelve dependent keys, animated containers, wardrobe/bed hiding, noise-driven ghost pursuit, a narrated skippable opening, four difficulty settings and a car escape ending.
+The current project is the **Unreal Engine 5.7.4 rebuild, version 0.9.2** under [`unreal/`](unreal/README.md). It contains a four-storey house with 16 rooms, three physical stair flights, twelve dependent keys, animated containers, wardrobe/bed hiding, noise-driven ghost pursuit, a narrated skippable opening, four difficulty settings and a car escape ending.
 
-Version 0.9.1 fixes the animation scale that made the ghost almost invisible. She now visibly approaches, pauses before chasing, and winds up an attack you can escape by sprinting. She can slowly open unlocked room doors. The update also adds a full-screen red danger wash, hallway ceiling-crawl poses, revised narration and recorded-source horror sounds. See the [release notes](unreal/docs/RELEASE-0.9.1.md).
+Version 0.9.2 redesigns Eleanor in Blender: a gaunt textured face, recessed eyes, uneven teeth, long layered hair, hooked nails and a torn nightdress. The new animated mesh is integrated into the actual house, with low-light materials and the existing visible pursuit, door opening, ceiling poses and face-framed capture. See the [release notes](unreal/docs/RELEASE-0.9.2.md) and [editable art source](design/eleanor-092/).
 
 ## Android download
 
-Get the ARM64 APK from the [Unreal 0.9.1 release](https://github.com/singusathwik/WaitingforDawn/releases/tag/unreal-v0.9.1). This is a development-signed preview, installed separately from the older Godot app. It requires Android 8 or newer and a supported Vulkan or OpenGL ES 3.2 GPU. Actual physical-phone compatibility and sustained performance still need testing.
+Get the ARM64 APK from the [Unreal 0.9.2 release](https://github.com/singusathwik/WaitingforDawn/releases/tag/unreal-v0.9.2). This is a development-signed preview, installed separately from the older Godot app. It requires Android 8 or newer and a supported Vulkan or OpenGL ES 3.2 GPU. Actual physical-phone compatibility and sustained performance still need testing.
 
 ## Play and build
 

@@ -1,0 +1,2 @@
+# Unreal's FBX importer extracts embedded images here; sources are already packed.
+*.fbm/

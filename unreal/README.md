@@ -1,4 +1,4 @@
-# Waiting for Dawn — Unreal 0.9.1
+# Waiting for Dawn — Unreal 0.9.2
 
 A playable Unreal Engine 5.7.4 horror survival development preview for Android ARM64 and Windows. Explore Eleanor's house, collect twelve shared keys, open the ground-floor garage and bring the surviving team to the car before dawn. This is the Unreal rebuild; the earlier Godot game remains at the repository root.
 
@@ -10,6 +10,7 @@ A playable Unreal Engine 5.7.4 horror survival development preview for Android A
 - Sixteen wardrobe hiding spots and four under-bed spots. The camera enters the hiding space with a restricted view. Hiding before being seen matters; a closed room door buys time while the ghost rattles and opens it. She cannot unlock progression gates or open hiding furniture.
 - Noise investigation, patrol, search and chase. Repeated sounds cannot indefinitely postpone the ghost's response. Door/drawer actions, thrown bottles and loose boards attract attention. Ordinary footsteps are silent; board creaks require distance travelled and an uneven-floor zone.
 - Full-sized animated ghost, a visible spotting pause, corridor pursuit and a cancellable attack wind-up. Sprinting is faster than her chase on all difficulties. She floats slightly and sometimes crawls beneath hallway ceilings; this is a visual pose over ground navigation, not arbitrary wall traversal.
+- Eleanor's 0.9.2 Blender redesign replaces the old head and body with a gaunt face, long layered hair, ragged nightdress and hooked nails. Her credited arm geometry and animation rig are retained. The 30,499-triangle mesh uses eight opaque material slots and two baked 1K maps; the face source texture was generated and projected in Blender.
 - A 36-second narrated, skippable in-engine opening, with no ghost reveal. The keeper's letter appears in an aged-paper journal. Retry skips the introduction.
 - Flashlight on every floor, a dark basement, intermittent light flicker, recorded-source proximity breathing and a translucent full-screen red danger wash. A face-framed capture precedes the loss screen. Catching the last survivor or reaching dawn loses the round; the garage and ignition keys enable the car ending.
 - Easy, Normal, Hard and Extreme: 40, 32, 26 and 20 minutes; initial noise response delays of 6, 4.5, 3 and 2 seconds.
@@ -38,6 +39,8 @@ Requires UE 5.7.4 with Android support, VS 2022 C++ tools and Windows SDK 22621.
 `Content/Maps/House.umap` and imported assets are committed and can be opened directly. To regenerate art, run Blender with `tools/prepare_assets.py` and `tools/prepare_nursery_props.py`, then `tools/Rebuild-House.ps1`. Export staging is generated and ignored. Run one map rebuild at a time. Use the saved map for ordinary builds.
 
 The rebuild wrapper also restores the ghost's master-root bind scale in all five animations and imports the 0.9.1 materials/audio. Do not reimport the original animation clips without this repair. Narration and sound provenance are in `Audio/provenance.json`; `tools/prepare_audio_091.py` documents optional regeneration using an external Kokoro model. The already generated audio is included, so that model is not required to build the game.
+
+The wrapper then imports the 0.9.2 ghost from `../design/eleanor-092/SK_EleanorDread.fbx`. To regenerate that character, run Blender 4.3.2 in background mode with `tools/sculpt_eleanor_092.py`, then run `tools/import_eleanor_092.py` through Unreal's Python commandlet. The packed editable `.blend`, generated face source, baked maps and exact texture prompt are in the art folder. The importer recreates only the generated mesh, checks centimetre bounds/bind transforms and verifies that the five existing animation clips and skeleton retain their hashes. It reuses the rig's established full-body physics bounds. This avoids unit conversion changes in legacy FBX reimport and partial bounds from automatically fitting the new clothing.
 
 ## Validation and limits
 

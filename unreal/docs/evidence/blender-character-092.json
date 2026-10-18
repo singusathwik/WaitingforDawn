@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "scope": "Blender mesh, skinning, outward face normals and packed-image inspection; runtime tests separate",
+  "blend_sha256": "f8bcb8ca7a8a228a3f941bd743c0b184fe0300c6d0acc26f6c0976d183e402f5",
+  "triangles": 30499,
+  "bones": 42,
+  "skinned_mesh_objects": 42,
+  "face_outward_normal_sum": -1105.8341967463493,
+  "packed_images": [
+    "cloth_albedo",
+    "face_albedo",
+    "face_projection.png",
+    "new_thin_zombie"
+  ]
+}

@@ -1,7 +1,7 @@
-param([string]$Adb='E:/WaitingForDawnTools/Android/sdk/platform-tools/adb.exe',[string]$Serial='emulator-5560')
+param([string]$Adb='E:/WaitingForDawnTools/Android/sdk/platform-tools/adb.exe',[string]$Serial='emulator-5560',[ValidatePattern('^[a-zA-Z0-9-]+$')][string]$EvidenceSuffix='092')
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
-$output=Join-Path $root 'unreal/docs/evidence/android-screens-091'
+$output=Join-Path $root "unreal/docs/evidence/android-screens-$EvidenceSuffix"
 New-Item -ItemType Directory -Force -Path $output | Out-Null
 & $Adb -s $Serial shell am force-stop org.waitingfordawn.unrealpreview
 & $Adb -s $Serial logcat -c
@@ -24,8 +24,8 @@ do{
     if($result.Success){break}
     Start-Sleep -Milliseconds 200
 }while((Get-Date)-lt $until)
-$log | Set-Content (Join-Path $root 'artifacts/unreal-setup/threat-android-091.log')
+$log | Set-Content (Join-Path $root "artifacts/unreal-setup/threat-android-$EvidenceSuffix.log")
 if(!$result.Success){throw 'Threat test timeout'}
-$result.Groups[1].Value | Set-Content (Join-Path $root 'unreal/docs/evidence/threat-android-091.json')
+$result.Groups[1].Value | Set-Content (Join-Path $root "unreal/docs/evidence/threat-android-$EvidenceSuffix.json")
 if(!($result.Groups[1].Value|ConvertFrom-Json).passed -or $seen.Count-ne $wanted.Count){throw 'Threat test or screenshots failed'}
 Write-Output $result.Groups[1].Value

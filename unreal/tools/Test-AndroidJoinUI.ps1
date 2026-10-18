@@ -1,5 +1,5 @@
 # Coordinates are for the reviewed 2400x1080 landscape test emulator.
-param([string]$Adb='E:/WaitingForDawnTools/Android/sdk/platform-tools/adb.exe',[string]$Serial='emulator-5560')
+param([string]$Adb='E:/WaitingForDawnTools/Android/sdk/platform-tools/adb.exe',[string]$Serial='emulator-5560',[ValidatePattern('^[a-zA-Z0-9-]+$')][string]$EvidenceSuffix='092')
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
 & $Adb -s $Serial shell am force-stop org.waitingfordawn.unrealpreview
@@ -19,7 +19,7 @@ Start-Sleep -Seconds 1
 & $Adb -s $Serial shell input tap 2000 700
 Start-Sleep -Milliseconds 500
 $output=Join-Path $root 'artifacts/unreal-setup/android-network-ui-inner.log'
-$inner=Start-Process (Join-Path $PSHOME 'pwsh.exe') -ArgumentList @('-NoProfile','-File',('"'+(Join-Path $PSScriptRoot 'Test-AndroidWindowsNetwork.ps1')+'"'),'-Port','7777','-ManualJoin') -WindowStyle Hidden -PassThru -RedirectStandardOutput $output -RedirectStandardError (Join-Path $root 'artifacts/unreal-setup/android-network-ui-inner.stderr')
+$inner=Start-Process (Join-Path $PSHOME 'pwsh.exe') -ArgumentList @('-NoProfile','-File',('"'+(Join-Path $PSScriptRoot 'Test-AndroidWindowsNetwork.ps1')+'"'),'-Port','7777','-ManualJoin','-EvidenceSuffix',$EvidenceSuffix) -WindowStyle Hidden -PassThru -RedirectStandardOutput $output -RedirectStandardError (Join-Path $root 'artifacts/unreal-setup/android-network-ui-inner.stderr')
 $null=$inner.Handle
 $until=(Get-Date).AddSeconds(45)
 do{Start-Sleep -Milliseconds 300;$ready=Get-Content $output -Raw -ErrorAction SilentlyContinue}while($ready -notmatch 'Host ready' -and (Get-Date)-lt $until -and !$inner.HasExited)

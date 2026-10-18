@@ -1,0 +1,68 @@
+{
+  "mesh": "/Game/Eleanor092/SK_EleanorDread.SK_EleanorDread",
+  "skeleton": "/Game/Imported/SK_Eleanor_Skeleton.SK_Eleanor_Skeleton",
+  "physics_asset": "/Game/Imported/SK_Eleanor_PhysicsAsset.SK_Eleanor_PhysicsAsset",
+  "slots": [
+    {
+      "slot": "m_dreadcavity",
+      "material": "/Game/Eleanor092/M_DreadCavity.M_DreadCavity"
+    },
+    {
+      "slot": "spectral skin - rosswet mobile",
+      "material": "/Game/Eleanor092/M_DreadArms.M_DreadArms"
+    },
+    {
+      "slot": "m_dreadface",
+      "material": "/Game/Eleanor092/M_DreadFace.M_DreadFace"
+    },
+    {
+      "slot": "m_dreadcloth",
+      "material": "/Game/Eleanor092/M_DreadCloth.M_DreadCloth"
+    },
+    {
+      "slot": "m_dreadhair",
+      "material": "/Game/Eleanor092/M_DreadHair.M_DreadHair"
+    },
+    {
+      "slot": "m_dreadeye",
+      "material": "/Game/Eleanor092/M_DreadEye.M_DreadEye"
+    },
+    {
+      "slot": "m_dreadivory",
+      "material": "/Game/Eleanor092/M_DreadIvory.M_DreadIvory"
+    },
+    {
+      "slot": "m_dreadrust",
+      "material": "/Game/Eleanor092/M_DreadRust.M_DreadRust"
+    }
+  ],
+  "bind_extent_cm": [
+    206.65970611572266,
+    101.15506362915039,
+    440.07256746292114
+  ],
+  "fbx_sha256": "cc85f9b4fc4e28c2fe117078a4ffd062151ffd9cd956938f97913a3032653fb8",
+  "face_source_sha256": "1e87df11973c693a8357aa4c531ab84cb63521dc9d20e2e5312726695c0e8041",
+  "preserved_animations": true,
+  "protected_asset_hashes": {
+    "SK_Eleanor_Anim_Armature_attack1_l_Armature.uasset": "a4a9fb73ed912e9557eea1eb8d7ad69895df9064b4fd98d5c029bcf351292dc1",
+    "SK_Eleanor_Anim_Armature_attack2_Armature.uasset": "b54bb071cfcc0d1102d999cf827941091ca9b005f6a4cad2d4b82d6332e38435",
+    "SK_Eleanor_Anim_Armature_idle_Armature.uasset": "3eea6ea67d30f1dc52dc896c4ace650225915f14b28856ef878cf496e39fbddf",
+    "SK_Eleanor_Anim_Armature_run_Armature.uasset": "2ab0eef3b1a78cc182ed96b9b523d9f3aebb4827202bfe3df3a205eaa27b2f4b",
+    "SK_Eleanor_Anim_Armature_walk_Armature.uasset": "7b8ac59ba52e0301ee35a34b0986f7faf2c65a11da739cdeb52adfffcc49c6f7",
+    "SK_Eleanor_Skeleton.uasset": "43d54590ef4b5bb1092c823642358cbc7d65bac31225d24c30693b4d61aeb7a9"
+  },
+  "generated_asset_hashes": {
+    "M_DreadArms.uasset": "0bdb75a26fa303238e0ea880d42ca854499b638c376e4092c7ce735d63059357",
+    "M_DreadCavity.uasset": "e24084c5973994dadf25e4b4a924c1f26b67a93f654d514272a1ddc33aee1990",
+    "M_DreadCloth.uasset": "109f50e63779969294217901c430c1d357b9b524cf823cddcf5b020d62e0097c",
+    "M_DreadEye.uasset": "42518f9168f2ab6f2be2aad0f0c5ff7e4284990841a2d49c6ba0295113e0359c",
+    "M_DreadFace.uasset": "9c593071582de8f082ef0bb3675068b8ee1a2ee5dcbc6e58c52d3eaaef585eb5",
+    "M_DreadHair.uasset": "403d11f9746fe6d8b35342c735d6f33a6c0c7e27b87b2af07217b3295ccf6619",
+    "M_DreadIvory.uasset": "1f59c7658912c7e3bd6132b202aed79b216cf061ad55f2fafe8d2b8b3fedfa65",
+    "M_DreadRust.uasset": "d5a02a70151436d05d2665136b4f222e0fae93a396ea27f193ba90472d74eb6b",
+    "SK_EleanorDread.uasset": "476bb4fceb0cd51e394794c1f81f8e125d0d3fa670ea84731854c51f47eb2d82",
+    "T_cloth.uasset": "4c5d2280a7e7b9b2aede93f3eff195b114d884586627b6e54486e4214c0ee3dc",
+    "T_face.uasset": "78fee87381ad96821b2d685646f9a5defe0f299a1bf16cc15090bc7ec5aed6af"
+  }
+}

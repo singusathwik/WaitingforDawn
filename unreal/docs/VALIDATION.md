@@ -1,40 +1,38 @@
-# Unreal 0.9.1 validation — 2026-10-18
+# Unreal 0.9.2 validation — 2026-10-18
 
-These results describe the Unreal development preview. Automated checks and actual rendered Android captures are recorded separately; they are not a physical-phone certification or an unassisted human playthrough.
+This is an art update to Eleanor in the existing Unreal development preview. The results below were executed on the delivered model and APK. They are automated checks and rendered captures, not a physical-phone certification or an unassisted human playthrough.
 
-## Executed checks
+## Executed for 0.9.2
 
 | Check | Evidence and scope |
 |---|---|
-| Build/package | UE 5.7.4; VS 2022/MSVC 14.44; SDK 22621; real Win64 editor and Android ARM64 builds, ASTC cook and Gradle packaging. APK version 0.9.1/code 10, signature verified. See `evidence/apk-manifest-091.json`. |
-| Source/export | `evidence/source-validation-091.json`: 23 verified FBX exports, 65,744 triangles across unique static exports; four floors, 16 rooms and the twelve-key dependency graph. This is not the rendered scene triangle count. |
-| Native automation | `evidence/native-tests-091.json`: 5 successes, 0 failures. Difficulty, earliest noise deadline, story/dawn/escape rules, stair collision and cancellable attack timing. |
-| Windows campaign | `evidence/campaign-win64-091.json`: 67 checks; twelve keys, all three stair flights physically walked both ways, zero fall recoveries, hiding and car ending. |
-| Android campaign | `evidence/campaign-android-091.json`: the installed ARM64 APK passed the same 67 checks on API 35 with host Vulkan graphics, including the ghost opening a closed room door and entering to search after a noise. |
-| Ghost encounter | `evidence/threat-win64-091.json` and `evidence/threat-android-091.json`: 8 checks on each platform. Full-sized animated body, more than 8 metres of actual corridor pursuit, attack wind-up, actual sprint movement out of reach, ceiling bounds, face-framed capture and subsequent loss. |
-| Android visual inspection | `evidence/android-screens-091/`: actual 2400 × 1080 emulator captures of approach, chase, ceiling pose and capture. These are game renders, not Blender images. |
-| Four-process co-op | `evidence/network-win64-091/`: host and three independent Windows clients. Remote drawer/key use, hiding, shared inventory, late join, ending replication, disconnect cleanup and new ghost/door state replication passed. |
-| Android/Windows co-op | `evidence/network-android-windows-091.json`: packaged Android client joined a Windows host through Home → Join with friends → entered IP → Join house. Actual remote use, pickup, hiding, ghost/door state receipt and disconnect cleanup passed without a protocol override. |
-| Audio production | `../Audio/provenance.json`: source licenses/hashes, four output hashes, durations and bounded waveform peaks. The 36-second introduction uses Kokoro narration; the narrator is still synthetic. Breath/scream effects use processed CC0 human recordings. |
+| Blender character | `evidence/blender-character-092.json`: 30,499 triangles, 42 bones, 42 skinned mesh objects, every vertex weighted, outward-facing facial polygons and packed source/baked images. The saved Blender file's hash is recorded. |
+| Source/export/import | `evidence/source-validation-092.json`: 23 existing FBX exports plus the new character, two baked maps and generated asset hashes. The five repaired animation clips and skeleton retain their hashes. `../../design/eleanor-092/unreal-import.json` records the actual map mesh, materials, shared physics asset and bind bounds. |
+| Android package | UE 5.7.4 ARM64/ASTC cook and Gradle build succeeded. Version 0.9.2/code 11; APK v2 signature verified. `evidence/apk-manifest-092.json` records bytes and SHA-256. Installed over the previous Unreal preview on the API 35 emulator. |
+| Windows encounter | `evidence/threat-win64-092.json`: 8 checks passed using the final mesh, with actual offscreen rendering. Screenshots are in `evidence/windows-screens-092/`. |
+| Android encounter | `evidence/threat-android-092.json`: the same 8 checks passed in the installed ARM64 APK. Actual 2400 × 1080 captures of approach, chase, ceiling pose and capture are in `evidence/android-screens-092/`; all four were visually inspected. |
+| Android campaign | `evidence/campaign-android-092.json`: 67 checks passed, twelve visible keys, dependency locks, duplicate pickup prevention, wardrobe/bed hiding, letter, navigation to all four floors, noise-driven pursuit/door opening and garage/car ending. Three stair flights were walked in both directions with zero fall recoveries. |
+| Android/Windows co-op | `evidence/network-android-windows-092.json`: the packaged Android client joined a Windows host through Home → Join with friends → entered IP → Join house. Remote use/pickup, shared state, hiding, ghost/door state receipt and disconnect cleanup passed over the emulator's virtual network. No protocol override was used. |
 
-## What the tests establish
+The Android emulator uses ARM64 translation and host Vulkan graphics. Its rendering and timings are not measurements of physical-phone performance.
 
-The campaign uses the real Use selection, locks and pickup code, checks visible keys and duplicate prevention, enters/leaves both hiding types, reads the keeper's letter and validates navigation to all floors and key approaches. A noise attracts Eleanor to a closed room; she must wait, open its door, enter and search. The test then exercises garage gating and the car escape. It teleports between room fixtures while physically walking each stair flight. It does not establish that every route has been exhaustively walked or that an unaided player can solve the game.
+## What these checks establish
 
-The encounter probe runs actual chase AI and CharacterMovement during the approach and sprint escape. Ceiling positioning and capture framing then use controlled fixtures; those portions do not prove unrestricted climbing or an emergent attack at every location. Separate native assertions cover attack timing. Network probes use controlled host fixtures for ghost appearance flags and the ending; the campaign exercises the complete key/garage/car sequence. The four-process test is loopback, and Android/Windows uses the emulator's virtual network.
+The encounter probe exercises actual chase AI and character movement over more than eight metres, a visible attack wind-up and sprint movement out of reach. Ceiling positioning and capture framing use controlled fixtures; those parts do not prove unrestricted wall climbing or an emergent attack at every location. The campaign uses real interaction/lock/pickup code while teleporting between room fixtures; it physically walks the stair flights. It does not establish that every route was exhaustively walked or that a new player can solve the game without assistance.
 
-## Root cause and repairs
+The delivered mesh has a modeled face, recessed eyes, hair, sleeves, layered dress, nails and keepsake. The generated face source is projected and baked into the face UVs in Blender. Runtime screenshots confirm that the actual animated geometry is present in the APK, rather than relying on a Blender preview. Hair and cloth are weighted geometry without simulation. Eight opaque material slots avoid alpha-blended hair, but this is an asset budget decision, not a measured phone performance claim.
 
-In 0.9.0, all five animation clips overwrote Eleanor's master-root bind scale (395.7522) with 1.0. The animated body shrank almost 396 times while the collision capsule remained full-sized. The previous static ghost-art view disabled animation ticking, so it failed to detect this. `evidence/ghost-animation-scale-091.json` records the before/after correction. The new encounter test rejects an animated body smaller than human scale.
+## Issues caught before release
 
-The repaired encounter includes a 1.8-second spotting pause, slower-than-sprint chase, a cancellable 0.95-second attack wind-up, a 2.3-second face-framed capture, slow audible door opening, full-screen danger tint and same-floor proximity breathing. Skin and fabric retain texture in low light. The Android compiler also caught ambiguous indentation in the new camera block; explicit braces fixed it before the successful package.
+- Legacy skeletal FBX reimport alternated between metre and centimetre bounds. The importer now recreates only the generated mesh and checks bind scale/transforms before saving the map.
+- Automatic physics fitting of the clothing produced partial bounds that failed the encounter regression. The new mesh now reuses the existing compatible rig's full-body physics asset; the gameplay capsule is unchanged.
+- Facial polygons initially faced inward. Unreal's backface culling exposed internal mouth/eye geometry, despite the two-sided Blender preview looking intact. The final export has outward facial winding, checked by the Blender validator and by the actual Windows/Android close-ups.
+- The face texture initially repeated on the neck. The neck now uses a cloth collar, with internal sockets and teeth positioned behind the facial surface.
 
-## Limits and earlier evidence
+## Earlier tests and remaining limits
 
-No physical Android phone, multi-phone Wi-Fi session, sustained thermal/battery test or iOS build was available. Emulator graphics use the host GPU and ARM64 translation; these results are not phone performance measurements. Headphone listening balance and whether the new synthetic voice meets the player's preference remain subjective and unverified.
+The gameplay C++ is unchanged from 0.9.1. The five native automation tests, Windows campaign and four-process Windows network run recorded in [VALIDATION-0.9.1.md](VALIDATION-0.9.1.md) were not rerun for this art update. They are historical evidence, not additional 0.9.2 test passes. Current Android campaign/encounter and Android-to-Windows results are listed above.
 
-Ceiling crawling is a visual pose beneath traced hallway ceilings over the existing ground navigation; it is not arbitrary wall-climbing AI. The game has fixed key locations, no save/resume, no revive, no host migration and no internet relay. Co-op models remain Epic template mannequins, the ghost is an adapted credited model, and hiding uses a camera transition and view mask. The accepted house geometry was retained in this repair.
+No physical Android phone, multi-phone Wi-Fi session, sustained thermal/battery test or iOS build was available. Audio/narration was not changed or re-evaluated in this update; the narrator remains synthesized. Ceiling crawling remains a visual pose over ground navigation. Fixed key locations, no save/resume, no revive, no internet relay and no host migration remain. Co-op bodies remain Epic template mannequins. The house geometry was retained.
 
-Files without the `091` suffix include historical 0.9.0 results. In particular, the older static ghost-art, full room-tour and touch-smoke evidence must not be used to claim that the old animated ghost was visible. The current Android join flow and new animated encounter were exercised again for 0.9.1.
-
-See [../README.md](../README.md) for controls, build steps and device requirements.
+See [../README.md](../README.md) for controls and build instructions, and [../../ASSETS.md](../../ASSETS.md) for provenance and licenses.

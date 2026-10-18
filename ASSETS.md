@@ -118,3 +118,11 @@ No models, audio, code, or textures were extracted from Eyes, Amnesia or the com
 - `unreal/Audio/sources/scream.mp3`: “Female scream 02” by missozzy, [Freesound 169811](https://freesound.org/people/missozzy/sounds/169811/), CC0. Slowed, mixed and given short room echoes for warning/capture cues.
 - Audio source URLs, SHA-256 hashes, output durations and peaks: `unreal/Audio/provenance.json`. The reusable processing script is `unreal/tools/prepare_audio_091.py`.
 - Eleanor retains the existing credited mesh and child-bone animations. `repair_ghost_animation_scale.py` restores the static master root's bind transform, which the original FBX animation import incorrectly replaced with unit scale. This repairs the animated model without changing its vertex weights or provenance.
+
+## Unreal 0.9.2 Eleanor redesign
+
+`design/eleanor-092/Eleanor-Mourning-092.blend` contains the editable Blender character. The facial shell, hair ribbons/scalp, layered torn nightdress, sleeves, nails, recessed sockets, teeth and keepsake are original project geometry. The Rosswet Mobile armature, arms/hands and five existing animations remain adapted CC BY 3.0 material with the original attribution above. No endorsement is implied.
+
+`face_projection.png` was generated with the built-in OpenAI image generation tool on 2026-10-18 for this original fictional character. Its exact prompt and projection/baking method are in `design/eleanor-092/FACE-TEXTURE.md`. Blender bakes the projected face into `face_albedo.png`; `cloth_albedo.png` is baked from an original procedural material. All source images are packed into the editable Blender file. No commercial character image or stock reference was used as a texture.
+
+The 30,499-triangle mesh exports as `SK_EleanorDread.fbx` and is imported under `Content/Eleanor092`. The map references this actual skeletal mesh. Mesh, source and baked-map hashes are in the art manifest; `unreal-import.json` records material assignments and unchanged animation/skeleton hashes. The source rig has 42 bones including the shared master root. Hair and cloth are weighted geometry without physical simulation.
