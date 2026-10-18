@@ -5,9 +5,10 @@ import argparse, hashlib, http.client, json, subprocess, urllib.parse, urllib.re
 p=argparse.ArgumentParser()
 p.add_argument('--apk',type=Path,required=True)
 p.add_argument('--body',type=Path,required=True)
-p.add_argument('--tag',default='unreal-v0.9.0')
+p.add_argument('--tag',default='unreal-v0.9.1')
 p.add_argument('--commit',required=True)
 args=p.parse_args()
+version=args.tag.removeprefix('unreal-v')
 repo='singusathwik/WaitingforDawn'
 credential=subprocess.run(['git','credential','fill'],input='protocol=https\nhost=github.com\n\n',text=True,capture_output=True,check=True)
 fields=dict(line.split('=',1) for line in credential.stdout.splitlines() if '=' in line)
@@ -23,9 +24,9 @@ if identity.lower()!='singusathwik':raise RuntimeError('Unexpected authenticated
 try:release=api('/repos/'+repo+'/releases/tags/'+urllib.parse.quote(args.tag))
 except urllib.error.HTTPError as e:
     if e.code!=404:raise
-    release=api('/repos/'+repo+'/releases',{'tag_name':args.tag,'target_commitish':args.commit,'name':'Waiting for Dawn — Unreal 0.9.0','body':args.body.read_text(encoding='utf-8'),'draft':False,'prerelease':True})
+    release=api('/repos/'+repo+'/releases',{'tag_name':args.tag,'target_commitish':args.commit,'name':'Waiting for Dawn — Unreal '+version,'body':args.body.read_text(encoding='utf-8'),'draft':False,'prerelease':True})
 digest=hashlib.file_digest(args.apk.open('rb'),'sha256').hexdigest()
-name='WaitingForDawn-Unreal-0.9.0-arm64.apk'
+name='WaitingForDawn-Unreal-'+version+'-arm64.apk'
 existing=next((a for a in release['assets'] if a['name']==name),None)
 if existing:
     if existing.get('digest')!='sha256:'+digest:raise RuntimeError('An asset with different content already exists; refusing silent replacement')

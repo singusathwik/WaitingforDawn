@@ -82,4 +82,14 @@ bool FWDRoundLifecycle::RunTest(const FString& Parameters)
     State->bRoundEnded=false;State->Phase=EWDRoundPhase::Playing;State->SecondsRemaining=.001f;State->Tick(.02f);TestTrue(TEXT("Dawn loses"),State->Phase==EWDRoundPhase::Lost);
     State->Destroy();return true;
 }
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FWDAttackGrace,"WaitingForDawn.Rules.VisibleAttackWindow",
+    EAutomationTestFlags::EditorContext|EAutomationTestFlags::EngineFilter)
+bool FWDAttackGrace::RunTest(const FString& Parameters)
+{
+    TestFalse(TEXT("First sight cannot instantly capture"),AWDGhost::HasAttackWindow(10,10,9,80));
+    TestFalse(TEXT("Wind-up cannot capture on its first frame"),AWDGhost::HasAttackWindow(13,10,13,80));
+    TestFalse(TEXT("Moving out of reach defeats the attack"),AWDGhost::HasAttackWindow(14,10,13,180));
+    TestTrue(TEXT("Telegraphed close attack can capture"),AWDGhost::HasAttackWindow(14,10,13,80));
+    return true;
+}
 #endif

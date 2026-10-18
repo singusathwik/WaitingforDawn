@@ -25,6 +25,7 @@ void AWDCampaignProbe::Finish(bool Pass,const FString& Why)
     Done=true;FString R=FString::Printf(TEXT("{\"passed\":%s,\"phase\":\"%s\",\"detail\":\"%s\",\"checks\":%d,\"keys\":%d,\"stair_flights_both_directions\":%d,\"fall_recoveries\":%d}"),Pass?TEXT("true"):TEXT("false"),*Phase,*Why,Checks,KeyIndex,Flight,Player?Player->FallRecoveryCount:-1);
     FString File=TEXT("campaign");
     if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetServer")))File=TEXT("house-net-server");
+    if(FParse::Param(FCommandLine::Get(),TEXT("WDThreatTest")))File=TEXT("threat-encounter");
     if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetClient"))){int32 Observer=0;FParse::Value(FCommandLine::Get(),TEXT("WDObserver="),Observer);File=FString::Printf(TEXT("house-net-client%d"),Observer);}
     IFileManager::Get().MakeDirectory(*(FPaths::ProjectSavedDir()/TEXT("Validation")),true);FFileHelper::SaveStringToFile(R,*(FPaths::ProjectSavedDir()/TEXT("Validation")/(File+TEXT(".json"))));
     UE_LOG(LogTemp,Display,TEXT("WD_CAMPAIGN_RESULT %s"),*R);if(Player)UE_LOG(LogTemp,Display,TEXT("Position %s"),*Player->GetActorLocation().ToString());FPlatformMisc::RequestExitWithStatus(false,Pass?0:1);
@@ -54,6 +55,7 @@ void AWDCampaignProbe::Tick(float D)
 {
     Super::Tick(D);if(Done)return;double Now=GetWorld()->GetTimeSeconds();auto* GS=GetWorld()->GetGameState<AWDGameState>();if(!GS)return;
     if(FParse::Param(FCommandLine::Get(),TEXT("WDVisualTour"))){TickTour();return;}
+    if(FParse::Param(FCommandLine::Get(),TEXT("WDThreatTest"))){TickThreat();return;}
     if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetServer"))){TickNetwork(true);return;}
     if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetClient"))){TickNetwork(false);return;}
     if(Now-At>100){Finish(false,TEXT("Stage timed out"));return;}
@@ -103,11 +105,10 @@ void AWDCampaignProbe::Tick(float D)
         Ghost->SetActorLocation(FVector(0,350,90));GhostStart=Ghost->GetActorLocation();Ghost->State=EWDGhostState::Patrol;Ghost->SetActorTickEnabled(true);Ghost->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
         GS->EmitNoise(FVector(-450,-730,80),8000,TEXT("Campaign room noise"));Place(FVector(0,-900,732));Stage(TEXT("ClosedDoorNoise"));
     }
-    else if(Phase==TEXT("ClosedDoorNoise")&&Now-At>14){
-        if(Ghost->GetActorLocation().X < -190){Finish(false,TEXT("Ghost crossed shut door"));return;}
-        Ghost->SetActorTickEnabled(false);if(auto* AI=Cast<AAIController>(Ghost->GetController()))AI->StopMovement();
-        Place(FVector(-65,-730,92));if(!Use(Current))return;if(!Current->bOpen){Finish(false,TEXT("Door opening failed"));return;}
-        Place(FVector(0,-900,732));Ghost->SetActorTickEnabled(true);GS->EmitNoise(FVector(-450,-730,80),8000,TEXT("Campaign drawer sound"));++Checks;Stage(TEXT("NoisePursuit"));
+    else if(Phase==TEXT("ClosedDoorNoise")){
+        if(!Current->bOpen&&Ghost->GetActorLocation().X < -190){Finish(false,TEXT("Ghost crossed shut door without opening it"));return;}
+        if(Current->bOpen){if(!Current->bGhostOpened||Now-At<6){Finish(false,TEXT("Ghost door opened without warning delay"));return;}++Checks;Stage(TEXT("NoisePursuit"));}
+        else if(Now-At>40){Finish(false,TEXT("Ghost did not open the noisy room door"));return;}
     }
     else if(Phase==TEXT("NoisePursuit")){
         if(Ghost->State==EWDGhostState::Searching&&FVector::Dist(GhostStart,Ghost->GetActorLocation())>700&&Ghost->GetActorLocation().X < -230){Ghost->SetActorTickEnabled(false);if(auto* AI=Cast<AAIController>(Ghost->GetController()))AI->StopMovement();Ghost->GetCharacterMovement()->DisableMovement();++Checks;Point=0;Stage(TEXT("DoorAccess"));}

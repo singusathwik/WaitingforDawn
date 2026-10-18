@@ -1,0 +1,22 @@
+{
+  "environment": "Android API 35 ARM64 translation with host Vulkan GPU; Windows UE 5.7.4; emulator virtual network, not physical Wi-Fi",
+  "joined_through_android_ui": true,
+  "client": {
+    "passed": true,
+    "phase": "NetFourSeen",
+    "detail": "Remote use, pickup and hiding replicated; 2 players joined",
+    "checks": 2,
+    "keys": 0,
+    "stair_flights_both_directions": 0,
+    "fall_recoveries": 0
+  },
+  "host": {
+    "passed": true,
+    "phase": "FourPlayers",
+    "detail": "2 separate processes; server validates remote drawer pickup, hiding and disconnect cleanup",
+    "checks": 2,
+    "keys": 0,
+    "stair_flights_both_directions": 0,
+    "fall_recoveries": 0
+  }
+}

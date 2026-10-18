@@ -32,7 +32,7 @@ void AWDCampaignProbe::TickTour()
     else if(Phase==TEXT("LetterArt")&&Now-At>3){Player->bJournalOpen=false;PC->bBagOpen=true;GS->AddKey(TEXT("Nursery"),TEXT("Survivor"));Stage(TEXT("BagArt"));}
     else if(Phase==TEXT("BagArt")&&Now-At>3){PC->bBagOpen=false;Place(FVector(0,-850,92));Ghost->SetActorLocation(FVector(0,-600,90));Ghost->SetActorRotation(FRotator(0,-90,0));Ghost->SetActorHiddenInGame(false);PC->SetControlRotation(FRotator(0,90,0));if(!Player->bLightOn)Player->ToggleLight();Stage(TEXT("GhostArt"));}
     else if(Phase==TEXT("GhostArt")&&Now-At>3){Player->Catch();Stage(TEXT("CaptureScare"));}
-    else if(Phase==TEXT("CaptureScare")&&Now-At>2){if(GS->Phase!=EWDRoundPhase::Lost){Finish(false,TEXT("Last survivor capture did not end round"));return;}Stage(TEXT("LossScreen"));}
+    else if(Phase==TEXT("CaptureScare")&&Now-At>2.6){if(GS->Phase!=EWDRoundPhase::Lost){Finish(false,TEXT("Last survivor capture did not end round"));return;}Stage(TEXT("LossScreen"));}
     else if(Phase==TEXT("LossScreen")&&Now-At>2){Finish(true,TEXT("Rendered home, skippable introduction, seven house views, journal, bag, ghost and capture loss"));}
     if(Now-At>.8&&Now-At<1.0)FScreenshotRequest::RequestScreenshot(FPaths::ProjectSavedDir()/TEXT("Validation")/(Phase+TEXT(".png")),true,false);
 }

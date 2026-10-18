@@ -42,6 +42,10 @@ public:
     bool IsAvailable() const;
     FText GetPrompt() const;
     void Interact(AWDCharacter* User);
+    bool CanGhostOpen() const;
+    void OpenForGhost();
+    void RattleForGhost();
+    UPROPERTY(Replicated) bool bGhostOpened = false;
 protected:
     virtual void BeginPlay() override;
     UFUNCTION() void OnRep_State();

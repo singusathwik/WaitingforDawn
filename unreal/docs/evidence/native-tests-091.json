@@ -1,0 +1,104 @@
+﻿{
+	"devices": [
+		{
+			"deviceName": "KING-OF-HELL",
+			"instance": "AC530C94470B6676D70CF7960896D7A7",
+			"instanceName": "KING-OF-HELL-31036",
+			"platform": "WindowsEditor",
+			"oSVersion": "Windows 11 (26H2) [10.0.26300.9711] ",
+			"model": "Default",
+			"gPU": "Intel(R) Iris(R) Xe Graphics",
+			"cPUModel": "13th Gen Intel(R) Core(TM) i5-13500H",
+			"rAMInGB": 16,
+			"renderMode": "SM6",
+			"rHI": "",
+			"appInstanceLog": ""
+		}
+	],
+	"reportCreatedOn": "2026.10.18-16.10.48",
+	"succeeded": 5,
+	"succeededWithWarnings": 0,
+	"failed": 0,
+	"notRun": 0,
+	"inProcess": 0,
+	"totalDuration": 0.083953604102134705,
+	"comparisonExported": false,
+	"comparisonExportDirectory": "",
+	"tests": [
+		{
+			"testDisplayName": "Difficulty",
+			"fullTestPath": "WaitingForDawn.Rules.Difficulty",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"AC530C94470B6676D70CF7960896D7A7"
+			],
+			"duration": 0.016673501580953598,
+			"dateTime": "2026.10.18-16.10.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "NoiseCannotPostponePursuit",
+			"fullTestPath": "WaitingForDawn.Rules.NoiseCannotPostponePursuit",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"AC530C94470B6676D70CF7960896D7A7"
+			],
+			"duration": 0.016332998871803284,
+			"dateTime": "2026.10.18-16.10.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StoryDawnAndEscape",
+			"fullTestPath": "WaitingForDawn.Rules.StoryDawnAndEscape",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"AC530C94470B6676D70CF7960896D7A7"
+			],
+			"duration": 0.018174398690462112,
+			"dateTime": "2026.10.18-16.10.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "VisibleAttackWindow",
+			"fullTestPath": "WaitingForDawn.Rules.VisibleAttackWindow",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"AC530C94470B6676D70CF7960896D7A7"
+			],
+			"duration": 0.016303502023220062,
+			"dateTime": "2026.10.18-16.10.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		},
+		{
+			"testDisplayName": "StairCollision",
+			"fullTestPath": "WaitingForDawn.World.StairCollision",
+			"tags": [],
+			"state": "Success",
+			"deviceInstance": [
+				"AC530C94470B6676D70CF7960896D7A7"
+			],
+			"duration": 0.01646919921040535,
+			"dateTime": "2026.10.18-16.10.48",
+			"entries": [],
+			"warnings": 0,
+			"errors": 0,
+			"artifacts": []
+		}
+	]
+}

@@ -1,0 +1,53 @@
+{
+  "narrator": {
+    "engine": "Kokoro v1.0 / kokoro-onnx 0.4.7",
+    "voice": "bm_george",
+    "license": "Apache-2.0 model",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "script": [
+      "We were students on a midnight trip. That house should have been empty. Then the front door slammed shut.",
+      "Upstairs, we found the keeper. Dead for days. We tried to leave, but not a single door would open.",
+      "Eleanor lived here with her children. After the fire, she locked every room, still waiting for them to return.",
+      "There was a letter in his hand. Find the keys. Reach the garage. Start the car... before dawn."
+    ],
+    "synthetic": true
+  },
+  "recordings": [
+    {
+      "author": "OwlStorm",
+      "source": "https://freesound.org/people/OwlStorm/sounds/151206/",
+      "download": "https://cdn.freesound.org/previews/151/151206_140737-hq.mp3",
+      "license": "CC0-1.0",
+      "sha256": "e509b1ff3165b79de03a71940e390f8c51c30dcd604641c3b841d62d6605da55"
+    },
+    {
+      "author": "missozzy",
+      "source": "https://freesound.org/people/missozzy/sounds/169811/",
+      "download": "https://cdn.freesound.org/previews/169/169811_1122547-hq.mp3",
+      "license": "CC0-1.0",
+      "sha256": "e5a3cce9ee27a13f25691baca99ffd35c283e7eb948e76f89c8ebb14117d5912"
+    }
+  ],
+  "outputs": {
+    "breath.wav": {
+      "sha256": "f01b51a0c6d6777788559cf254ddacff8b3c4958772342027ef906f625df67a7",
+      "seconds": 5.75,
+      "peak": 0.399993896484375
+    },
+    "introduction.wav": {
+      "sha256": "c39648e160d754a0b0da47ccece78ab91d512b505b609632907615fba0d792ef",
+      "seconds": 36.0,
+      "peak": 0.639984130859375
+    },
+    "stinger.wav": {
+      "sha256": "254b9b3efa31ab041751aa55273362ed5fcde58ccd516b5f22f2c37aabf200aa",
+      "seconds": 3.2032083333333334,
+      "peak": 0.720001220703125
+    },
+    "wail.wav": {
+      "sha256": "e5b42d982e60b54f28f3f0953b48b43e872a931bbd64dc91b02183338bf5a4f6",
+      "seconds": 5.8,
+      "peak": 0.5
+    }
+  }
+}

@@ -141,7 +141,7 @@ void AWDCharacter::Catch()
     bSprinting = false;
     PlayCue(StingerSound,GetActorLocation());
     if(auto* PC=Cast<AWDPlayerController>(Controller))
-        for(TActorIterator<AWDGhost> It(GetWorld());It;++It){PC->ShowScare(It->GetActorLocation()+FVector(0,0,102),It->GetActorForwardVector());break;}
+        for(TActorIterator<AWDGhost> It(GetWorld());It;++It){PC->ShowScare(It->GetFaceLocation(),It->GetActorForwardVector());break;}
     GetCharacterMovement()->StopMovementImmediately();
     ForceNetUpdate();
 }
@@ -159,7 +159,7 @@ void AWDCharacter::Tick(float DeltaSeconds)
     {
         float Danger=0;
         for (TActorIterator<AWDGhost> It(GetWorld()); It; ++It)
-            Danger=FMath::Max(Danger,1.f-FVector::Dist(It->GetActorLocation(),GetActorLocation())/1000.f);
+            Danger=FMath::Max(Danger,It->ThreatAt(GetActorLocation()));
         Breath->SetVolumeMultiplier(bStopped && !HidingSpot?0.f:FMath::Clamp(Danger*.7f,0.f,.7f));
     }
     // Short intermittent dips, not rapid strobing; the light remains usable.

@@ -28,6 +28,8 @@ private:
     void StartFlight();
     void TickNetwork(bool Server);
     void TickTour();
+    void TickThreat();
     int32 NetworkMax=0;
     bool SawHidden=false;
+    FString LastThreatScreenshot;
 };

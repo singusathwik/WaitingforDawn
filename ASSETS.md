@@ -1,4 +1,4 @@
-# Asset sources and licenses — 0.4.0
+# Asset sources and licenses
 
 
 
@@ -110,3 +110,11 @@ The Unreal house uses the original credited furniture and surfaces above. `unrea
 Visible co-op bodies use Epic's UE 5.7 template Manny mesh, skeleton, materials, idle/walk/jog/death animations and their rig dependencies under `unreal/WaitingForDawn/Content/Characters`. These are recognizable template mannequins, not commissioned student character art. Source: the installed `Templates/TemplateResources/High/Characters/Content` directory. Epic owns these example assets; they are not covered by any project-specific permissive license. The [Unreal Engine EULA, sections 1 and 5(b)](https://www.unrealengine.com/eula/unreal) identifies Templates as Examples and permits distributing Examples in source or object form. The Unreal runtime remains subject to Epic's EULA.
 
 No models, audio, code, or textures were extracted from Eyes, Amnesia or the commercial reference screenshots. Narration and effects retain the original synthesized-audio provenance above.
+
+## Unreal 0.9.1 audio and animation repairs
+
+- `unreal/Audio/introduction.wav`: original story text synthesized locally with Kokoro v1.0, `bm_george`. This is a synthetic narrator, not a recording of a hired actor. [Model and Apache-2.0 license](https://huggingface.co/hexgrad/Kokoro-82M), [runtime](https://github.com/thewh1teagle/kokoro-onnx).
+- `unreal/Audio/sources/breath.mp3`: “Female Breathing heavily” by OwlStorm, [Freesound 151206](https://freesound.org/people/OwlStorm/sounds/151206/), CC0. Used for restrained proximity breathing and the ghost warning.
+- `unreal/Audio/sources/scream.mp3`: “Female scream 02” by missozzy, [Freesound 169811](https://freesound.org/people/missozzy/sounds/169811/), CC0. Slowed, mixed and given short room echoes for warning/capture cues.
+- Audio source URLs, SHA-256 hashes, output durations and peaks: `unreal/Audio/provenance.json`. The reusable processing script is `unreal/tools/prepare_audio_091.py`.
+- Eleanor retains the existing credited mesh and child-bone animations. `repair_ghost_animation_scale.py` restores the static master root's bind transform, which the original FBX animation import incorrectly replaced with unit scale. This repairs the animated model without changing its vertex weights or provenance.

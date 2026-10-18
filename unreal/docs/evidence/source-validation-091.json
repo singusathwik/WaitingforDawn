@@ -1,0 +1,30 @@
+{
+  "scope": "Source and export checks only; not an Unreal runtime test",
+  "layout": {
+    "support_probes": 2586,
+    "boxes": 128,
+    "props": 9
+  },
+  "house": {
+    "rooms": 16,
+    "keys": 12,
+    "progression_order": [
+      "Nursery",
+      "Pantry",
+      "Study",
+      "Cellar",
+      "Boiler",
+      "Bedroom",
+      "Attic",
+      "Safe",
+      "Archive",
+      "Workshop",
+      "Garage",
+      "Ignition"
+    ],
+    "stair_flights": 3,
+    "boxes": 401
+  },
+  "verified_fbx_exports": 23,
+  "static_triangles": 65744
+}

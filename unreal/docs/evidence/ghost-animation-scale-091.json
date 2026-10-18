@@ -1,0 +1,32 @@
+[
+  {
+    "animation": "SK_Eleanor_Anim_Armature_attack1_l_Armature",
+    "keys": 33,
+    "before_root_scale": 1.0,
+    "after_root_scale": 395.7522277832031
+  },
+  {
+    "animation": "SK_Eleanor_Anim_Armature_attack2_Armature",
+    "keys": 33,
+    "before_root_scale": 1.0,
+    "after_root_scale": 395.7522277832031
+  },
+  {
+    "animation": "SK_Eleanor_Anim_Armature_idle_Armature",
+    "keys": 33,
+    "before_root_scale": 1.0,
+    "after_root_scale": 395.7522277832031
+  },
+  {
+    "animation": "SK_Eleanor_Anim_Armature_run_Armature",
+    "keys": 33,
+    "before_root_scale": 1.0,
+    "after_root_scale": 395.7522277832031
+  },
+  {
+    "animation": "SK_Eleanor_Anim_Armature_walk_Armature",
+    "keys": 25,
+    "before_root_scale": 1.0,
+    "after_root_scale": 395.7522277832031
+  }
+]

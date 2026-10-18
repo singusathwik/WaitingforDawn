@@ -51,7 +51,7 @@ void AWDInteractable::Tick(float DeltaSeconds)
         if(Round && Round->Phase==EWDRoundPhase::Escaped && Round->EndingAge<7)
             AddActorWorldOffset(FVector(0,-250*DeltaSeconds,0));
     }
-    OpenFraction = FMath::FInterpConstantTo(OpenFraction, bOpen ? 1.f : 0.f, DeltaSeconds, 2.5f);
+    OpenFraction = FMath::FInterpConstantTo(OpenFraction, bOpen ? 1.f : 0.f, DeltaSeconds, bGhostOpened ? .65f : 2.5f);
     if (Kind == EWDInteraction::Door)
         Mesh->SetRelativeRotation(ClosedRotation + FRotator(0, OpenYaw * OpenFraction, 0));
     else if (Kind == EWDInteraction::Drawer || Kind == EWDInteraction::Garage)
@@ -125,6 +125,7 @@ void AWDInteractable::Interact(AWDCharacter* User)
             if (GetWorld()->OverlapAnyTestByObjectType(Doorway, GetActorQuat(),
                 FCollisionObjectQueryParams(ECC_Pawn), FCollisionShape::MakeBox(FVector(45,70,110)), Params)) return;
         }
+        bGhostOpened=false;
         bOpen = !bOpen;
         if (Kind == EWDInteraction::Garage) { State->bGarageUnlocked=bOpen; State->ForceNetUpdate(); }
     }
@@ -137,10 +138,24 @@ void AWDInteractable::PlayInteractionSound_Implementation()
 {
     if (InteractionSound) UGameplayStatics::PlaySoundAtLocation(this, InteractionSound, GetActorLocation(), .55f);
 }
+bool AWDInteractable::CanGhostOpen() const
+{
+    const auto* GS=GetWorld()->GetGameState<AWDGameState>();
+    // Eleanor can work room handles, not unlock progression gates or open hiding furniture.
+    return Kind==EWDInteraction::Door && bBlocksPassage && !bOpen && GS &&
+        (RequiredKey.IsNone()||GS->TeamKeys.Contains(RequiredKey)) && GS->HasKeys(RequiredKeys);
+}
+void AWDInteractable::RattleForGhost(){if(HasAuthority()&&CanGhostOpen())PlayInteractionSound();}
+void AWDInteractable::OpenForGhost()
+{
+    if(!HasAuthority()||!CanGhostOpen())return;
+    bGhostOpened=true;bOpen=true;OnRep_State();PlayInteractionSound();ForceNetUpdate();
+}
 void AWDInteractable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     DOREPLIFETIME(AWDInteractable, bOpen);
     DOREPLIFETIME(AWDInteractable, bCollected);
     DOREPLIFETIME(AWDInteractable, Occupant);
+    DOREPLIFETIME(AWDInteractable, bGhostOpened);
 }

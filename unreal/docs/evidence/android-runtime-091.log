@@ -1,0 +1,80 @@
+Source: artifacts/unreal-setup/android-campaign.log
+10-18 21:54:41.701  5750  5816 D UE      : [2026.10.18-16.24.41:701][157]LogTemp: Display: WD_CAMPAIGN StairFlight0
+10-18 21:54:49.541  5750  5816 D UE      : [2026.10.18-16.24.49:541][406]LogTemp: Display: WD_CAMPAIGN StairFlight1
+10-18 21:54:57.431  5750  5816 D UE      : [2026.10.18-16.24.57:431][676]LogTemp: Display: WD_CAMPAIGN StairFlight2
+10-18 21:55:05.283  5750  5816 D UE      : [2026.10.18-16.25.05:283][949]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:05.992  5750  5816 D UE      : [2026.10.18-16.25.05:992][978]LogTemp: Display: WD_CAMPAIGN InspectKey0
+10-18 21:55:06.824  5750  5816 D UE      : [2026.10.18-16.25.06:824][999]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:07.525  5750  5816 D UE      : [2026.10.18-16.25.07:525][ 15]LogTemp: Display: WD_CAMPAIGN InspectKey1
+10-18 21:55:08.327  5750  5816 D UE      : [2026.10.18-16.25.08:327][ 47]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:09.034  5750  5816 D UE      : [2026.10.18-16.25.09:034][ 76]LogTemp: Display: WD_CAMPAIGN InspectKey2
+10-18 21:55:09.851  5750  5816 D UE      : [2026.10.18-16.25.09:851][107]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:10.557  5750  5816 D UE      : [2026.10.18-16.25.10:557][137]LogTemp: Display: WD_CAMPAIGN InspectKey3
+10-18 21:55:11.355  5750  5816 D UE      : [2026.10.18-16.25.11:355][167]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:12.058  5750  5816 D UE      : [2026.10.18-16.25.12:058][194]LogTemp: Display: WD_CAMPAIGN InspectKey4
+10-18 21:55:12.884  5750  5816 D UE      : [2026.10.18-16.25.12:884][225]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:13.601  5750  5816 D UE      : [2026.10.18-16.25.13:601][254]LogTemp: Display: WD_CAMPAIGN InspectKey5
+10-18 21:55:14.408  5750  5816 D UE      : [2026.10.18-16.25.14:408][287]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:15.114  5750  5816 D UE      : [2026.10.18-16.25.15:114][317]LogTemp: Display: WD_CAMPAIGN InspectKey6
+10-18 21:55:15.933  5750  5816 D UE      : [2026.10.18-16.25.15:933][349]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:16.651  5750  5816 D UE      : [2026.10.18-16.25.16:651][377]LogTemp: Display: WD_CAMPAIGN InspectKey7
+10-18 21:55:17.467  5750  5816 D UE      : [2026.10.18-16.25.17:467][407]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:18.185  5750  5816 D UE      : [2026.10.18-16.25.18:185][435]LogTemp: Display: WD_CAMPAIGN InspectKey8
+10-18 21:55:18.993  5750  5816 D UE      : [2026.10.18-16.25.18:993][466]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:19.707  5750  5816 D UE      : [2026.10.18-16.25.19:707][494]LogTemp: Display: WD_CAMPAIGN InspectKey9
+10-18 21:55:20.513  5750  5816 D UE      : [2026.10.18-16.25.20:513][523]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:21.218  5750  5816 D UE      : [2026.10.18-16.25.21:218][550]LogTemp: Display: WD_CAMPAIGN InspectKey10
+10-18 21:55:22.027  5750  5816 D UE      : [2026.10.18-16.25.22:027][578]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:22.751  5750  5816 D UE      : [2026.10.18-16.25.22:751][605]LogTemp: Display: WD_CAMPAIGN InspectKey11
+10-18 21:55:23.557  5750  5816 D UE      : [2026.10.18-16.25.23:557][639]LogTemp: Display: WD_CAMPAIGN NextKey
+10-18 21:55:24.265  5750  5816 D UE      : [2026.10.18-16.25.24:265][669]LogTemp: Display: WD_CAMPAIGN HideStart
+10-18 21:55:24.978  5750  5816 D UE      : [2026.10.18-16.25.24:978][700]LogTemp: Display: WD_CAMPAIGN WardrobePeek
+10-18 21:55:25.989  5750  5816 D UE      : [2026.10.18-16.25.25:989][742]LogTemp: Display: WD_CAMPAIGN BedStart
+10-18 21:55:26.690  5750  5816 D UE      : [2026.10.18-16.25.26:690][771]LogTemp: Display: WD_CAMPAIGN UnderBedPeek
+10-18 21:55:27.711  5750  5816 D UE      : [2026.10.18-16.25.27:711][815]LogTemp: Display: WD_CAMPAIGN Letter
+10-18 21:55:28.414  5750  5816 D UE      : [2026.10.18-16.25.28:414][844]LogTemp: Display: WD_CAMPAIGN Navigation
+10-18 21:55:29.133  5750  5816 D UE      : [2026.10.18-16.25.29:133][871]LogTemp: Display: WD_CAMPAIGN ClosedDoorNoise
+10-18 21:55:43.940  5750  5816 D UE      : [2026.10.18-16.25.43:940][469]LogTemp: Display: WD_CAMPAIGN NoisePursuit
+10-18 21:55:47.594  5750  5816 D UE      : [2026.10.18-16.25.47:594][610]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:48.309  5750  5816 D UE      : [2026.10.18-16.25.48:309][639]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:49.029  5750  5816 D UE      : [2026.10.18-16.25.49:029][667]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:49.749  5750  5816 D UE      : [2026.10.18-16.25.49:749][696]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:50.459  5750  5816 D UE      : [2026.10.18-16.25.50:459][724]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:51.177  5750  5816 D UE      : [2026.10.18-16.25.51:177][752]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:51.884  5750  5816 D UE      : [2026.10.18-16.25.51:884][780]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:52.599  5750  5816 D UE      : [2026.10.18-16.25.52:599][806]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:53.304  5750  5816 D UE      : [2026.10.18-16.25.53:304][832]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:54.028  5750  5816 D UE      : [2026.10.18-16.25.54:028][860]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:54.728  5750  5816 D UE      : [2026.10.18-16.25.54:728][886]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:55.449  5750  5816 D UE      : [2026.10.18-16.25.55:449][913]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:56.159  5750  5816 D UE      : [2026.10.18-16.25.56:159][938]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:56.869  5750  5816 D UE      : [2026.10.18-16.25.56:869][953]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:57.587  5750  5816 D UE      : [2026.10.18-16.25.57:587][977]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:58.289  5750  5816 D UE      : [2026.10.18-16.25.58:289][  2]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:59.001  5750  5816 D UE      : [2026.10.18-16.25.59:000][ 28]LogTemp: Display: WD_CAMPAIGN DoorAccess
+10-18 21:55:59.714  5750  5816 D UE      : [2026.10.18-16.25.59:714][ 47]LogTemp: Display: WD_CAMPAIGN KeyReachability
+10-18 21:56:00.725  5750  5816 D UE      : [2026.10.18-16.26.00:725][ 85]LogTemp: Display: WD_CAMPAIGN CarLocked
+10-18 21:56:01.419  5750  5816 D UE      : [2026.10.18-16.26.01:419][112]LogTemp: Display: WD_CAMPAIGN Garage
+10-18 21:56:02.135  5750  5816 D UE      : [2026.10.18-16.26.02:135][138]LogTemp: Display: WD_CAMPAIGN Escape
+10-18 21:56:03.159  5750  5816 D UE      : [2026.10.18-16.26.03:159][172]LogTemp: Display: WD_CAMPAIGN_RESULT {"passed":true,"phase":"Escape","detail":"Three stair flights both ways, twelve visible keys, locks, duplicate prevention, wardrobe and bed, letter, four-storey navigation, noise pursuit, garage and car ending","checks":67,"keys":12,"stair_flights_both_directions":3,"fall_recoveries":0}
+Source: artifacts/unreal-setup/threat-android-091.log
+10-18 21:53:41.518  5168  5292 D UE      : [2026.10.18-16.23.41:518][163]LogTemp: Display: WD_CAMPAIGN VisibleApproach
+10-18 21:53:49.187  5168  5292 D UE      : [2026.10.18-16.23.49:187][373]LogTemp: Display: WD_CAMPAIGN VisibleChase
+10-18 21:53:50.926  5168  5292 D UE      : [2026.10.18-16.23.50:926][429]LogTemp: Display: WD_CAMPAIGN AttackWindup
+10-18 21:53:51.181  5168  5292 D UE      : [2026.10.18-16.23.51:181][438]LogTemp: Display: WD_CAMPAIGN SprintEscape
+10-18 21:53:51.800  5168  5292 D UE      : [2026.10.18-16.23.51:800][459]LogTemp: Display: WD_CAMPAIGN CeilingCrawl
+10-18 21:53:53.815  5168  5292 D UE      : [2026.10.18-16.23.53:815][525]LogTemp: Display: WD_GHOST ceiling bounds X=-13.211 Y=-387.226 Z=216.105 X=69.507 Y=113.639 Z=59.895 face X=-4.524 Y=-471.892 Z=203.894
+10-18 21:53:53.815  5168  5292 D UE      : [2026.10.18-16.23.53:815][525]LogTemp: Display: WD_CAMPAIGN Descend
+10-18 21:53:55.136  5168  5292 D UE      : [2026.10.18-16.23.55:136][565]LogTemp: Display: WD_CAMPAIGN VisibleCapture
+10-18 21:53:56.134  5168  5292 D UE      : [2026.10.18-16.23.56:134][609]LogTemp: Display: WD_CAMPAIGN CaptureHeld
+10-18 21:53:58.167  5168  5292 D UE      : [2026.10.18-16.23.58:167][687]LogTemp: Display: WD_CAMPAIGN_RESULT {"passed":true,"phase":"CaptureHeld","detail":"Visible physical approach, cancellable windup, actual sprint escape, ceiling bounds and face-framed capture","checks":8,"keys":0,"stair_flights_both_directions":0,"fall_recoveries":0}
+Source: artifacts/unreal-setup/android-network.log
+10-18 21:56:40.217  6010  6054 D UE      : [2026.10.18-16.26.40:217][592]LogTemp: Display: WD_CAMPAIGN NetAimDrawer
+10-18 21:56:40.732  6010  6054 D UE      : [2026.10.18-16.26.40:732][605]LogTemp: Display: WD_CAMPAIGN NetWaitDrawer
+10-18 21:56:41.168  6010  6054 D UE      : [2026.10.18-16.26.41:168][619]LogTemp: Display: WD_CAMPAIGN NetAimKey
+10-18 21:56:41.882  6010  6054 D UE      : [2026.10.18-16.26.41:882][644]LogTemp: Display: WD_CAMPAIGN NetWaitInventory
+10-18 21:56:41.982  6010  6054 D UE      : [2026.10.18-16.26.41:982][647]LogTemp: Display: WD_CAMPAIGN NetAimHide
+10-18 21:56:42.797  6010  6054 D UE      : [2026.10.18-16.26.42:797][676]LogTemp: Display: WD_CAMPAIGN NetWaitHiding
+10-18 21:56:42.856  6010  6054 D UE      : [2026.10.18-16.26.42:856][678]LogTemp: Display: WD_CAMPAIGN NetFourSeen
+10-18 21:56:44.307  6010  6054 D UE      : [2026.10.18-16.26.44:307][732]LogTemp: Display: WD_NET_DIAGNOSTIC server=0 phase=NetFourSeen container_open=1 key_available=0 key_collected=1 actors=2
+10-18 21:56:47.895  6010  6054 D UE      : [2026.10.18-16.26.47:894][858]LogTemp: Display: WD_CAMPAIGN_RESULT {"passed":true,"phase":"NetFourSeen","detail":"Remote use, pickup and hiding replicated; 2 players joined","checks":2,"keys":0,"stair_flights_both_directions":0,"fall_recoveries":0}

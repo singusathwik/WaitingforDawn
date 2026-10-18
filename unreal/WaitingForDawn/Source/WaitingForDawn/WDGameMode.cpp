@@ -19,7 +19,7 @@ void AWDGameMode::BeginPlay()
     if(auto* Navigation=FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld()))Navigation->Build();
     GetWorld()->SpawnActor<AWDAmbience>();
 #if !UE_BUILD_SHIPPING
-    if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseTest"))||FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetServer"))||FParse::Param(FCommandLine::Get(),TEXT("WDVisualTour")))GetWorld()->SpawnActor<AWDCampaignProbe>();
+    if(FParse::Param(FCommandLine::Get(),TEXT("WDHouseTest"))||FParse::Param(FCommandLine::Get(),TEXT("WDHouseNetServer"))||FParse::Param(FCommandLine::Get(),TEXT("WDVisualTour"))||FParse::Param(FCommandLine::Get(),TEXT("WDThreatTest")))GetWorld()->SpawnActor<AWDCampaignProbe>();
     if (FParse::Param(FCommandLine::Get(), TEXT("WDGameplayTest")) ||
         FParse::Param(FCommandLine::Get(), TEXT("WDNetworkServer"))) GetWorld()->SpawnActor<AWDGameplayProbe>();
 #endif

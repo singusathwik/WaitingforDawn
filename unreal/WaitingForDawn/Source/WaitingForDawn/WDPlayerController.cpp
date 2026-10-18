@@ -7,6 +7,8 @@
 #include "WDGameState.h"
 #include "WDCharacter.h"
 #include "WDInteractable.h"
+#include "WDGhost.h"
+#include "Components/PointLightComponent.h"
 #include "EngineUtils.h"
 #include "WDHUD.h"
 #include "WDJoinPanel.h"
@@ -60,11 +62,14 @@ void AWDPlayerController::ToggleBag(){bBagOpen=!bBagOpen;bMenuOpen=false;if(auto
 void AWDPlayerController::ToggleJournal(){if(auto* P=Cast<AWDCharacter>(GetPawn()))P->bJournalOpen=!P->bJournalOpen;bBagOpen=false;bMenuOpen=false;}
 void AWDPlayerController::ShowScare_Implementation(FVector Face,FVector Facing)
 {
-    ScareUntil=GetWorld()->GetTimeSeconds()+1.6;
+    ScareUntil=GetWorld()->GetTimeSeconds()+2.3;
     if(!StoryCamera)StoryCamera=GetWorld()->SpawnActor<ACameraActor>();
     StoryCamera->GetCameraComponent()->bConstrainAspectRatio=false;
-    StoryCamera->SetActorLocation(Face+Facing*85);
+    StoryCamera->GetCameraComponent()->SetFieldOfView(68);
+    StoryCamera->SetActorLocation(Face+Facing*110);
     StoryCamera->SetActorRotation((Face-StoryCamera->GetActorLocation()).Rotation());SetViewTarget(StoryCamera);
+    auto* Fill=NewObject<UPointLightComponent>(StoryCamera);Fill->SetupAttachment(StoryCamera->GetRootComponent());Fill->RegisterComponent();
+    Fill->SetIntensityUnits(ELightUnits::Lumens);Fill->SetIntensity(35);Fill->SetAttenuationRadius(320);Fill->SetLightColor(FLinearColor(.55,.65,.8));Fill->SetCastShadows(false);
 }
 void AWDPlayerController::ClosePanels() { JoinPanel=nullptr; bMenuOpen=false; SetInputMode(FInputModeGameAndUI()); }
 void AWDPlayerController::OpenJoin()
@@ -78,7 +83,15 @@ void AWDPlayerController::PlayerTick(float DeltaSeconds)
     if(!IsLocalController()) return;
     auto* GS=GetWorld()->GetGameState<AWDGameState>(); auto* P=Cast<AWDCharacter>(GetPawn());
     if(!GS || !P) return;
-    if(ScareUntil>GetWorld()->GetTimeSeconds())return;
+    if(ScareUntil>GetWorld()->GetTimeSeconds()){
+        if(StoryCamera){
+            for(TActorIterator<AWDGhost>It(GetWorld());It;++It){
+                const FVector Face=It->GetFaceLocation();StoryCamera->SetActorLocation(Face+It->GetActorForwardVector()*110);
+                StoryCamera->SetActorRotation((Face-StoryCamera->GetActorLocation()).Rotation());break;
+            }
+        }
+        return;
+    }
     if(ScareUntil>0){ScareUntil=0;SetViewTarget(P);if(StoryCamera)StoryCamera->Destroy();StoryCamera=nullptr;}
     bShowMouseCursor=bMenuOpen || JoinPanel || GS->Phase!=EWDRoundPhase::Playing || P->bCaught || bBagOpen || P->bJournalOpen;
     if(GS->Phase==EWDRoundPhase::Playing && !bMenuOpen && !bBagOpen && !P->bJournalOpen && !JoinPanel && !P->bCaught && !P->HidingSpot)

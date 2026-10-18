@@ -80,8 +80,13 @@ void AWDHUD::DrawHUD()
     DrawRect(FLinearColor(.035,.035,.035,.8),W*.32,H-35*S,W*.34,8*S);DrawRect(FLinearColor(.27,.55,.27),W*.32,H-35*S,W*.34*P->Stamina/100,8*S);Ring(W/2,H/2,2*S,FLinearColor(.85,.82,.7));
     if(auto* T=P->FindInteractionTarget();T&&!P->HidingSpot){DrawRect(FLinearColor(0,0,0,.65),W*.3,H*.61,W*.4,35*S);Text(T->GetPrompt().ToString(),W*.32,H*.62,1.25);}
     if(GS->GetServerWorldTimeSeconds()-GS->DiscoveryAt<7)Text(GS->LastDiscovery,W*.26,65*S,1.15);
-    float Danger=0;for(TActorIterator<AWDGhost>It(GetWorld());It;++It)Danger=FMath::Max(Danger,1-FVector::Dist(It->GetActorLocation(),P->GetActorLocation())/950);
-    if(Danger>0){DrawRect(FLinearColor(.4,0,0,Danger*.5),0,0,12*S,H);DrawRect(FLinearColor(.4,0,0,Danger*.5),W-12*S,0,12*S,H);}
+    float Danger=0;for(TActorIterator<AWDGhost>It(GetWorld());It;++It)Danger=FMath::Max(Danger,It->ThreatAt(P->GetActorLocation()));
+    // A slow translucent wash covers the whole view without hiding her silhouette.
+    if(Danger>0){const float Pulse=.82f+.18f*FMath::Sin(GetWorld()->GetTimeSeconds()*3.f);
+        DrawRect(FLinearColor(.45,.015,.02,Danger*.20f*Pulse),0,0,W,H);
+        for(int I=0;I<12;++I){const float A=Danger*.018f*(1-I/12.f);const float X=W*.012f*I,Y=H*.018f*I;
+            DrawRect(FLinearColor(.5,0,0,A),X,Y,W-2*X,H*.018f);DrawRect(FLinearColor(.5,0,0,A),X,H-Y-H*.018f,W-2*X,H*.018f);}
+    }
     if(PC->bBagOpen){
         DrawRect(FLinearColor(.025,.022,.018,.96),W*.25,H*.18,W*.5,H*.6);Text(TEXT("SHARED BAG"),W*.29,H*.22,2);
         FString Items=FString::Printf(TEXT("Bottles: %d\n\n"),P->Bottles);if(GS->TeamKeys.IsEmpty())Items+=TEXT("No keys found yet.");
